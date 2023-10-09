@@ -1,4 +1,5 @@
 import { type Config } from 'tailwindcss';
+import {nextui} from "@nextui-org/react";
 import colors from 'tailwindcss/colors';
 
 export default {
@@ -6,6 +7,7 @@ export default {
   content: [
     './src/**/*.{js,ts,jsx,tsx}',
     './node_modules/react-tailwindcss-datepicker/dist/index.esm.js',
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
@@ -20,5 +22,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [nextui()],
 } satisfies Config;

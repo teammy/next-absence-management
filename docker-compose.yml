@@ -1,9 +1,13 @@
 version: '3.9'
+
 services:
   db:
-    image: 'postgres:15.3-alpine3.18'
+    image: mariadb:10.5
     ports:
-      - '9111:5432'
+      - 33061:3306
+    container_name: leave_db
     environment:
-      POSTGRES_USER: myapp
-      POSTGRES_PASSWORD: mypassword
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=db_e_leave
+      - MYSQL_USER=myapp
+      - MYSQL_PASSWORD=mypassword
