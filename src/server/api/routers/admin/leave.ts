@@ -8,7 +8,10 @@ export const adminLeaveRouter = createTRPCRouter({
       const leaves = await ctx.prisma.leave.findMany({
         select: {
           id: true,
-          leaveDate: true,
+          startLeaveDate: true,
+          endLeaveDate: true,
+          totalLeaveDate: true,
+          typeLeave: true,
           reason: true,
           status: true,
           user: {
@@ -36,7 +39,10 @@ export const adminLeaveRouter = createTRPCRouter({
         },
         select: {
           id: true,
-          leaveDate: true,
+          startLeaveDate: true,
+          endLeaveDate: true,
+          totalLeaveDate: true,
+          typeLeave: true,
           reason: true,
           status: true,
           user: {

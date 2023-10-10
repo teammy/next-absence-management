@@ -1,4 +1,3 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
-@import '../features/ui/components/Button.css';
 @import 'tailwindcss/utilities';

@@ -12,7 +12,8 @@ export const leaveRouter = createTRPCRouter({
       select: {
         id: true,
         reason: true,
-        leaveDate: true,
+        startLeaveDate: true,
+        endLeaveDate: true,
         status: true,
         user: {
           select: {
@@ -34,7 +35,8 @@ export const leaveRouter = createTRPCRouter({
       where: { id: input },
       select: {
         id: true,
-        leaveDate: true,
+        startLeaveDate: true,
+        endLeaveDate: true,
         reason: true,
       },
     });

@@ -48,9 +48,13 @@ async function main() {
       'REJECTED',
     ]);
     const userId = faker.helpers.arrayElement(userIds);
-    const leaveDate = faker.date.future().toISOString();
+    const startLeaveDate = faker.date.future().toISOString();
+    const endLeaveDate = faker.date.future().toISOString();
     const createLeaveInput: Prisma.LeaveCreateInput = {
-      leaveDate,
+      startLeaveDate: startLeaveDate,
+      endLeaveDate: endLeaveDate,
+      totalLeaveDate: faker.datatype.number.int(),
+      typeLeave: faker.helpers.arrayElement(['ANNUAL', 'SICK']),
       reason: faker.lorem.paragraph(),
       status,
       user: { connect: { id: userId } },
@@ -60,9 +64,9 @@ async function main() {
 
     await prisma.leave.upsert({
       where: {
-        userId_leaveDate: {
+        userId_startLeaveDate: {
           userId,
-          leaveDate,
+          endLeaveDate
         },
       },
       update: {},

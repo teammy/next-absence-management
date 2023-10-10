@@ -60,7 +60,7 @@ export const authOptions: NextAuthOptions = {
         if (session.name) token.name = session.name;
         if (session.email) token.email = session.email;
       }
-
+      console.log('jwt',token);
       if (user) {
         token.sub = user.id;
         token.email = user.email;
@@ -72,6 +72,7 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     session: ({ session, token }) => {
+      console.log('session', session);
       return {
         ...session,
         user: {

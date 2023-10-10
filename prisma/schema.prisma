@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider        = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
@@ -43,17 +43,23 @@ model User {
 }
 
 model Leave {
-    id              Int         @id @default(autoincrement())
-    status          LeaveStatus @default(PENDING)
-    reason          String
-    leaveDate       String
-    rejectionReason String?
-    userId          Int
-    createdAt       DateTime    @default(now())
-    updatedAt       DateTime    @default(now())
-    user            User        @relation(fields: [userId], references: [id])
+    id                   Int         @id @default(autoincrement())
+    userId               Int
+    startLeaveDate       String
+    endLeaveDate         String
+    totalLeaveDate       String
+    typeLeave            String
+    reason               String
+    rejectionReason      String?
+    status               LeaveStatus @default(PENDING)
+    managerStatus        LeaveStatus @default(PENDING)
+    departmentHeadStatus LeaveStatus @default(PENDING)
+    hrStatus             LeaveStatus @default(PENDING)
+    createdAt            DateTime    @default(now())
+    updatedAt            DateTime    @default(now())
+    user                 User        @relation(fields: [userId], references: [id])
 
-    @@unique([userId, leaveDate])
+    @@unique([userId])
 }
 
 model Announcement {

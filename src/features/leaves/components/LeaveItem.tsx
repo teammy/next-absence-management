@@ -17,12 +17,12 @@ const statusColor = (status: LeaveItem['status']) => {
   }
 };
 
-const LeaveItem = ({ reason, status, leaveDate, id }: LeaveItemProps) => {
+const LeaveItem = ({ reason, status, startLeaveDate,endLeaveDate, id }: LeaveItemProps) => {
   return (
     <div>
       <Badge color={statusColor(status)}>{status}</Badge>
       <p>{reason}</p>
-      <div>{toDateString(leaveDate)}</div>
+      <div>{toDateString(startLeaveDate)}</div>
       <Link href={`/leaves/${id}/edit`}>
         <PencilSquareIcon className="h-6 w-6"></PencilSquareIcon>
       </Link>
