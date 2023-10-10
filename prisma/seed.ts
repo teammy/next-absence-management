@@ -53,7 +53,7 @@ async function main() {
     const createLeaveInput: Prisma.LeaveCreateInput = {
       startLeaveDate: startLeaveDate,
       endLeaveDate: endLeaveDate,
-      totalLeaveDate: faker.datatype.number.int(),
+      totalLeaveDays: faker.datatype.text() ,
       typeLeave: faker.helpers.arrayElement(['ANNUAL', 'SICK']),
       reason: faker.lorem.paragraph(),
       status,

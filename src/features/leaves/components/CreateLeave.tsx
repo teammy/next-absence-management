@@ -41,12 +41,13 @@ const CreateLeave = () => {
     },
   });
   const createLeave = (leave: AddLeaveInput) => {
-    add(leave);
-    setUiToast({
-      type: 'Success',
-      message: 'The leave has been already created.',
-    });
-    router.push('/leaves');
+    // add(leave);
+    console.log(leave);
+    // setUiToast({
+    //   type: 'Success',
+    //   message: 'The leave has been already created.',
+    // });
+    // router.push('/leaves');
   };
 
   return <LeaveForm kind="create" onSubmit={createLeave}></LeaveForm>;

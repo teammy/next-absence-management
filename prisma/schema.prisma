@@ -28,6 +28,17 @@ enum LeaveStatus {
     REJECTED
 }
 
+enum LeaveType {
+    EMERGENCY
+    SICK
+    VACATION
+    MATERNITY
+    PATERNITY
+    BEREAVEMENT
+    MARRIAGE
+    OTHER
+}
+
 model User {
     id            Int            @id @default(autoincrement())
     name          String
@@ -47,7 +58,7 @@ model Leave {
     userId               Int
     startLeaveDate       String
     endLeaveDate         String
-    totalLeaveDate       String
+    totalLeaveDays       String
     typeLeave            String
     reason               String
     rejectionReason      String?
@@ -59,7 +70,7 @@ model Leave {
     updatedAt            DateTime    @default(now())
     user                 User        @relation(fields: [userId], references: [id])
 
-    @@unique([userId])
+    @@unique([userId, startLeaveDate, endLeaveDate, typeLeave])
 }
 
 model Announcement {
@@ -85,4 +96,14 @@ model Article {
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now())
     user      User     @relation(fields: [userId], references: [id])
+}
+
+model HolidayDate {
+    id                 Int      @id @default(autoincrement())
+    holidyDate         String
+    holidayName        String
+    holidayType        String
+    holidayDescription String
+    createdAt          DateTime @default(now())
+    updatedAt          DateTime @default(now())
 }

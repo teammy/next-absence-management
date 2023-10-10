@@ -37,6 +37,8 @@ export const leaveRouter = createTRPCRouter({
         id: true,
         startLeaveDate: true,
         endLeaveDate: true,
+        totalLeaveDays: true,
+        typeLeave: true,
         reason: true,
       },
     });

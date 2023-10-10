@@ -1,9 +1,7 @@
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { capitalize } from 'lodash';
-import Datepicker from 'react-tailwindcss-datepicker';
+import { capitalize, set } from 'lodash';
 import { ThaiDatePicker } from 'thaidatepicker-react';
-import { type DateValueType } from 'react-tailwindcss-datepicker/dist/types';
 import { Input, Textarea, Button } from '@nextui-org/react';
 import {
   type AddLeaveInput,
@@ -11,7 +9,7 @@ import {
   type UpdateLeaveInput,
 } from '../types';
 import * as validators from '../helpers/validators';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 
 export type LeaveFormProps =
   | {
@@ -26,6 +24,7 @@ export type LeaveFormProps =
 
 const LeaveForm = (props: LeaveFormProps) => {
   const { kind, onSubmit } = props;
+  
   const {
     register,
     handleSubmit,
@@ -43,8 +42,6 @@ const LeaveForm = (props: LeaveFormProps) => {
     ),
     defaultValues: kind === 'edit' ? props.leave : undefined,
   });
-  console.log("isValid", isValid);
-  const [selectedThaiDate, setSelectedThaiDate] = useState('');
 
   const currentStartLeaveDate = getValues("startLeaveDate");
   const currentEndLeaveDate = getValues("endLeaveDate");
@@ -55,28 +52,63 @@ const LeaveForm = (props: LeaveFormProps) => {
   //   endDate: currentLeaveDate,
   // };
 
-  const handleValueChange = (value: DateValueType) => {
-    if (value?.startDate) {
-      setValue('leaveDate', new Date(value.startDate).toISOString(), {
-        shouldValidate: true,
-        shouldDirty: true,
-        shouldTouch: true,
-      });
+
+  const calculateDiffDays = (startDate, endDate) => {
+    const oneDay = 24 * 60 * 60 * 1000; // milliseconds in a day
+    const holidays = [
+      new Date("2023-10-02"), // public holiday
+      new Date("2023-10-03"), // public holiday
+      new Date("2023-10-01"), // custom holiday
+    ];
+    let diffDays = 0;
+    for (let date = new Date(startDate); date <= new Date(endDate); date.setDate(date.getDate() + 1)) {
+      const dayOfWeek = date.getDay();
+      if (dayOfWeek !== 0 && dayOfWeek !== 6) { // exclude weekends
+        const isHoliday = holidays.some(holiday => holiday.toDateString() === date.toDateString());
+        if (!isHoliday) {
+          diffDays++;
+        }
+      }
     }
+    return diffDays;
   };
 
-  const handleDatePickerStartChange = (christDate, buddhistDate) => {
+
+  // const startLeaveDate = new Date(getValues("startLeaveDate"));
+  // const endLeaveDate = new Date(getValues("endLeaveDate"));
+  // const oneDay = 24 * 60 * 60 * 1000; // milliseconds in a day
+  // const holidays = [
+  //   new Date("2023-10-02"), // public holiday
+  //   new Date("2023-10-03"), // public holiday
+  //   new Date("2023-10-01"), // custom holiday
+  // ];
+  // let diffDays = 0;
+  // for (let date = startLeaveDate; date <= endLeaveDate; date.setDate(date.getDate() + 1)) {
+  //   const dayOfWeek = date.getDay();
+  //   if (dayOfWeek !== 0 && dayOfWeek !== 6) { // exclude weekends
+  //     const isHoliday = holidays.some(holiday => holiday.toDateString() === date.toDateString());
+  //     if (!isHoliday) {
+  //       diffDays++;
+  //     }
+  //   }
+  // }
+
+  const totalLeaveDate = calculateDiffDays(currentStartLeaveDate, currentEndLeaveDate);
+  console.log("totalLeaveDays:", totalLeaveDate);
+
+  const getdataDate = getValues('totalLeaveDays');
+  console.log("getdataDate:", getdataDate);
+  
+
+  const handleDatePickerStartChange = (christDate:any) => {
     setValue('startLeaveDate', christDate, {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true,
     });
-    // console.log('StartDate:',christDate);
-    // setSelectedStartDate(christDate);
-    setSelectedThaiDate(buddhistDate);
   };
 
-  const handleDatePickerEndChange = (christDate, buddhistDate) => {
+  const handleDatePickerEndChange = (christDate:any,totalLeaveDate) => {
     setValue('endLeaveDate', christDate, {
       shouldValidate: true,
       shouldDirty: true,
@@ -85,47 +117,35 @@ const LeaveForm = (props: LeaveFormProps) => {
   };
 
 
-  const calculateDays = () => {
-    if (!(currentStartLeaveDate instanceof Date) || !(currentEndLeaveDate instanceof Date)) {
-      return 0;
-    }
-
-    const start = currentStartLeaveDate.getTime();
-    const end = currentEndLeaveDate.getTime();
-    const days = Math.floor((end - start) / (1000 * 60 * 60 * 24));
-    return days;
-  };
 
   return (
     <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
       <h1>{capitalize(kind)}</h1>
       <label>Leave Date</label>
-      {/* <Datepicker
-        value={currentLeaveDateRange}
-        onChange={handleValueChange}
-        useRange={true}
-        asSingle={true}
-      /> */}
       <div>
         
       <ThaiDatePicker
           id="startLeaveDate"
           onChange={handleDatePickerStartChange}
           value={currentStartLeaveDate}
+          yearBoundary={1} 
         />
       </div>
       <div>
       <ThaiDatePicker
           id="endLeaveDate"
+          yearBoundary={2}
           onChange={handleDatePickerEndChange}
           value={currentEndLeaveDate}
+          minDate={new Date(currentStartLeaveDate)}
         />
       </div>
       <div>
         <Input
-          id="totalLeaveDate"
-          placeholder='Total Leave Date'
-          {...register('totalLeaveDate')}
+          isReadOnly
+          id="totalLeaveDays"
+          value={totalLeaveDate}
+          {...register('totalLeaveDays')}
         />
       </div>
       <div>
@@ -133,10 +153,8 @@ const LeaveForm = (props: LeaveFormProps) => {
           id="typeLeave"
           placeholder='Type Leave'
           {...register('typeLeave')}
+
         />
-      </div>
-      <div>
-        Number of days: {calculateDays()}
       </div>
       <label htmlFor="reason">Reason</label>
       <Textarea

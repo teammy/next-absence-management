@@ -30,5 +30,9 @@
     "*.css": "tailwindcss"
   },
   "files.eol": "\n",
-  "prettier.prettierPath": "./node_modules/prettier"
+  // "prettier.prettierPath": "./node_modules/prettier",
+  "workbench.colorCustomizations": {
+    "tab.activeBorder": "#fbff00",
+    "tab.unfocusedActiveBorder": "#000000"
+  }
 }
