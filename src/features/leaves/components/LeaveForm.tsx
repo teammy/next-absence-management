@@ -43,8 +43,6 @@ const LeaveForm = (props: LeaveFormProps) => {
     defaultValues: kind === 'edit' ? props.leave : undefined,
   });
 
-  const currentStartLeaveDate = getValues("startLeaveDate");
-  const currentEndLeaveDate = getValues("endLeaveDate");
 
   // const currentLeaveDate = getValues('leaveDate');
   // const currentLeaveDateRange = {
@@ -53,7 +51,8 @@ const LeaveForm = (props: LeaveFormProps) => {
   // };
 
 
-  const calculateDiffDays = (startDate, endDate) => {
+
+  const calculateDiffDays = (startDate:any, endDate:any) => {
     const oneDay = 24 * 60 * 60 * 1000; // milliseconds in a day
     const holidays = [
       new Date("2023-10-02"), // public holiday
@@ -70,9 +69,24 @@ const LeaveForm = (props: LeaveFormProps) => {
         }
       }
     }
+
     return diffDays;
   };
 
+
+  const [totalLeaveDate , setTotalLeaveDate] = useState('');
+
+  const currentStartLeaveDate = getValues("startLeaveDate");
+  const currentEndLeaveDate = getValues("endLeaveDate");
+
+  useEffect(() => {
+    setTotalLeaveDate(calculateDiffDays(currentStartLeaveDate, currentEndLeaveDate))
+    setValue('totalLeaveDays', (calculateDiffDays(currentStartLeaveDate, currentEndLeaveDate)));
+  }, [currentStartLeaveDate, currentEndLeaveDate])
+
+  console.log("totalLeaveDays:", totalLeaveDate);
+  console.log("getdataDate:", getValues('totalLeaveDays'));
+  
 
   // const startLeaveDate = new Date(getValues("startLeaveDate"));
   // const endLeaveDate = new Date(getValues("endLeaveDate"));
@@ -93,12 +107,7 @@ const LeaveForm = (props: LeaveFormProps) => {
   //   }
   // }
 
-  const totalLeaveDate = calculateDiffDays(currentStartLeaveDate, currentEndLeaveDate);
-  console.log("totalLeaveDays:", totalLeaveDate);
 
-  const getdataDate = getValues('totalLeaveDays');
-  console.log("getdataDate:", getdataDate);
-  
 
   const handleDatePickerStartChange = (christDate:any) => {
     setValue('startLeaveDate', christDate, {
@@ -108,7 +117,7 @@ const LeaveForm = (props: LeaveFormProps) => {
     });
   };
 
-  const handleDatePickerEndChange = (christDate:any,totalLeaveDate) => {
+  const handleDatePickerEndChange = (christDate:any) => {
     setValue('endLeaveDate', christDate, {
       shouldValidate: true,
       shouldDirty: true,
@@ -142,9 +151,10 @@ const LeaveForm = (props: LeaveFormProps) => {
       </div>
       <div>
         <Input
-          isReadOnly
+          
           id="totalLeaveDays"
           value={totalLeaveDate}
+          // onChange={(e) => console.log(e.target.value)}
           {...register('totalLeaveDays')}
         />
       </div>
@@ -153,7 +163,6 @@ const LeaveForm = (props: LeaveFormProps) => {
           id="typeLeave"
           placeholder='Type Leave'
           {...register('typeLeave')}
-
         />
       </div>
       <label htmlFor="reason">Reason</label>

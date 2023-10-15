@@ -9,6 +9,12 @@ import { api } from '~/utils/api';
 import '~/styles/globals.css';
 import { type NextPage } from 'next';
 import { type ReactElement, type ReactNode } from 'react';
+import { Noto_Sans_Thai } from 'next/font/google'
+
+const notosansthai = Noto_Sans_Thai({
+  weight: '400',
+  subsets: ['thai'],
+})
 
 export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
   getLayout?: (props: { children: ReactNode }) => ReactElement;
@@ -26,8 +32,8 @@ const MyApp = ({
 
   return (
     <SessionProvider session={session}>
-      <Layout>
-        <NextUIProvider>
+      <Layout >
+        <NextUIProvider className={notosansthai.className}>
         <Component {...pageProps} />
         </NextUIProvider>
         <ReactQueryDevtools initialIsOpen />

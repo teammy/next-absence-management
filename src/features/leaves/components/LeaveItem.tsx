@@ -3,6 +3,7 @@ import { type LeaveItem } from '../types';
 import { toDateString } from '~/features/shared/helpers/date';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
+import {Card, CardHeader, CardBody, CardFooter} from "@nextui-org/react";
 
 export type LeaveItemProps = LeaveItem;
 

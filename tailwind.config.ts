@@ -8,7 +8,15 @@ export default {
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        blue: {
+          100: '#5528FF',
+        }
+      }
+    },
   },
-  plugins: [nextui()],
+  plugins: [nextui({
+    addCommonColors: true,
+  })],
 } satisfies Config;

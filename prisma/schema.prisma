@@ -28,16 +28,16 @@ enum LeaveStatus {
     REJECTED
 }
 
-enum LeaveType {
-    EMERGENCY
-    SICK
-    VACATION
-    MATERNITY
-    PATERNITY
-    BEREAVEMENT
-    MARRIAGE
-    OTHER
-}
+// enum LeaveTypeSelectd {
+//     EMERGENCY
+//     SICK
+//     VACATION
+//     MATERNITY
+//     PATERNITY
+//     BEREAVEMENT
+//     MARRIAGE
+//     OTHER
+// }
 
 model User {
     id            Int            @id @default(autoincrement())
@@ -56,9 +56,9 @@ model User {
 model Leave {
     id                   Int         @id @default(autoincrement())
     userId               Int
-    startLeaveDate       String
-    endLeaveDate         String
-    totalLeaveDays       String
+    startLeaveDate       String    
+    endLeaveDate         String    
+    totalLeaveDays       Int
     typeLeave            String
     reason               String
     rejectionReason      String?
@@ -99,11 +99,37 @@ model Article {
 }
 
 model HolidayDate {
-    id                 Int      @id @default(autoincrement())
-    holidyDate         String
+    holidayId          Int      @id @default(autoincrement())
+    holidayDate         String
     holidayName        String
     holidayType        String
-    holidayDescription String
     createdAt          DateTime @default(now())
     updatedAt          DateTime @default(now())
+}
+
+model LeaveApproveEvent {
+    leaveApproveEventId Int         @id @default(autoincrement())
+    leaveId             Int
+    userApproveId       Int
+    statusApprove       LeaveStatus @default(APPROVED)
+    createdAt           DateTime    @default(now())
+    updatedAt           DateTime    @default(now())
+}
+
+model LeaveRejectEvent {
+    leaveRejectEventId Int         @id @default(autoincrement())
+    leaveId            Int
+    userId             Int
+    reasonReject       String
+    status             LeaveStatus @default(REJECTED)
+    createdAt          DateTime    @default(now())
+    updatedAt          DateTime    @default(now())
+}
+
+model LeaveType {
+    leaveTypeId          Int      @id @default(autoincrement())
+    leaveTypeDescription String
+    maxAllowPerYear      Int
+    createdAt            DateTime @default(now())
+    updatedAt            DateTime @default(now())
 }
