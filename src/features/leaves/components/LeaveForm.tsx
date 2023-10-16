@@ -43,15 +43,6 @@ const LeaveForm = (props: LeaveFormProps) => {
     defaultValues: kind === 'edit' ? props.leave : undefined,
   });
 
-
-  // const currentLeaveDate = getValues('leaveDate');
-  // const currentLeaveDateRange = {
-  //   startDate: currentLeaveDate,
-  //   endDate: currentLeaveDate,
-  // };
-
-
-
   const calculateDiffDays = (startDate:any, endDate:any) => {
     const oneDay = 24 * 60 * 60 * 1000; // milliseconds in a day
     const holidays = [

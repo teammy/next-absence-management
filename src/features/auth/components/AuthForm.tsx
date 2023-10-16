@@ -30,7 +30,7 @@ export type AuthFormProps =
     };
 
 const AuthForm = ({ kind, onSubmit }: AuthFormProps) => {
-  const [selected, setSelected] = useState<'login' | 'sign-up'>('login');
+  const [selected, setSelected] = useState<'sign-in' | 'sign-up'>('sign-in');
 
   const isRegisterForm = kind === 'register';
   const {
@@ -90,10 +90,12 @@ const AuthForm = ({ kind, onSubmit }: AuthFormProps) => {
                 ></FormField>
 
                 <div className="flex justify-end gap-2">
-                  <Button type="submit" fullWidth className="bg-[#0150F0] text-lg py-7 text-white">
+                  <Button type="submit" fullWidth className="bg-[#5627FF] text-lg py-7 text-white">
                     เข้าสู่ระบบ
                   </Button>
                 </div>
+                <div className="text-base text-center mt-3">เมื่อเข้าสู่ระบบจะถือว่าท่านยอมรับใน นโยบายข้อมูลส่วนบุคคล</div>
+
               </form>
             </Tab>
             <Tab

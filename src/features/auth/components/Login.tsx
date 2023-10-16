@@ -9,6 +9,7 @@ const Login = () => {
   const setUiToast = useAppStore((state) => state.setUiToast);
 
   const submit = async (credentials: LoginInput) => {
+    console.log('credentials', credentials)
     const result = await signIn('credentials', {
       ...credentials,
       redirect: false,

@@ -1,13 +1,13 @@
 import * as z from 'zod';
 
 export const login = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
+  email: z.string().email({ message: "กรุณาใส่อีเมลให้ถูกต้อง" }),
+  password: z.string().min(8,{ message: "กรุณาใส่รหัสผ่านมากกว่า 8 ตัว" }),
 });
 
 export const register = login.merge(
   z.object({
-    name: z.string().min(1).max(20),
+    name: z.string().min(1,{ message: "กรุณาใส่ชื่อ-สกุล" }).max(20),
   }),
 );
 

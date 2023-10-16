@@ -3,7 +3,7 @@ import { createTRPCRouter, protectedProcedure } from '../../trpc';
 import * as validators from '~/features/setting/helpers/validators';
 import { TRPCError } from '@trpc/server';
 
-export const settingAdminLeaveRouter = createTRPCRouter({
+export const adminSettingHolidayRouter = createTRPCRouter({
   listHoliday: protectedProcedure
     .meta({ roles: ['ADMIN', 'HR'] })
     .query(async ({ ctx }) => {
@@ -50,6 +50,7 @@ export const settingAdminLeaveRouter = createTRPCRouter({
     });
     return holidaySetting;
   }),
+
   destroyHoliday: protectedProcedure
   .meta({ roles: ['ADMIN', 'HR'] })
   .input(validators.destroyHoliday)
