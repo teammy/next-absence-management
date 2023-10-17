@@ -1,17 +1,17 @@
 import { z } from "zod";
 
-export const addHoliday = z.object({
+export const addSettingHoliday = z.object({
   
   holidayDate: z.string().min(1),
   holidayName: z.string().min(1),
   holidayType: z.string().min(1),
 });
 
-export const updateFormHoliday = addHoliday.partial();
+export const updateFormHoliday = addSettingHoliday.partial();
 
-export const updateHoliday = z.object({
+export const updateSettingHoliday = z.object({
   holidayId: z.number(),
   data: updateFormHoliday,
 });
 
-export const destroyHoliday = z.number();
+export const destroySettingHoliday = z.number();

@@ -10,9 +10,9 @@ export function LeaveList() {
   const { data, isLoading } = api.admin.leave.list.useQuery();
   const columns: DataGridColumn<AdminLeaveItem>[] = [
     {
-      field: 'leaveDate',
+      field: 'startLeaveDate',
       headerName: 'Leave Date',
-      value: (leave) => toDateString(leave.leaveDate),
+      value: (leave) => toDateString(leave.startLeaveDate),
     },
     {
       field: 'status',

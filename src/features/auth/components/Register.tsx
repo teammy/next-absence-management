@@ -16,6 +16,7 @@ const Register = () => {
     },
   });
   const submit = (credentials: RegisterInput) => {
+    console.log('credentials Register', credentials)
     register(credentials);
   };
 

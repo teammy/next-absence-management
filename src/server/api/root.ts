@@ -5,7 +5,7 @@ import { authRouter } from '~/server/api/routers/auth';
 import { adminLeaveRouter } from '~/server/api/routers/admin/leave';
 import { announcementRouter } from '~/server/api/routers/announcement';
 import { type inferRouterInputs, type inferRouterOutputs } from '@trpc/server';
-import { adminSettingHolidayRouter } from '~/server/api/routers/admin/setting';
+import { adminSettingHolidayRouter } from '~/server/api/routers/admin/settingHoliday';
 
 /**
  * This is the primary router for your server.

@@ -1,5 +1,7 @@
 import { type ComponentType, type ReactElement } from 'react';
 import DataGridItem from './DataGridItem';
+import {  Table,  TableHeader,  TableBody,  TableColumn,  TableRow,  TableCell} from "@nextui-org/react";
+
 
 export type DataRow = {
   id: number | string;
@@ -30,21 +32,21 @@ export function DataGrid<T extends DataRow>({
         {title}
       </h2>
       <div className="relative overflow-x-auto">
-        <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-          <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3">
+        <Table  className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+          <TableHeader columns={headerName} className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+            <TableRow>
+              <TableColumn scope="col" className="px-6 py-3">
                 ID
-              </th>
+              </TableColumn>
               {columns.map(({ headerName }) => (
-                <th key={headerName} scope="col" className="px-6 py-3">
+                <TableColumn key={headerName} scope="col" className="px-6 py-3">
                   {headerName}
-                </th>
+                </TableColumn>
               ))}
-            </tr>
-          </thead>
+            </TableRow>
+          </TableHeader>
           {rows && (
-            <tbody>
+            <TableBody>
               {rows.map((r) => {
                 return (
                   <DataGridItem
@@ -55,9 +57,9 @@ export function DataGrid<T extends DataRow>({
                   ></DataGridItem>
                 );
               })}
-            </tbody>
+            </TableBody>
           )}
-        </table>
+        </Table>
       </div>
     </div>
   );

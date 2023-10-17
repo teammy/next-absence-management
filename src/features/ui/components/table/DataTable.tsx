@@ -8,37 +8,40 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/react";
+import { type ComponentType, type ReactElement } from 'react';
 
+export type DataRow = {
+  id : number | string;
+} & Record<string, unknown>;
 
-const DataTable = () => {
+export interface DataTableColumn<T extends DataRow> {
+  field: keyof T;
+  headerName: string;
+  value?: (item: T) => string | ReactElement;
+}
+
+export interface DataGridProps<T extends DataRow> {
+  title: string;
+  columns : DataTableColumn<T>[];
+  rows?: T[];
+  detailsComponent: ComponentType<DataRow>;
+}
+
+export function DataTable<T extends DataRow>({
+  title,
+  columns,
+  rows,
+  detailsComponent,
+}: DataGridProps<T>) {
   return (
-    <div className="w-full flex flex-col gap-4">
-      <Table aria-label="Example table with custom cells">
-        <TableHeader columns={columns}>
-          {(column) => (
-            <TableColumn
-              key={column.uid}
-              hideHeader={column.uid === "actions"}
-              align={column.uid === "actions" ? "center" : "start"}
-            >
-              {column.name}
-            </TableColumn>
-          )}
-        </TableHeader>
-        <TableBody items={users}>
-          {(item) => (
-            <TableRow>
-              {(columnKey) => (
-                <TableCell>
-                  {RenderCell({ user: item, columnKey: columnKey })}
-                </TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
-  )
+    <Table>
+      <TableHeader>
+      </TableHeader>
+      <TableRow>
+        
+      </TableRow>
+    </Table>
+  );
 }
 
 export default DataTable

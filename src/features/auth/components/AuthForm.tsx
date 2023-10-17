@@ -3,21 +3,9 @@ import { type LoginInput, type RegisterInput } from '../types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as validators from '../helpers/validators';
 import { capitalize } from 'lodash';
-// import Button from '~/features/ui/components/Button';
+import Button from '~/features/ui/components/Button';
 import FormField from '~/features/ui/components/form/FormField';
-// import Link from 'next/link';
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Link,
-  CardFooter,
-  Input,
-  Button,
-  Tabs,
-  Tab,
-} from '@nextui-org/react';
-import { useState } from 'react';
+import Link from 'next/link';
 
 export type AuthFormProps =
   | {
@@ -30,8 +18,6 @@ export type AuthFormProps =
     };
 
 const AuthForm = ({ kind, onSubmit }: AuthFormProps) => {
-  const [selected, setSelected] = useState<'sign-in' | 'sign-up'>('sign-in');
-
   const isRegisterForm = kind === 'register';
   const {
     register,
@@ -47,108 +33,47 @@ const AuthForm = ({ kind, onSubmit }: AuthFormProps) => {
     ),
   });
 
-  const kindName = kind === 'register' ? 'สมัครสมาชิก' : 'ยินดีต้อนรับ';
-  const kindDesc =
-    kind === 'register'
-      ? 'สมัครสมาชิกเพื่อเริ่มใช้งาน'
-      : 'เข้าสู่ระบบเพื่อดำเนินการต่อ';
   return (
-    <div className='flex justify-center'>
-      <Card className="w-[500px] max-w-full">
-        <CardBody className="overflow-hidden">
-          <Tabs
-            fullWidth
-            radius="lg" 
-            size="md"
-            aria-label="Tabs form"
-            selectedKey={selected}
-            onSelectionChange={setSelected}
-          >
-            <Tab key="login" title="เข้าสู่ระบบ" className="m-3 py-8 text-lg">
-              <div className="flex justify-center mb-14">
-                <div className="">
-                  <p className="font-medum text-center text-4xl tracking-tight">
-                    ยินดีต้อนรับ
-                  </p>
-                  <p className="text-lg">เข้าสู่ระบบเพื่อดำเนินการต่อ</p>
-                </div>
-              </div>
-              <form onSubmit={handleSubmit(onSubmit)}  className="flex flex-col gap-4">
-                <FormField
-                  id="email"
-                  type="email"
-                  label="อีเมล"
-                  error={errors.email?.message}
-                  {...register('email')}
-                ></FormField>
-                <FormField
-                  id="password"
-                  type="password"
-                  label="รหัสผ่าน"
-                  error={errors.password?.message}
-                  {...register('password')}
-                ></FormField>
-
-                <div className="flex justify-end gap-2">
-                  <Button type="submit" fullWidth className="bg-[#5627FF] text-lg py-7 text-white">
-                    เข้าสู่ระบบ
-                  </Button>
-                </div>
-                <div className="text-base text-center mt-3">เมื่อเข้าสู่ระบบจะถือว่าท่านยอมรับใน นโยบายข้อมูลส่วนบุคคล</div>
-
-              </form>
-            </Tab>
-            <Tab
-              key="sign-up"
-              title="สมัครสมาชิก"
-              className="m-3 py-8  text-lg"
-            >
-              <div className="flex justify-center mb-14">
-                <div className="">
-                  <p className="font-medum text-center text-4xl tracking-tight">
-                  สมัครสมาชิก
-                  </p>
-                  <p className="text-lg">สมัครสมาชิกเพื่อเริ่มใช้งาน</p>
-                </div>
-              </div>
-              <form  onSubmit={handleSubmit(onSubmit)} className="flex h-[300px] flex-col gap-4">
-                <FormField
-                  id="name"
-                  label="ชื่อ-สกุล"
-                  error={errors.name?.message}
-                  {...register('name')}
-                ></FormField>
-
-                <FormField
-                  id="email"
-                  type="email"
-                  label="อีเมล"
-                  error={errors.email?.message}
-                  {...register('email')}
-                ></FormField>
-                <FormField
-                  id="password"
-                  type="password"
-                  label="รหัสผ่าน"
-                  error={errors.password?.message}
-                  {...register('password')}
-                ></FormField>
-
-                <div className="flex justify-end gap-2">
-                  <Button
-                    type="submit"
-                    fullWidth
-                    className="w-full bg-[#F68B1F] text-lg py-7 text-white"
-                  >
-                    สมัครสมาชิก
-                  </Button>
-                </div>
-              </form>
-            </Tab>
-          </Tabs>
-        </CardBody>
-      </Card>
-    </div>
+    <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-lg">
+      <h2 className="mb-4 text-center text-2xl text-primary-500">
+        {capitalize(kind)}
+      </h2>
+      {isRegisterForm && (
+        <FormField
+          id="name"
+          label="Name"
+          placeholder="Enter your name"
+          error={errors.name?.message}
+          {...register('name')}
+        ></FormField>
+      )}
+      <FormField
+        id="email"
+        type="email"
+        label="Email"
+        placeholder="Enter your email"
+        error={errors.email?.message}
+        {...register('email')}
+      ></FormField>
+      <FormField
+        id="password"
+        type="password"
+        label="Password"
+        placeholder="Enter your password"
+        error={errors.password?.message}
+        {...register('password')}
+      ></FormField>
+      <div className="flex items-center justify-between">
+        <Button type="submit" color="primary">
+          {kind}
+        </Button>
+        <Link href={isRegisterForm ? '/auth/sign-in' : '/auth/sign-up'}>
+          {isRegisterForm
+            ? 'Already have an account?'
+            : 'Do not have an account yet?'}
+        </Link>
+      </div>
+    </form>
   );
 };
 

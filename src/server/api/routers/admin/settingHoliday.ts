@@ -19,7 +19,7 @@ export const adminSettingHolidayRouter = createTRPCRouter({
     }),
   addHoliday: protectedProcedure
     .meta({ roles: ['ADMIN', 'HR'] })
-    .input(validators.addHoliday)
+    .input(validators.addSettingHoliday)
     .mutation(async ({ ctx, input }) => {
       const holidaySetting = await ctx.prisma.holidayDate.create({
         data: {
@@ -28,9 +28,24 @@ export const adminSettingHolidayRouter = createTRPCRouter({
       });
       return holidaySetting;
     }),
+  byId : protectedProcedure.input(z.number()).query(async ({ input, ctx }) => {
+    const holidaySetting = await ctx.prisma.holidayDate.findUnique({
+      where: { holidayId: input },
+      select: {
+        holidayId: true,
+        holidayDate: true,
+        holidayName: true,
+        holidayType: true,
+      },
+    });
+
+    if (!holidaySetting) throw new TRPCError({ code: 'NOT_FOUND' });
+
+    return holidaySetting;
+  }),
   updateHoliday: protectedProcedure
   .meta({ roles: ['ADMIN', 'HR'] })
-  .input(validators.updateHoliday)
+  .input(validators.updateSettingHoliday)
   .mutation(async ({ ctx, input }) => {
     const existingHoliday = await ctx.prisma.holidayDate.findUnique({
       where: {
@@ -53,7 +68,7 @@ export const adminSettingHolidayRouter = createTRPCRouter({
 
   destroyHoliday: protectedProcedure
   .meta({ roles: ['ADMIN', 'HR'] })
-  .input(validators.destroyHoliday)
+  .input(validators.destroySettingHoliday)
   .mutation(async ({ ctx, input }) => {
     const existingHoliday = await ctx.prisma.holidayDate.findUnique({
       where: {
