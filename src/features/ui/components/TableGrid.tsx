@@ -1,50 +1,40 @@
-import { type ComponentType, type ReactElement } from "react";
-import DataGridItem from "./DataGridItem";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-  TableColumn,
-  Button,
-  Pagination,
-  Tab,
-} from "@nextui-org/react";
+import { Table as NextUITable, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/react";
+import { ReactNode } from "react";
 
-export type TableRows = {
-  id : number | string;
-} & Record<string, unknown>;
-
-export interface TableGridColumn<T extends TableRows> {
-  field: keyof T;
-  headerName: string;
-  value?: (item : T) => string | ReactElement;
+export interface Column {
+  key: string;
+  label: string;
 }
 
-export interface TableGridProps<T extends TableRows> {
-  title: string;
-  columns: TableGridColumn<T>[];
-  rows?: T[];
-  detailsComponent: ComponentType<TableRows>;
+export interface Row {
+  key: string;
+  [key: string]: unknown;
 }
 
-export function TableGrid<T extends TableRows>({
-  title,
-  columns,
-  rows,
-  detailsComponent
-} : TableGridProps<T>) {
+export interface TableProps {
+  columns: Column[];
+  rows: Row[];
+  
+  renderCell?: (row: Row, columnKey: string) => ReactNode;
+}
+
+export function Table({ columns, rows, renderCell }: TableProps) {
   return (
-    <Table>
-      <TableHeader>
-
-        </TableHeader>
-        <TableBody>
-          
-          </TableBody>
-    </Table>
+    <NextUITable aria-label="Example table with dynamic content">
+      <TableHeader columns={columns}>
+        {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
+      </TableHeader>
+      <TableBody items={rows}>
+        {(item) => (
+          <TableRow key={item.key}>
+            {(columnKey) => (
+              <TableCell>
+                {renderCell ? renderCell(item, columnKey) : item[columnKey]}
+              </TableCell>
+            )}
+          </TableRow>
+        )}
+      </TableBody>
+    </NextUITable>
   );
 }
-
-export default TableGrid;

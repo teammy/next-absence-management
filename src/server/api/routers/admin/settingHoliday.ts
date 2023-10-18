@@ -9,7 +9,7 @@ export const adminSettingHolidayRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       const holidaySetting = await ctx.prisma.holidayDate.findMany({
         select: {
-          holidayId: true,
+          id: true,
           holidayDate: true,
           holidayName: true,
           holidayType: true,
@@ -30,9 +30,9 @@ export const adminSettingHolidayRouter = createTRPCRouter({
     }),
   byId : protectedProcedure.input(z.number()).query(async ({ input, ctx }) => {
     const holidaySetting = await ctx.prisma.holidayDate.findUnique({
-      where: { holidayId: input },
+      where: { id: input },
       select: {
-        holidayId: true,
+        id: true,
         holidayDate: true,
         holidayName: true,
         holidayType: true,
@@ -49,7 +49,7 @@ export const adminSettingHolidayRouter = createTRPCRouter({
   .mutation(async ({ ctx, input }) => {
     const existingHoliday = await ctx.prisma.holidayDate.findUnique({
       where: {
-        holidayId: input.holidayId,
+        id: input.id,
       },
     });
 
@@ -57,7 +57,7 @@ export const adminSettingHolidayRouter = createTRPCRouter({
 
     const holidaySetting = await ctx.prisma.holidayDate.update({
       where: {
-        holidayId: input.holidayId,
+        id: input.id,
       },
       data: {
         ...input,
@@ -72,7 +72,7 @@ export const adminSettingHolidayRouter = createTRPCRouter({
   .mutation(async ({ ctx, input }) => {
     const existingHoliday = await ctx.prisma.holidayDate.findUnique({
       where: {
-        holidayId: input,
+        id: input,
       },
     });
 
@@ -80,7 +80,7 @@ export const adminSettingHolidayRouter = createTRPCRouter({
 
     const holidaySetting = await ctx.prisma.holidayDate.delete({
       where: {
-        holidayId: input,
+        id: input,
       },
     });
     return holidaySetting;

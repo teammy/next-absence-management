@@ -28,7 +28,7 @@ export function LeaveItem({ id }: LeaveItemProps) {
   if (isLoading) return <div>Loading...</div>;
   if (!leave) return <div>No content</div>;
 
-  const { leaveDate, reason, status, user } = leave;
+  const { startLeaveDate, reason, status, user } = leave;
 
   return (
     <div>
@@ -46,12 +46,13 @@ export function LeaveItem({ id }: LeaveItemProps) {
         <span className="my-2 text-gray-900">{user.name}</span>
         <blockquote className="mx-auto mb-4 max-w-2xl text-gray-500 dark:text-gray-400 lg:mb-4">
           <h3 className="text-lg font-semibold  text-primary-500 dark:text-white">
-            {new Date(leaveDate).toLocaleDateString('en-US', {
+          {reason}
+            {/* {new Date(startLeaveDate).toLocaleDateString('en-US', {
               weekday: 'long',
               year: 'numeric',
               month: 'long',
               day: 'numeric',
-            })}
+            })} */}
           </h3>
           <p className="my-4 font-light">{reason}</p>
         </blockquote>

@@ -10,7 +10,7 @@ export const addSettingHoliday = z.object({
 export const updateFormHoliday = addSettingHoliday.partial();
 
 export const updateSettingHoliday = z.object({
-  holidayId: z.number(),
+  id: z.number(),
   data: updateFormHoliday,
 });
 

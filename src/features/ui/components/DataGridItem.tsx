@@ -1,16 +1,17 @@
 import { type ReactNode, useState } from 'react';
-import { type DataGridProps, type DataRow } from './DataGrid';
-import {TableRow, TableCell} from "@nextui-org/react";
+import { TableRow,TableCell } from '@nextui-org/react';
+import type { ComponentType, ReactElement } from 'react';
+import type { DataGridProps, DataRow } from './DataGrid';
+
 
 export interface DataGridItemProps<T extends DataRow>
-  extends Pick<DataGridProps<T>, 'columns' | 'detailsComponent'> {
+  extends Pick<DataGridProps<T>, 'columns'> {
   row: T;
 }
 
 export function DataGridItem<T extends DataRow>({
   row,
   columns,
-  detailsComponent: DetailsComponent,
 }: DataGridItemProps<T>) {
   const [isDetailsShown, setIsDetailsShown] = useState(false);
 
@@ -47,20 +48,20 @@ export function DataGridItem<T extends DataRow>({
     return result;
   };
 
-  if (isDetailsShown)
-    return (
-      <TableRow onClick={hideDetails} className="cursor-pointer">
-        <TableCell colSpan={100} className="border-b-[1px] p-4">
-          <DetailsComponent id={row.id}></DetailsComponent>
-        </TableCell>
-      </TableRow>
-    );
+  // if (isDetailsShown)
+  //   return (
+  //     <tr onClick={hideDetails} className="cursor-pointer">
+  //       <td colSpan={100} className="border-b-[1px] p-4">
+  //         {/* <DetailsComponent id={row.id}></DetailsComponent> */}
+  //       </td>
+  //     </tr>
+  //   );
 
   return (
     <TableRow
       key={row.id}
       className="cursor-pointer border-b bg-white dark:border-gray-700 dark:bg-gray-800"
-      onClick={showDetails}
+      // onClick={showDetails}
     >
       {generateRow(row)}
     </TableRow>

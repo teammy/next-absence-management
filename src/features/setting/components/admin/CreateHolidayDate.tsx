@@ -32,14 +32,14 @@ const CreateHolidayDate = () => {
     }
   });
   const CreateHolidayDate = (holidayDate: AddSettingHolidayInput) => {
-    // AddSettingHolidayInput(holidayDate)
+    AddSettingHolidayInput(holidayDate)
     console.log(holidayDate)
     // console.log(holiday)
     setUiToast({
       type: 'Success',
       message: 'The holiday has been already created.',
     })
-    router.push('/setting/admin/holiday')
+    router.push('/admin/setting/holidayDate')
   }
 
   return <SettingHolidayDateForm kind="create" onSubmit={CreateHolidayDate}></SettingHolidayDateForm>;
