@@ -15,9 +15,11 @@ const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
           ref={ref}
           id={id}
           label={label}
-          labelPlacement="inside"
           placeholder={placeholder}
           type={type}
+          labelPlacement='outside'
+          variant='bordered'
+          radius='sm'
           classNames={{
             label: 'text-lg',
           }}

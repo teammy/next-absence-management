@@ -16,7 +16,7 @@ export function SettingHolidayList() {
   const columns: DataGridColumn<HolidayDateItem>[] = [
     {
       field: 'holidayDate',
-      headerName: 'Date Holiday',
+      headerName: 'วันที่',
       value: (holiday) => holiday.holidayDate,
     },
     {
@@ -29,6 +29,7 @@ export function SettingHolidayList() {
       headerName: 'Holiday Type',
       value: (holiday) => holiday.holidayType,
     },
+    
   ];
 
   if (isLoading) return <div>Loading...</div>;
