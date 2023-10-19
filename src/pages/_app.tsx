@@ -10,11 +10,19 @@ import '~/styles/globals.css';
 import { type NextPage } from 'next';
 import { type ReactElement, type ReactNode } from 'react';
 import { Noto_Sans_Thai } from 'next/font/google'
+import localFont from 'next/font/local'
 
 const notosansthai = Noto_Sans_Thai({
   weight: '400',
   subsets: ['thai'],
 })
+
+const kvlFont = localFont({ src: '../../public/fonts/kvl-reg.woff2' })
+const kvlFont_bold = localFont({ src: '../../public/fonts/kvl-bold.woff2' })
+const ttFont = localFont({ src: '../../public/fonts/thongterm-reg.woff2' })
+const ttFont_bold = localFont({ src: '../../public/fonts/thongterm-bold.woff2' })
+const mlpFont = localFont({ src: '../../public/fonts/maledpan.woff2' })
+const mlpFont_bold = localFont({ src: '../../public/fonts/maledpan-bold.woff2' })
 
 export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
   getLayout?: (props: { children: ReactNode }) => ReactElement;
@@ -33,7 +41,7 @@ const MyApp = ({
   return (
     <SessionProvider session={session}>
       <Layout >
-        <NextUIProvider className={notosansthai.className}>
+        <NextUIProvider className={mlpFont.className}>
         <Component {...pageProps} />
         </NextUIProvider>
         <ReactQueryDevtools initialIsOpen />

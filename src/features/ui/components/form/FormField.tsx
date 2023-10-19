@@ -25,7 +25,7 @@ const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
           }}
           {...props}
         ></Input>
-        {error && <div className="mt-2 text-sm text-red-500">{error}</div>}
+        {error && <div className="mt-2 text-md text-red-500">{error}</div>}
       </div>
     );
   },

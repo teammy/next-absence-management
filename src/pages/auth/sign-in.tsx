@@ -16,7 +16,7 @@ const LoginPage: NextPageWithLayout = () => {
             <div className="w-full">
               <div className="mb-8 text-center">
 
-              <h1 className="mb-1 text-3xl font-semibold text-gray-700 dark:text-gray-200">ยินดีต้อนรับ</h1>
+              <h1 className="mb-1 text-4xl font-semibold text-gray-700 dark:text-gray-200">ยินดีต้อนรับ</h1>
               <p className="text-gray-400">เข้าสู่ระบบเพื่อดำเนินการต่อ</p>
               </div>
               <Login></Login>

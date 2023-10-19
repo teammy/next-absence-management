@@ -48,7 +48,7 @@ const AuthForm = ({ kind, onSubmit }: AuthFormProps) => {
         id="email"
         type="email"
         label="อีเมล"
-        placeholder="Enter your email"
+        placeholder=" "
         error={errors.email?.message}
         {...register('email')}
       ></FormField>
@@ -56,7 +56,7 @@ const AuthForm = ({ kind, onSubmit }: AuthFormProps) => {
         id="password"
         type="password"
         label="รหัสผ่าน"
-        placeholder="Enter your password"
+        placeholder=" "
         error={errors.password?.message}
         {...register('password')}
       ></FormField>
