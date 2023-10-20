@@ -38,8 +38,8 @@ const AuthForm = ({ kind, onSubmit }: AuthFormProps) => {
       {isRegisterForm && (
         <FormField
           id="name"
-          label="Name"
-          placeholder="Enter your name"
+          label="ชื่อ-สกุล"
+          placeholder=" "
           error={errors.name?.message}
           {...register('name')}
         ></FormField>
@@ -63,16 +63,18 @@ const AuthForm = ({ kind, onSubmit }: AuthFormProps) => {
      
       <div className="flex items-center justify-between">
         <Button type="submit" color="primary" 
-        className="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-          {kind}
+        className="block w-full px-4 py-2 mt-4 text-base font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+           {isRegisterForm
+            ? 'สมัครบัญชี'
+            : 'เข้าสู่ระบบ'}
         </Button>
         
       </div>
-      <p>
+      <p className="mt-5 text-right ">
         <Link href={isRegisterForm ? '/auth/sign-in' : '/auth/sign-up'}>
           {isRegisterForm
-            ? 'Already have an account?'
-            : 'Do not have an account yet?'}
+            ? 'ต้องการเข้าสู่ระบบ?'
+            : 'ต้องการสมัครบัญชีเข้าใช้งาน?'}
         </Link>
         </p>
     </form>

@@ -12,11 +12,6 @@ import { type ReactElement, type ReactNode } from 'react';
 import { Noto_Sans_Thai } from 'next/font/google'
 import localFont from 'next/font/local'
 
-const notosansthai = Noto_Sans_Thai({
-  weight: '400',
-  subsets: ['thai'],
-})
-
 const kvlFont = localFont({ src: '../../public/fonts/kvl-reg.woff2' })
 const kvlFont_bold = localFont({ src: '../../public/fonts/kvl-bold.woff2' })
 const ttFont = localFont({ src: '../../public/fonts/thongterm-reg.woff2' })

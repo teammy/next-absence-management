@@ -2,6 +2,7 @@ import Login from '~/features/auth/components/Login';
 import { type NextPageWithLayout } from '../_app';
 import Layout from '~/features/ui/components/layouts/Normal';
 import AuthLayout from '~/features/ui/components/layouts/AuthLayout';
+import Toast from '~/features/ui/components/Toast';
 
 const LoginPage: NextPageWithLayout = () => {
   return (
@@ -23,6 +24,7 @@ const LoginPage: NextPageWithLayout = () => {
             </div>
           </main>
         </div>
+        <Toast></Toast>
       </div>
     </div>
   </>

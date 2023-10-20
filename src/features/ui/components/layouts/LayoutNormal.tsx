@@ -1,6 +1,6 @@
 import React,{ useState} from 'react'
 import MainNavbar from '../navbar/main-navbar';
-import { SidebarWrapper } from '../sidebar/sidebar';
+import { SidebarWrapper } from '../sidebar/Sidebar';
 
 import { type ReactNode } from 'react';
 

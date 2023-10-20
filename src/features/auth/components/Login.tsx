@@ -15,9 +15,16 @@ const Login = () => {
       redirect: false,
     });
 
+    console.log('result status', result?.status)
+
     if (result?.ok) return router.replace('/leaves');
-    if (result?.error) {
-      setUiToast({ type: 'Error', message: 'Invalid Credentials' });
+    // if (result?.error) {
+    //   console.log('result?.error', result?.error)
+    //   setUiToast({ type: 'Error', message: 'Invalid Credentials' });
+    // }
+
+    if (result?.status === 401) {
+      setUiToast({ type: 'Error', message: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' });
     }
   };
 
