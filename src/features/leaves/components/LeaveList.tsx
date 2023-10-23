@@ -42,7 +42,7 @@ const LeaveList = () => {
       {leaves.map((leave) => (
         <LeaveItem key={leave.id} {...leave}></LeaveItem>
       ))}
-      <FloatingActionButton onClick={() => router.push('/leaves/new')}>
+      <FloatingActionButton onClick={() => router.push('/leaves/selectType')}>
         +
       </FloatingActionButton>
     </div>

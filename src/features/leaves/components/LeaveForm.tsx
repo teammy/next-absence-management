@@ -1,8 +1,15 @@
+
+import dayjs from "dayjs";
+import "dayjs/locale/th";
+dayjs.locale("th");
+import { ThaiDatePicker } from "thaidatepicker-react";
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { capitalize, set } from 'lodash';
-import { ThaiDatePicker } from 'thaidatepicker-react';
-import { Input, Textarea, Button } from '@nextui-org/react';
+
+
+
+import { Input, Textarea, Button,Select, SelectSection, SelectItem } from '@nextui-org/react';
 import {
   type AddLeaveInput,
   type LeaveDetails,
@@ -10,6 +17,7 @@ import {
 } from '../types';
 import * as validators from '../helpers/validators';
 import { useState,useEffect } from 'react';
+
 
 export type LeaveFormProps =
   | {
@@ -66,6 +74,7 @@ const LeaveForm = (props: LeaveFormProps) => {
 
 
   const [totalLeaveDate , setTotalLeaveDate] = useState('');
+  const [selectedThaiDate, setSelectedThaiDate] = useState();
 
   const currentStartLeaveDate = getValues("startLeaveDate");
   const currentEndLeaveDate = getValues("endLeaveDate");
@@ -100,20 +109,23 @@ const LeaveForm = (props: LeaveFormProps) => {
 
 
 
-  const handleDatePickerStartChange = (christDate:any) => {
+  const handleDatePickerStartChange = (christDate:any,buddhistDate: any) => {
     setValue('startLeaveDate', christDate, {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true,
     });
+    setSelectedThaiDate(buddhistDate);
+    console.log("christDate:", buddhistDate);
   };
 
-  const handleDatePickerEndChange = (christDate:any) => {
+  const handleDatePickerEndChange = (christDate:any,buddhistDate: any) => {
     setValue('endLeaveDate', christDate, {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true,
     });
+    setSelectedThaiDate(buddhistDate);
   };
 
 
@@ -121,34 +133,160 @@ const LeaveForm = (props: LeaveFormProps) => {
   return (
     <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
       <h1>{capitalize(kind)}</h1>
-      <label>Leave Date</label>
-      <div>
-        
+     <div className="flex space-x-7">
+
+     <div className="flex-1 ">
+      <div className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-6 gap-7">
+        <div>
+        <label className="">
+          ลาตั้งแต่วันที่ *
+        </label>
       <ThaiDatePicker
           id="startLeaveDate"
           onChange={handleDatePickerStartChange}
           value={currentStartLeaveDate}
+          placeholder="เลือกวันที่เริ่มต้นลา"
           yearBoundary={1} 
+          inputProps={{
+            displayFormat: "D MMM YYYY",
+            className: "border w-full rounded-md border-gray-300 px-3 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+          }}
         />
-      </div>
-      <div>
+        </div>
+        <div>
+        <label>
+        ถึงวันที่ *
+        </label>
       <ThaiDatePicker
           id="endLeaveDate"
-          yearBoundary={2}
+          yearBoundary={1}
+          placeholder="เลือกวันที่สิ้นสุดลา"
           onChange={handleDatePickerEndChange}
           value={currentEndLeaveDate}
           minDate={new Date(currentStartLeaveDate)}
+          inputProps={{
+            displayFormat: "D MMM YYYY",
+            className: "border  rounded-md border-gray-300 px-3 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+          }}
         />
-      </div>
+        </div>
+        </div>
       <div>
         <Input
-          
+          variant='bordered'
           id="totalLeaveDays"
+          label="จำนวนวันลา"
+          labelPlacement='outside'
+          placeholder=" "
+          radius="sm"
+          isReadOnly
+          classNames={{
+            label: 'text-lg',
+          }}
+          endContent={
+            <div className="pointer-events-none flex items-center">
+              <span className="text-default-400 text-small">วัน</span>
+            </div>
+          }
           value={totalLeaveDate}
-          // onChange={(e) => console.log(e.target.value)}
           {...register('totalLeaveDays')}
         />
       </div>
+      </div>
+        <div className="flex-1">
+        <Textarea
+      label="เหตุผลการลา *"
+      labelPlacement="outside"
+      variant="bordered"
+      placeholder=" "
+      radius="sm"
+      classNames={{
+        label: 'text-lg',
+      }}
+      {...register('reason')}
+      className="max-w-xs mb-5"
+    />
+    {errors.reason && <div>{errors.reason.message}</div>}
+     <Textarea
+      label="สถานที่ติดต่อระหว่างการลา *"
+      labelPlacement="outside"
+      variant="bordered"
+      placeholder=" "
+      cols={3}
+      radius="sm"
+      className="max-w-xs mb-6"
+      classNames={{
+        label: 'text-lg',
+      }}
+
+    />
+    <Input 
+      variant="bordered"
+      label="เบอร์โทรศัพท์ *"
+      labelPlacement="outside"
+      placeholder=" "
+      radius="sm"
+      classNames={{
+        label: 'text-lg',
+      }}
+    />
+        </div>
+        <div className="flex-1">
+       <div>
+        <Select
+        label="มอบหมายงานให้ *"
+        labelPlacement="outside"
+        placeholder="เลือกผู้ปฏิบัติงานแทน"
+        variant="bordered"
+        className="mb-6"
+        classNames={{
+          label: 'text-lg',
+        }}
+        radius="sm"
+        >
+          <SelectItem key={2}>
+            ลากิจ
+          </SelectItem>
+        </Select>
+        </div>
+        <div>
+        <Select
+        label="หัวหน้างาน *"
+        labelPlacement="outside"
+        placeholder=" "
+        variant="bordered"
+        className="mb-6"
+        classNames={{
+          label: 'text-lg',
+        }}
+        radius="sm"
+        >
+          <SelectItem key={2}>
+            ลากิจ
+          </SelectItem>
+        </Select>
+        </div>
+        <div>
+        <Select
+        label="หัวหน้าฝ่าย/กลุ่มภารกิจ *"
+        labelPlacement="outside"
+        placeholder=" "
+        variant="bordered"
+        className="mb-5"
+        classNames={{
+          label: 'text-lg',
+        }}
+        radius="sm"
+        >
+          <SelectItem key={2}>
+            ลากิจ
+          </SelectItem>
+        </Select>
+        </div>
+        </div>
+     
+     </div>
+      
       <div>
         <Input
           id="typeLeave"
@@ -156,14 +294,7 @@ const LeaveForm = (props: LeaveFormProps) => {
           {...register('typeLeave')}
         />
       </div>
-      <label htmlFor="reason">Reason</label>
-      <Textarea
-        id="reason"
-        variant="bordered"
-        cols={3}
-        {...register('reason')}
-      ></Textarea>
-      {errors.reason && <div>{errors.reason.message}</div>}
+      
       <Button type="submit" color="primary" isDisabled={!isValid}>
         {capitalize(kind)}
       </Button>

@@ -1,6 +1,5 @@
 import React,{ useState} from 'react'
 import MainNavbar from '../navbar/main-navbar';
-import { SidebarWrapper } from '../sidebar/Sidebar';
 
 import { type ReactNode } from 'react';
 
@@ -14,7 +13,7 @@ const LayoutNormal = ({ children }: LayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   return <>
   <section className='flex'>
-    <SidebarWrapper/>
+
     <MainNavbar>
     <main>
       {children}

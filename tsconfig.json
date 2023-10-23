@@ -28,6 +28,6 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs"
-  ],
+, ".d.ts"  ],
   "exclude": ["node_modules"]
 }

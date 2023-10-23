@@ -3,7 +3,8 @@ import Navbar from '../Navbar';
 import Toast from '../Toast';
 import AuthMenu from '~/features/auth/components/AuthMenu';
 import ProtectedResource from '~/features/auth/guards/ProtectedResource';
-import { Sidebar } from '../sidebar/sidebar.styles';
+// import { Sidebar } from '../sidebar/sidebar.styles';
+import {Sidebar} from '../sidebar/Sidebar';
 import SidebarContext,{ SidebarProvider } from '~/features/context/SidebarContext';
 import Main from './Main';
 import Header from './Header';
@@ -19,7 +20,7 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <SidebarProvider>
         <div
-      className={`flex h-screen bg-gray-50 dark:bg-gray-900 ${isSidebarOpen && 'overflow-hidden'}`}
+      className={`flex h-screen bg-[#f3f3f3] dark:bg-gray-900 ${isSidebarOpen && 'overflow-hidden'}`}
       >
       <Sidebar />
       <div className="flex flex-col flex-1 w-full">
