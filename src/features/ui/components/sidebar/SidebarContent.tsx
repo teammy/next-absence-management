@@ -32,7 +32,7 @@ const routes = [
   },
   {
     path: '/leaves',
-    icon: 'BeachIcon',
+    icon: 'CalendarIcon',
     name: 'ข้อมูลการลา',
   },
   // {
@@ -99,7 +99,7 @@ function SidebarContent() {
             <li className="relative px-6 py-3" key={route.name}>
               <Link
                 href={route.path}
-                className="inline-flex items-center w-full text-lg font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+                className="inline-flex items-center w-full text-lg font-semibold transition-colors duration-150 hover:text-[#0050f0] dark:hover:text-gray-200"
                 // activeClassName="text-gray-800 dark:text-gray-100"
               >
                 <span className='w-6 h-6'>

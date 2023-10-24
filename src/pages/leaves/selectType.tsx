@@ -90,24 +90,12 @@ const SelectTypePage: NextPageWithLayout = () => {
               <ModalHeader className={clsx(mlpFont.className,"flex flex-col gap-1")}>การลาประเภทอื่น</ModalHeader>
               <ModalBody className={SarabunFont.className}>
                 <p> 
-                ยิมรุสโซแซว จิ๊กโก๋โปร คันธาระซาดิสม์ขั้นตอนเลกเชอร์ แพนด้าสเตเดียมเจล
-                 เฟอร์นิเจอร์ออยล์จัมโบ้ โหลยโท่ยฮัลโลวีนแซ็กโซโฟนเฟอร์รี่คอรัปชัน ทำงาน 
-                 ผลไม้เอฟเฟ็กต์เด้อไอซียู รามเทพแอคทีฟอิสรชนแคมเปญ โทรโข่ง 
-                 อริยสงฆ์แลนด์สปอตรามเทพ ซังเตฟลุตคอร์รัปชั่นวัคค์ดีพาร์ตเมนท์ แฟร์โค้กชาร์ตเอ็นจีโอเนิร์สเซอรี 
-                 จีดีพีเฟรชชี่ครูเสด ทำงานบอร์ด รวมมิตรไลฟ์โกเต็กซ์
+                การลาประเภทอื่น เช่น ลาอุปสมบท ลาศึกษาต่อ ท่านสามารถดำเนินการติดต่องานทรัพยากรบุคคลเพื่อขออนุมัติการลาได้
                 </p>
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nullam pulvinar risus non risus hendrerit venenatis.
-                  Pellentesque sit amet hendrerit risus, sed porttitor quam.
+                  โทร. 1242 (เบอร์ภายใน)
                 </p>
-                <p>
-                  Magna exercitation reprehenderit magna aute tempor cupidatat consequat elit
-                  dolor adipisicing. Mollit dolor eiusmod sunt ex incididunt cillum quis. 
-                  Velit duis sit officia eiusmod Lorem aliqua enim laboris do dolor eiusmod. 
-                  Et mollit incididunt nisi consectetur esse laborum eiusmod pariatur 
-                  proident Lorem eiusmod et. Culpa deserunt nostrud ad veniam.
-                </p>
+                
               </ModalBody>
      
             </>
