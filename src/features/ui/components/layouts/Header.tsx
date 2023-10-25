@@ -2,6 +2,7 @@ import { useContext, useState } from 'react'
 import SidebarContext from '~/features/context/SidebarContext'
 import HomeIcon from '../icon/home-icon'
 import { FiSearch } from 'react-icons/fi'
+import { useSession, signOut } from 'next-auth/react';
 
 // import { Avatar, Badge, Input, Dropdown, DropdownItem, WindmillContext } from '@roketid/windmill-react-ui'
 import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, User,Input} from "@nextui-org/react";
@@ -75,7 +76,7 @@ function Header() {
           <DropdownItem key="help_and_feedback">
             Help & Feedback
           </DropdownItem>
-          <DropdownItem key="logout" color="danger">
+          <DropdownItem key="logout" color="danger" onClick={() => signOut()}>
             Log Out
           </DropdownItem>
         </DropdownMenu>

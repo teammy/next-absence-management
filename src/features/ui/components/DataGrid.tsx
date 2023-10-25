@@ -105,6 +105,7 @@ export function DataGrid<T extends DataRow>({
             {generateRow(row)}
           </TableRow>
         )}
+
       </TableBody>
       {/* {rows && (
           {rows.map((r) => {

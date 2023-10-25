@@ -2,7 +2,7 @@ import { type SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { capitalize, set } from 'lodash';
 import { ThaiDatePicker } from 'thaidatepicker-react';
-import { Input, Textarea, Button } from '@nextui-org/react';
+import { Input, Button ,Select , SelectItem,SelectSection } from '@nextui-org/react';
 import {
   type AddSettingHolidayInput,
   type UpdateSettingHolidayInput,
@@ -10,6 +10,9 @@ import {
 } from '../../types';
 import * as validators from '../../helpers/validators';
 import { useState,useEffect } from 'react';
+import dayjs from 'dayjs';
+import "dayjs/locale/th"
+dayjs.locale('th')
 
 export type SettingHolidayProps =
   | {
@@ -119,6 +122,9 @@ const SettingHolidayDateForm = (props: SettingHolidayProps) => {
           yearBoundary={2}
           onChange={handleSettingHolidayDatePickerChange}
           value={currentEndLeaveDate}
+          inputProps={{
+            displayFormat: 'D MMM YYYY',
+          }}
         />
       </div>
       <div>
@@ -129,11 +135,15 @@ const SettingHolidayDateForm = (props: SettingHolidayProps) => {
         />
       </div>
       <div>
-        <Input
+        <Select label="ประเภทวันหยุด" {...register('holidayType')}>
+          <SelectItem value="วันหยุดราชการ" key="วันหยุดราชการ">วันหยุดราชการ</SelectItem>
+          <SelectItem value="วันหยุดชดเชย" key="วันหยุดชดเชย">วันหยุดชดเชย</SelectItem>
+        </Select>
+        {/* <Input
           id="holidayType"
           placeholder='Type Leave'
           {...register('holidayType')}
-        />
+        /> */}
       </div>
       <Button type="submit" color="primary" isDisabled={!isValid}>
         {capitalize(kind)}

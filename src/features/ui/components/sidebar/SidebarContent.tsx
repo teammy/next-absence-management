@@ -3,6 +3,7 @@ import React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import * as Icons from '../icon/iconList'
+import { Accordion , AccordionItem } from '@nextui-org/react'
 
 // import * as Icons from '../../icons'
 // import SidebarSubmenu from './SidebarSubmenu'
@@ -110,6 +111,12 @@ function SidebarContent() {
             </li>
           )
         )}
+
+<Accordion>
+      <AccordionItem key="1" aria-label="Accordion 1" title="ตั้งค่า">
+      <Link href="/admin/setting/holidayDate">ตั้งค่าวันหยุด</Link>
+      </AccordionItem>
+      </Accordion>
       </ul>
       <div className="px-6 my-6">
         <Button>
