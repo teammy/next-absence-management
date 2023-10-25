@@ -62,7 +62,7 @@ const SelectTypePage: NextPageWithLayout = () => {
           width={40}
         />
         <div className="flex flex-col ml-3">
-          <p className="text-lg font-semibold">{item.title}</p>
+          <p className="text-lg font-semibold text-[#002d63]">{item.title}</p>
         </div>
 
       </CardHeader>

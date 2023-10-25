@@ -13,7 +13,7 @@ const IndexCreateLeave:NextPageWithLayout = () => {
   return (
     <>
     <Card>
-      <CardHeader className="text-xl font-semibold">สร้างใบลาประเภท {slug}</CardHeader>
+      <CardHeader className="text-xl font-semibold">เขียนใบลา {slug}</CardHeader>
       <CardBody>
     <CreateLeave/>
       </CardBody>

@@ -4,41 +4,69 @@ import LeaveItem from './LeaveItem';
 import FloatingActionButton from '~/features/ui/components/FloatingActionButton';
 import { useRouter } from 'next/router';
 import {Card, CardHeader, CardBody, CardFooter,CircularProgress} from "@nextui-org/react";
+import DataGrid, {type DataGridColumn } from '~/features/ui/components/DataGrid';
+import dayjs from "dayjs";
+import "dayjs/locale/th";
+dayjs.locale("th");
+var buddhistEra = require('dayjs/plugin/buddhistEra')
+dayjs.extend(buddhistEra)
+
 
 const LeaveList = () => {
   const router = useRouter();
   const { data: leaves, isLoading } = api.leave.list.useQuery(); // CSR
 
+  const columns: DataGridColumn<LeaveItem>[] = [
+    {
+      field: 'typeLeave',
+      headerName: 'ประเภท',
+
+    },
+    {
+      field: 'startLeaveDate',
+      headerName: 'ตั้งแต่วันที่',
+      value: (leave) => dayjs(leave.startLeaveDate).format('D MMM BBBB'),
+    },
+    {
+      field: 'endLeaveDate',
+      headerName: 'ถึงวันที่',
+      value: (leave) => dayjs(leave.endLeaveDate).format('D MMM BBBB'),
+    },
+    {
+      field: 'totalLeaveDays',
+      headerName: 'จำนวน(วัน)',
+    },
+    {
+      field: 'managerStatus',
+      headerName: 'หัวหน้างาน',
+    },
+    {
+      field: 'departmentHeadStatus',
+      headerName: 'หัวหน้าฝ่าย',
+    },
+    {
+      field: 'hrStatus',
+      headerName: 'ทรัพยากรบุคคล',
+      value: (leave) => leave.hrStatus,
+    },
+  ];
+
   if (isLoading) return <Loading></Loading>;
   if (!leaves) return <div>Not found.</div>;
 
   return (
+    <>
+
+         <DataGrid 
+         columns={columns}
+          rows={leaves} 
+          detailsComponent={LeaveItem}
+         >
+         </DataGrid>
+   
     <div className="mx-auto grid max-w-3xl grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
-       <Card>
-      <CardBody>
-        <p><CircularProgress
-          classNames={{
-            svg: "w-36 h-36 drop-shadow-md",
-            // indicator: "stroke-white",
-            track: "stroke-white/10",
-            value: "text-3xl font-semibold",
-          }}
-          value={70}
-          strokeWidth={4}
-          showValueLabel={true}
-        /></p>
-      </CardBody>
-    </Card>
-    <Card>
-      <CardBody>
-        <p>Make beautiful websites regardless of your design experience.</p>
-      </CardBody>
-    </Card>
-    <Card>
-      <CardBody>
-        <p>Make beautiful websites regardless of your design experience.</p>
-      </CardBody>
-    </Card>
+
+   
       {leaves.map((leave) => (
         <LeaveItem key={leave.id} {...leave}></LeaveItem>
       ))}
@@ -46,6 +74,7 @@ const LeaveList = () => {
         +
       </FloatingActionButton>
     </div>
+    </>
   );
 };
 

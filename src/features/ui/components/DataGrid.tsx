@@ -77,10 +77,14 @@ export function DataGrid<T extends DataRow>({
     <Table
       aria-label="DataGrid Component"
       className="w-full text-left text-sm text-gray-500 dark:text-gray-400"
+      classNames={{
+        th: 'bg-[#FCDCBB] font-medium text-base text-[#002d63] dark:bg-gray-700 dark:text-gray-400',
+        // tbody: 'bg-white divide-y dark:divide-gray-700 dark:bg-gray-800',
+      }}
     >
       <TableHeader
         columns={columns}
-        className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400"
+        className="bg-[#0050f0] text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400"
       >
         {(column) => (
           <TableColumn key={column.headerName}>{column.headerName}</TableColumn>

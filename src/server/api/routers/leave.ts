@@ -15,6 +15,11 @@ export const leaveRouter = createTRPCRouter({
         startLeaveDate: true,
         endLeaveDate: true,
         status: true,
+        typeLeave: true,
+        totalLeaveDays: true,
+        managerStatus: true,
+        departmentHeadStatus: true,
+        hrStatus: true,
         user: {
           select: {
             id: true,

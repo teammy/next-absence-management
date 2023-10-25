@@ -133,9 +133,9 @@ const LeaveForm = (props: LeaveFormProps) => {
   return (
     <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
       <h1>{capitalize(kind)}</h1>
-     <div className="flex space-x-7">
+     <div className="flex space-x-7 flex-col md:flex-row">
 
-     <div className="flex-1 ">
+     <div className="flex-1 md:w-1/2">
       <div className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-6 gap-7">
         <div>
         <label className="">
@@ -193,7 +193,7 @@ const LeaveForm = (props: LeaveFormProps) => {
         />
       </div>
       </div>
-        <div className="flex-1">
+        <div className="flex-1 md:w-1/2">
         <Textarea
       label="เหตุผลการลา *"
       labelPlacement="outside"
@@ -230,9 +230,7 @@ const LeaveForm = (props: LeaveFormProps) => {
         label: 'text-lg',
       }}
     />
-        </div>
-        <div className="flex-1">
-       <div>
+    <div>
         <Select
         label="มอบหมายงานให้ *"
         labelPlacement="outside"
