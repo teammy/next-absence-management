@@ -46,26 +46,6 @@ const SettingHolidayDateForm = (props: SettingHolidayProps) => {
     defaultValues: kind === 'edit' ? props.settingHoliday : undefined,
   });
 
-  const calculateDiffDays = (startDate:any, endDate:any) => {
-    const oneDay = 24 * 60 * 60 * 1000; // milliseconds in a day
-    const holidays = [
-      new Date("2023-10-02"), // public holiday
-      new Date("2023-10-03"), // public holiday
-      new Date("2023-10-01"), // custom holiday
-    ];
-    let diffDays = 0;
-    for (let date = new Date(startDate); date <= new Date(endDate); date.setDate(date.getDate() + 1)) {
-      const dayOfWeek = date.getDay();
-      if (dayOfWeek !== 0 && dayOfWeek !== 6) { // exclude weekends
-        const isHoliday = holidays.some(holiday => holiday.toDateString() === date.toDateString());
-        if (!isHoliday) {
-          diffDays++;
-        }
-      }
-    }
-
-    return diffDays;
-  };
 
 
   // const [totalLeaveDate , setTotalLeaveDate] = useState('');
@@ -124,18 +104,24 @@ const SettingHolidayDateForm = (props: SettingHolidayProps) => {
           value={currentEndLeaveDate}
           inputProps={{
             displayFormat: 'D MMM YYYY',
+            className: "border w-full rounded-md border-gray-300 px-3 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
           }}
         />
       </div>
       <div>
         <Input
           id="holidayName"
-          // onChange={(e) => console.log(e.target.value)}
+
+          errorMessage={errors.holidayName?.message}
           {...register('holidayName')}
         />
       </div>
       <div>
-        <Select label="ประเภทวันหยุด" {...register('holidayType')}>
+        <Select 
+        label="ประเภทวันหยุด" 
+        {...register('holidayType')}
+        errorMessage={errors.holidayType?.message}
+        >
           <SelectItem value="วันหยุดราชการ" key="วันหยุดราชการ">วันหยุดราชการ</SelectItem>
           <SelectItem value="วันหยุดชดเชย" key="วันหยุดชดเชย">วันหยุดชดเชย</SelectItem>
         </Select>

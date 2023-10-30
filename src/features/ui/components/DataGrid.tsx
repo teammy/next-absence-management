@@ -3,6 +3,8 @@ import {
   type ReactElement,
   type ReactNode,
   useState,
+  use,
+  useEffect,
 } from 'react';
 import {
   Table,
@@ -13,9 +15,14 @@ import {
   TableCell,
   getKeyValue,
   Tab,
+  Pagination,
+  PaginationItem,
+  PaginationCursor,
 } from '@nextui-org/react';
-import DataGridItem from './DataGridItem';
+// import DataGridItem from './DataGridItem';
 import React from 'react';
+import { PencilSquareIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
 
 export type DataRow = {
   id: number | string;
@@ -33,6 +40,7 @@ export interface DataGridProps<T extends DataRow> {
   rows?: T[];
 }
 
+
 export interface DataGridItemProps<T extends DataRow>
   extends Pick<DataGridProps<T>, 'columns'> {
   row: T;
@@ -42,11 +50,10 @@ export function DataGrid<T extends DataRow>({
   title,
   columns,
   rows,
+  actions,
 }: DataGridProps<T>) {
-
-  const [page,setPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 4;
 
   const generateRow = (row: T) => {
     const result = [];
@@ -64,14 +71,32 @@ export function DataGrid<T extends DataRow>({
       }
 
       result.push(
-        <TableCell key={col.field as string} className="px-6 py-4">
+        <TableCell
+          key={col.field as string}
+          className="pl-2 text-left text-base"
+        >
           {value}
+         
         </TableCell>,
       );
     }
 
+     // Add edit and delete buttons
+
+
     return result;
   };
+
+  // const pages = Math.ceil(rows.length / rowsPerPage);
+
+  const rowsPage = useEffect(() => {
+    const startIndex = (page - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    // return rows.slice(startIndex, endIndex);
+  }, [page, rows]);
+
+  // const currentRows = rows.slice(startIndex, endIndex);
+  console.log('tttt', rowsPage);
 
   return (
     <Table
@@ -105,7 +130,6 @@ export function DataGrid<T extends DataRow>({
             {generateRow(row)}
           </TableRow>
         )}
-
       </TableBody>
       {/* {rows && (
           {rows.map((r) => {
