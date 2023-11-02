@@ -6,7 +6,7 @@ interface IMain{
 
 function Main({ children }: IMain) {
   return (
-    <main className="h-full overflow-y-auto text-lg">
+    <main className="h-full overflow-y-auto text-base">
       <div className="container grid px-6 mx-auto">{children}</div>
     </main>
   );

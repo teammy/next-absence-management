@@ -95,8 +95,6 @@ export function DataGrid<T extends DataRow>({
     // return rows.slice(startIndex, endIndex);
   }, [page, rows]);
 
-  // const currentRows = rows.slice(startIndex, endIndex);
-  console.log('tttt', rowsPage);
 
   return (
     <Table

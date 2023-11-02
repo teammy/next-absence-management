@@ -91,34 +91,50 @@ const SettingHolidayDateForm = (props: SettingHolidayProps) => {
     });
   };
 
+  let head_text;
+  if (kind === 'edit') {
+    const head_text = "แก้ไขข้อมูลวันหยุดนักขัตฤกษ์"
+    const bttn_text = "แก้ไขข้อมูล"
+  } else {
+    const head_text = "เพิ่มข้อมูลวันหยุดนักขัตฤกษ์"
+    const bttn_text = "บันทึกข้อมูล";
+  }
+
 
   return (
-    <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
-      <h1>{capitalize(kind)}</h1>
-      <label>Leave Date</label>
-      <div>
-      <ThaiDatePicker
+    
+    <div className="flex flex-col gap-4">
+          <form onSubmit={handleSubmit(onSubmit)}>
+          <h1 className="text-lg">{capitalize(kind)}</h1>
+       <div className="flex flex-col gap-4 mb-10">
+      <div className="flex flex-col gap-2">
+        <div className="flex w-full flex-wrap items-end md:flex-nowrap mb-6 md:mb-0 gap-4">
+          <label htmlFor="holidayDate" className="text-default-500 text-small block">วันที่หยุด</label>
+        <ThaiDatePicker
           id="holidayDate"
           yearBoundary={2}
           onChange={handleSettingHolidayDatePickerChange}
           value={currentEndLeaveDate}
           inputProps={{
             displayFormat: 'D MMM YYYY',
-            className: "border w-full rounded-md border-gray-300 px-3 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            className: "border rounded-md border-gray-300 px-3 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
           }}
         />
-      </div>
-      <div>
-        <Input
+           <Input
           id="holidayName"
-
+          label="รายละเอียด"
+          labelPlacement="outside"
+          placeholder=" "
+          classNames={{ label: 'text-default-500 text-base' }}
           errorMessage={errors.holidayName?.message}
           {...register('holidayName')}
         />
-      </div>
-      <div>
-        <Select 
-        label="ประเภทวันหยุด" 
+        
+          <Select 
+        label="ประเภทวันหยุด"
+        labelPlacement="outside"
+        placeholder=" " 
+        classNames={{ label: 'text-default-500 text-base' }}
         {...register('holidayType')}
         errorMessage={errors.holidayType?.message}
         >
@@ -130,11 +146,14 @@ const SettingHolidayDateForm = (props: SettingHolidayProps) => {
           placeholder='Type Leave'
           {...register('holidayType')}
         /> */}
-      </div>
-      <Button type="submit" color="primary" isDisabled={!isValid}>
+        </div>
+      </div>  
+    </div>  
+      <Button type="submit" color="primary" isDisabled={!isValid} className="w-full">
         {capitalize(kind)}
       </Button>
     </form>
+    </div>
   );
 };
 

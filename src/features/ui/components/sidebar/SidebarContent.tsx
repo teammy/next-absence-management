@@ -114,7 +114,7 @@ function SidebarContent() {
 
 <Accordion>
       <AccordionItem key="1" aria-label="Accordion 1" title="ตั้งค่า">
-      <Link href="/admin/setting/holidayDate">ตั้งค่าวันหยุด</Link>
+      <Link href="/admin/setting/holidayDate">กำหนดวันหยุดนักขัตฤกษ์</Link>
       </AccordionItem>
       </Accordion>
       </ul>
