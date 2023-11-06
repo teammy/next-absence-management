@@ -6,7 +6,7 @@ import {
   type DefaultSession,
 } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from '~/server/db';
 import { type Role } from '@prisma/client';
 
@@ -21,17 +21,20 @@ declare module 'next-auth' {
     user: {
       id: string;
       role: Role;
+      firstname: string;
+      lastname: string;
+      cid: string;
     } & DefaultSession['user'];
   }
 
   interface User {
-    role: Role;
+    role_user: Role;
   }
 }
 
 declare module 'next-auth/jwt' {
   interface JWT {
-    role: Role;
+    role_user: Role;
   }
 }
 
@@ -60,15 +63,14 @@ export const authOptions: NextAuthOptions = {
         if (session.name) token.name = session.name;
         if (session.email) token.email = session.email;
       }
-      console.log('jwt',token);
+      console.log('jwt on console',user);
       if (user) {
         token.sub = user.id;
         token.email = user.email;
-        token.role = user.role;
+        token.role_user = user.role_user;
         token.name = user.name;
         token.picture = user.image;
       }
-
       return token;
     },
     session: ({ session, token }) => {
@@ -76,43 +78,45 @@ export const authOptions: NextAuthOptions = {
       return {
         ...session,
         user: {
-          ...session.user,
+          // ...session.user,
           id: token.sub,
-          role: token.role,
+          // role_user: token.role_user,
+          firstname: token.firstname,
+          // lastname: token.lastname,
           name: token.name,
-          email: token.email,
-          image: token.picture,
+          // email: token.email,
+          // image: token.picture,
         },
       };
     },
   },
-  adapter: PrismaAdapter(prisma),
+  adapter: PrismaAdapter(prisma) as any,
   providers: [
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        username: { label: 'Username', type: 'text' },
-        password: { label: 'Password', type: 'password' },
+        person_username: { label: 'person_username', type: 'text' },
+        person_password: { label: 'person_password', type: 'password' },
       },
       async authorize(credentials) {
-        // const user2 = await prisma.personal.findUnique({
-        //   where: {
-        //     person_username: credentials?.username,
-        //   },
-        // });
-        const user = await prisma.user.findUnique({
+        const user = await prisma.personal.findUnique({
           where: {
-            email: credentials?.email,
+            person_username: credentials?.person_username,
           },
         });
+        // const user = await prisma.user.findUnique({
+        //   where: {
+        //     email: credentials?.email,
+        //   },
+        // });
 
         if (!user) return null;
-        if (!credentials?.password) return null;
-        if (!(await bcrypt.compare(credentials.password, user.password))) {
+        if (!credentials?.person_password) return null;
+        if (!(await bcrypt.compare(credentials.person_password, user.person_password_hash))) {
           return null;
         }
-
-        return { ...user, id: user.id.toString() };
+        
+        return { ...user,id:user.user_id.toString()};
       },
     }),
   ],
