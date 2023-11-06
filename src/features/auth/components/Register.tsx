@@ -9,7 +9,7 @@ const Register = () => {
   const router = useRouter();
   const setUiToast = useAppStore((state) => state.setUiToast);
   const { mutate: register } = api.auth.register.useMutation({
-    onSuccess( data,status  ) {
+    onSuccess( data  ) {
       if (data) {
         setUiToast({ type: 'Success', message:"สมัครบัญชีเสร็จเรียบร้อยแล้ว" });
         setTimeout(() => {
@@ -17,11 +17,11 @@ const Register = () => {
         }, 1000);
       }
     },
-    onError({ data  }) {
-      // console.log('message status code', data?.httpStatus)
+    onError({ data  },error, variables) {
+      console.log('message status code', data)
       if (data?.httpStatus === 500) {
-        setUiToast({ type: 'Error', message:"อีเมลถูกใช้งานแล้ว" });
-      }
+        setUiToast({ type: 'Error', message:"อีเมลนี้ถูกใช้งานแล้ว" });
+      } 
     },
   });
   const submit = (credentials: RegisterInput) => {

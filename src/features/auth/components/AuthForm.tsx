@@ -36,30 +36,67 @@ const AuthForm = ({ kind, onSubmit }: AuthFormProps) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-lg">
       {isRegisterForm && (
+        <>
+        <div className="flex flex-row">
+          <div className="flex flex-col mr-6"><FormField
+        id="person_firstname"
+        label="ชื่อ *"
+        placeholder="กรอกชื่อจริง ไม่ต้องใส่คำนำหน้า"
+        error={errors.person_firstname?.message}
+        {...register('person_firstname')}
+      ></FormField></div>
+          <div className="flex flex-col"><FormField
+        id="person_lastname"
+        label="นามสกุล *"
+        placeholder="กรอกนามสกุล"
+
+        error={errors.person_lastname?.message}
+        {...register('person_lastname')}
+      ></FormField></div>
+        </div>
         <FormField
-          id="name"
-          label="ชื่อ-สกุล"
-          placeholder=" "
-          error={errors.name?.message}
-          {...register('name')}
-        ></FormField>
+        id="person_id"
+        label="เลขบัตรประชาชน *"
+        maxLength={13}
+        placeholder="กรอกเลขบัตรประชาชน"
+        error={errors.person_id?.message}
+        {...register('person_id')}
+      ></FormField>
+       <FormField
+        id="person_tel"
+        label="เบอร์โทรศัพท์มือถือ *"
+        maxLength={10}
+        placeholder="กรอกเบอร์โทรศัพท์มือถือ"
+        error={errors.person_tel?.message}
+        {...register('person_tel')}
+      ></FormField>
+      <FormField
+        id="person_email"
+        label="อีเมล *"
+        placeholder="กรอกอีเมล"
+        error={errors.person_email?.message}
+        {...register('person_email')}
+      ></FormField>
+        </>
+
+      
       )}
       <FormField
-        id="email"
-        type="email"
-        label="อีเมล"
-        placeholder=" "
+        id="username"
+        type="text"
+        label="ชื่อผู้ใช้งาน (Username) *"
+        placeholder="กรอกชื่อผู้ใช้งาน (Username)"
         className="text-[#002d63]"
-        error={errors.email?.message}
-        {...register('email')}
+        error={errors.person_username?.message}
+        {...register('person_username')}
       ></FormField>
       <FormField
         id="password"
         type="password"
-        label="รหัสผ่าน"
-        placeholder=" "
-        error={errors.password?.message}
-        {...register('password')}
+        label="รหัสผ่าน *"
+        placeholder="กรอกรหัสผ่าน"
+        error={errors.person_password?.message}
+        {...register('person_password')}
       ></FormField>
      
       <div className="flex items-center justify-between">

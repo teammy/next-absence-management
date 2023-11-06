@@ -91,10 +91,15 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        email: { label: 'Email', type: 'email' },
+        username: { label: 'Username', type: 'text' },
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
+        // const user2 = await prisma.personal.findUnique({
+        //   where: {
+        //     person_username: credentials?.username,
+        //   },
+        // });
         const user = await prisma.user.findUnique({
           where: {
             email: credentials?.email,

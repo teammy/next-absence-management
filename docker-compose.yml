@@ -2,12 +2,20 @@ version: '3.9'
 
 services:
   db:
-    image: mariadb:10.5
+    image: bitnami/mariadb:10.5
     ports:
       - 33061:3306
     container_name: leave_db
+    volumes:
+      - ./init_mysql:/docker-entrypoint-initdb.d
+      # - leave_data:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=db_e_leave
-      - MYSQL_USER=myapp
-      - MYSQL_PASSWORD=mypassword
+      - MARIADB_ROOT_PASSWORD=superroot
+      - MARIADB_DATABASE=db_e_leave
+      - MARIADB_USER=myapp
+      - MARIADB_PASSWORD=mypassword
+
+volumes:
+  leave_data:
+    driver: local
+

@@ -4,26 +4,39 @@ import { createTRPCRouter, publicProcedure, protectedProcedure } from '../trpc';
 
 export const authRouter = createTRPCRouter({
   register: publicProcedure.input(register).mutation(async ({ input, ctx }) => {
-    const hashedPassword = await bcrypt.hash(input.password, 12);
-    const user = await ctx.prisma.user.create({
+    const hashedPassword = await bcrypt.hash(input.person_password, 12);
+    const user = await ctx.prisma.personal.create({
       data: {
         ...input,
-        password: hashedPassword,
+        person_password_hash: hashedPassword,
       },
       select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        image: true,
+        user_id: true,
+        person_firstname: true,
+        person_email: true,
+        role_user: true,
       },
     });
+    // const user = await ctx.prisma.user.create({
+    //   data: {
+    //     ...input,
+    //     password: hashedPassword,
+    //   },
+    //   select: {
+    //     id: true,
+    //     name: true,
+    //     email: true,
+    //     role: true,
+    //     image: true,
+    //   },
+    // });
 
     return user;
+    console.log(user);
   }),
   update: protectedProcedure
     .input(profile)
-    .mutation(async ({ input: { password, ...data }, ctx }) => {
+    .mutation(async ({ input: { person_password_hash, ...data }, ctx }) => {
       const id = +ctx.session.user.id;
       const profile = await ctx.prisma.user.update({
         where: {
@@ -31,7 +44,8 @@ export const authRouter = createTRPCRouter({
         },
         data: {
           ...data,
-          password: password ? await bcrypt.hash(password, 12) : undefined,
+          person_password: person_password,
+          person_password_hash: person_password_hash ? await bcrypt.hash(person_password, 12) : undefined,
         },
         select: {
           id: true,

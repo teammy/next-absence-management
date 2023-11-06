@@ -4,6 +4,7 @@ const config = {
   singleQuote: true,
   trailingComma: 'all',
   semi: true,
+  endOfLine: "auto",
 };
 
 module.exports = config;

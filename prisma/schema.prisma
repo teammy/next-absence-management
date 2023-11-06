@@ -1,135 +1,754 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "mysql"
-    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
-enum Role {
-    ADMIN
-    HR
-    DEPARTMENT_HEAD
-    MANAGER
-    MEMBER
+model academic {
+  ac_id     Int    @id @default(autoincrement())
+  ac_name   String @db.VarChar(100)
+  typeac_id Int
 }
 
-enum LeaveStatus {
-    PENDING
-    APPROVED
-    REJECTED
+model administrator {
+  administrator_id       Int    @id @default(autoincrement())
+  administrator_username String @db.VarChar(15)
+  administrator_password String @db.VarChar(15)
+  administrator_op       Int
 }
 
-// enum LeaveTypeSelectd {
-//     EMERGENCY
-//     SICK
-//     VACATION
-//     MATERNITY
-//     PATERNITY
-//     BEREAVEMENT
-//     MARRIAGE
-//     OTHER
-// }
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model amphur {
+  amphur_id   String? @db.VarChar(5)
+  province_id String? @db.VarChar(3)
+  amphur_name String? @db.Text
+
+  @@index([amphur_id], map: "amphur_id")
+  @@ignore
+}
+
+model blood {
+  blood_id   Int    @id @default(autoincrement())
+  blood_name String @db.VarChar(15)
+}
+
+model chart {
+  chart_id   Int    @id @default(autoincrement())
+  chart_name String @db.VarChar(30)
+}
+
+model cult {
+  cult_id   Int    @id @default(autoincrement())
+  cult_name String @db.VarChar(100)
+}
+
+model degree {
+  edu_level   Int    @id @default(autoincrement())
+  degree_name String @db.VarChar(100)
+}
+
+model depart {
+  depart_id   Int    @id @default(autoincrement())
+  depart_name String @db.VarChar(150)
+  faction_id  Int
+}
+
+model doctor {
+  doctor_id   Int    @id @default(autoincrement())
+  doctor_name String @db.VarChar(100)
+  edu_level   Int
+  senior_id   Int
+  express_id  Int
+}
+
+model duty {
+  duty_id   Int    @id @default(autoincrement())
+  duty_name String @db.VarChar(150)
+}
+
+model education {
+  edu_id     Int    @id @default(autoincrement())
+  person_id  String @db.VarChar(13)
+  edu_level  Int
+  senior_id  Int
+  express_id Int
+  doctor_id  Int
+  edu_course String @db.VarChar(150)
+  edu_no     String @db.VarChar(30)
+  edu_house  String @db.VarChar(150)
+  edu_year   String @db.Char(5)
+  edu_status Int
+}
+
+model express {
+  express_id   Int    @id @default(autoincrement())
+  express_name String @db.VarChar(150)
+  edu_level    Int
+  senior_id    Int
+}
+
+model faction {
+  faction_id   Int    @id @default(autoincrement())
+  faction_name String @db.VarChar(100)
+}
+
+model level {
+  level_id   Int    @id @default(autoincrement())
+  person_id  String @db.VarChar(13)
+  duty_id    Int
+  faction_id Int
+  depart_id  Int
+  ward_id    Int
+}
+
+model massage {
+  massage_id     Int    @id @default(autoincrement())
+  person_id      String @db.VarChar(13)
+  massage_detail String @db.Text
+  massage_op     Int
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model money {
+  money_id   Int
+  money_name String @db.VarChar(30)
+
+  @@index([money_id], map: "money_id")
+  @@ignore
+}
+
+model office {
+  office_id   Int    @id @default(autoincrement())
+  office_name String @db.VarChar(150)
+}
+
+model office_sit {
+  ward_id   Int    @id @default(autoincrement())
+  ward_name String @db.VarChar(150)
+}
+
+model ot {
+  ot_id        Int       @id @default(autoincrement())
+  person_id    String?   @default("0") @db.VarChar(20)
+  typeposition Int?
+  type_money   Int?
+  position_id  Int?
+  year         String?   @db.VarChar(20)
+  months       String?   @db.VarChar(20)
+  ot1          Float?
+  ot2          Float?
+  ot3          Float?
+  ot4          Float?
+  ot5          Float?
+  ot6          Float?
+  ot7          Float?
+  ot8          Float?
+  ot9          Float?
+  ot10         Float?
+  ot11         Float?
+  ot12         Float?
+  ot13         Float?
+  ot14         Float?
+  ot15         Float?
+  lastupdate   DateTime? @db.DateTime(0)
+}
+
+model ot_copy1 {
+  ot_id        Int       @id @default(autoincrement())
+  person_id    String?   @default("0") @db.VarChar(20)
+  typeposition Int?
+  type_money   Int?
+  position_id  Int?
+  year         String?   @db.VarChar(20)
+  months       String?   @db.VarChar(20)
+  ot1          Float?
+  ot2          Float?
+  ot3          Float?
+  ot4          Float?
+  ot5          Float?
+  ot6          Float?
+  ot7          Float?
+  ot8          Float?
+  ot9          Float?
+  ot10         Float?
+  ot11         Float?
+  ot12         Float?
+  ot13         Float?
+  ot14         Float?
+  ot15         Float?
+  lastupdate   DateTime? @db.DateTime(0)
+}
+
+model pct {
+  pct_id   Int    @id
+  pct_name String @db.VarChar(50)
+}
+
+model percount {
+  faction_id     Int @id
+  percount_score Int
+}
+
+model personal {
+  user_id              Int       @id @default(autoincrement())
+  person_id            String    @unique
+  person_prefix        Int?
+  person_firstname     String
+  person_lastname      String
+  person_sex           Int?
+  person_cult          Int?
+  person_blood         Int?
+  person_status        Int?
+  person_birth         DateTime? @db.Date
+  person_no            String?   @db.VarChar(10)
+  person_moo           String?   @db.VarChar(5)
+  person_road          String?   @db.VarChar(100)
+  person_tumbon        String?   @db.VarChar(7)
+  person_amphur        String?   @db.VarChar(5)
+  person_province      String?   @db.VarChar(3)
+  person_postcode      String?   @db.VarChar(5)
+  person_noT           String?   @db.VarChar(10)
+  person_mooT          String?   @db.VarChar(5)
+  person_roadT         String?   @db.VarChar(100)
+  person_tumbonT       String?   @db.VarChar(7)
+  person_amphurT       String?   @db.VarChar(5)
+  person_provinceT     String?   @db.VarChar(3)
+  person_postcodeT     String?   @db.VarChar(5)
+  person_tel           String    @unique
+  person_email         String    @unique
+  person_da            String?   @db.VarChar(150)
+  person_ma            String?   @db.VarChar(150)
+  person_nopo          String?   @db.VarChar(50)
+  position_id          String?   @db.VarChar(10)
+  money_id             Int?
+  typeac_id            Int?
+  ac_id                Int?
+  typeposition_id      Int?
+  wo_id                Int?
+  po_id                Int?
+  po_level_id          Int?
+  profession_id        Int?
+  office_id            Int?
+  person_singin        DateTime? @db.Date
+  person_state         Int?
+  person_univer        String?   @db.VarChar(150)
+  person_course        String?   @db.VarChar(150)
+  person_startdate     DateTime? @db.Date
+  person_enddate       DateTime? @db.Date
+  person_username      String    @unique @db.VarChar(15)
+  person_password      String
+  person_password_hash String
+  person_datetime      DateTime? @db.DateTime(0)
+  person_op            Int?
+  person_photo         String?   @db.VarChar(30)
+  person_createdAt     DateTime  @default(now())
+  person_updatedAt     DateTime  @default(now())
+  role_user            Role      @default(MEMBER)
+  leaves               Leave[]
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model personal_email {
+  person_id       String                       @db.VarChar(13)
+  person_email    String                       @db.VarChar(255)
+  person_password String                       @db.VarChar(255)
+  person_status   personal_email_person_status
+
+  @@index([person_id], map: "person_id")
+  @@ignore
+}
+
+model po_group {
+  po_id   Int    @id @default(autoincrement())
+  po_name String @db.VarChar(100)
+}
+
+model po_level {
+  po_level_id   Int            @id
+  po_level_name String         @db.VarChar(50)
+  stage         po_level_stage
+}
+
+model po_work {
+  wo_id   Int    @id @default(autoincrement())
+  wo_name String @db.VarChar(100)
+}
+
+model position {
+  position_id   Int    @id
+  position_name String @db.VarChar(150)
+}
+
+model prefix {
+  prefix_id   Int    @id @default(autoincrement())
+  prefix_name String @db.VarChar(100)
+}
+
+model profession {
+  profession_id     Int                          @id @default(autoincrement())
+  profession_name   String                       @db.VarChar(255)
+  profession_cal    Decimal                      @db.Decimal(10, 2)
+  profession_status profession_profession_status
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model province {
+  province_id   String? @db.VarChar(3)
+  province_name String? @db.Text
+
+  @@index([province_id], map: "province_id")
+  @@ignore
+}
+
+model senior {
+  senior_id   Int    @id @default(autoincrement())
+  senior_name String @db.VarChar(100)
+  edu_level   Int
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model sex {
+  sex_id   Int    @id @default(autoincrement())
+  sex_name String @db.VarChar(10)
+
+  @@index([sex_id], map: "sex_id")
+  @@ignore
+}
+
+model state {
+  state_id   Int    @id @default(autoincrement())
+  state_name String @db.VarChar(100)
+}
+
+model state_work {
+  person_state Int    @id @default(autoincrement())
+  sw_name      String @db.VarChar(100)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tb_salary {
+  id_salary  Int      @id @default(autoincrement())
+  person_id  String   @db.VarChar(13)
+  month_sal  Int
+  year       Int
+  salary     Float
+  salary_pos Float
+  pts        Float
+  p4p        Float
+  pay_month  Float
+  tax        Float
+  tokbuk     Float
+  kongcip    Float
+  ot         Float
+  goto       Float
+  tax_with   Float
+  gbk        Float
+  cooper     Float
+  tos        Float
+  omsin      Float
+  sgs        Float
+  shop       Float
+  fee_elec   Float
+  krung_thai Float
+  repay      Float
+  save_data  DateTime @db.DateTime(0)
+  username   String   @db.VarChar(50)
+  plumbing   Float
+  svk        Float
+  social     Float
+  cable      Float
+  store      Float
+  nurse      Float
+  fee        Float
+  share      Float
+  principle  Float
+  insurance  Float
+  drother    Float
+  goto1      Float
+  sum_op     Float
+  sum_pp     Float
+  sum_tt     Float
+  confirm    Int
+  f_tax      Float
+  goto2      Float
+  goto3      Float
+  goto4      Float
+  sstatus    Float    @default(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tb_salary8 {
+  id_salary  Int      @id @default(autoincrement())
+  person_id  String   @db.VarChar(13)
+  month_sal  Int
+  year       Int
+  salary     Float
+  salary_pos Float
+  pts        Float
+  p4p        Float
+  pay_month  Float
+  tax        Float
+  tokbuk     Float
+  kongcip    Float
+  ot         Float
+  goto       Float
+  tax_with   Float
+  gbk        Float
+  cooper     Float
+  tos        Float
+  omsin      Float
+  sgs        Float
+  shop       Float
+  fee_elec   Float
+  krung_thai Float
+  repay      Float
+  save_data  DateTime @db.DateTime(0)
+  username   String   @db.VarChar(50)
+  plumbing   Float
+  svk        Float
+  social     Float
+  cable      Float
+  store      Float
+  nurse      Float
+  fee        Float
+  share      Float
+  principle  Float
+  insurance  Float
+  drother    Float
+  goto1      Float
+  sum_op     Float
+  sum_pp     Float
+  sum_tt     Float
+  confirm    Int
+  f_tax      Float
+  goto2      Float
+  goto3      Float
+  goto4      Float
+  sstatus    Float    @default(0)
+}
+
+model tb_salary_acc {
+  code  Int     @default(autoincrement())
+  ccid  String  @default("") @db.VarChar(20)
+  cname String? @db.VarChar(50)
+
+  @@id([code, ccid])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tb_salary_copy1 {
+  id_salary  Int      @id @default(autoincrement())
+  person_id  String   @db.VarChar(13)
+  month_sal  Int
+  year       Int
+  salary     Float
+  salary_pos Float
+  pts        Float
+  p4p        Float
+  pay_month  Float
+  tax        Float
+  tokbuk     Float
+  kongcip    Float
+  ot         Float
+  goto       Float
+  tax_with   Float
+  gbk        Float
+  cooper     Float
+  tos        Float
+  omsin      Float
+  sgs        Float
+  shop       Float
+  fee_elec   Float
+  krung_thai Float
+  repay      Float
+  save_data  DateTime @db.DateTime(0)
+  username   String   @db.VarChar(50)
+  plumbing   Float
+  svk        Float
+  social     Float
+  cable      Float
+  store      Float
+  nurse      Float
+  fee        Float
+  share      Float
+  principle  Float
+  insurance  Float
+  drother    Float
+  goto1      Float
+  sum_op     Float
+  sum_pp     Float
+  sum_tt     Float
+  confirm    Int
+  f_tax      Float
+  goto2      Float
+  goto3      Float
+  goto4      Float
+  sstatus    Float    @default(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tb_salary_k {
+  tyear     String  @default("0") @db.VarChar(20)
+  month_sal Int     @default(0)
+  person_id String  @default("0") @db.VarChar(20)
+  e14       String? @db.VarChar(20)
+  e15       String? @db.VarChar(20)
+  e16       String? @db.VarChar(20)
+  e17       String? @db.VarChar(20)
+  e18       String? @db.VarChar(20)
+  e19       String? @db.VarChar(20)
+  e20       String? @db.VarChar(20)
+  e21       String? @db.VarChar(20)
+  e22       String? @db.VarChar(20)
+  e23       String? @db.VarChar(20)
+  e24       String? @db.VarChar(20)
+  e25       String? @db.VarChar(20)
+  e26       String? @db.VarChar(20)
+  e27       String? @db.VarChar(20)
+  e28       String? @db.VarChar(20)
+  e29       String? @db.VarChar(20)
+  e30       String? @db.VarChar(20)
+  e31       String? @db.VarChar(20)
+  e32       String? @db.VarChar(20)
+  e33       String? @db.VarChar(20)
+  e34       String? @db.VarChar(20)
+  e35       String? @db.VarChar(20)
+  e36       String? @db.VarChar(20)
+  e37       String? @db.VarChar(20)
+  e38       String? @db.VarChar(20)
+  e39       String? @db.VarChar(20)
+  e40       String? @db.VarChar(20)
+  e41       String? @db.VarChar(20)
+  e42       String? @db.VarChar(20)
+  e43       String? @db.VarChar(20)
+  e44       String? @db.VarChar(20)
+  e45       String? @db.VarChar(20)
+  e46       String? @db.VarChar(20)
+  e47       String? @db.VarChar(20)
+  e48       String? @db.VarChar(20)
+  e49       String? @db.VarChar(20)
+  e50       String? @db.VarChar(20)
+  e51       String? @db.VarChar(20)
+  e52       String? @db.VarChar(20)
+  e53       String? @db.VarChar(20)
+  e54       String? @db.VarChar(20)
+  e55       String? @db.VarChar(20)
+  e56       String? @db.VarChar(20)
+  e57       String? @db.VarChar(20)
+  e58       String? @db.VarChar(20)
+  e59       String? @db.VarChar(20)
+  e60       String? @db.VarChar(50)
+  e61       String? @db.VarChar(20)
+  e62       String? @db.VarChar(50)
+  e63       String? @db.VarChar(20)
+  e64       String? @db.VarChar(50)
+  e65       String? @db.VarChar(20)
+  e66       String? @db.VarChar(50)
+  e67       String? @db.VarChar(20)
+  e68       String? @db.VarChar(50)
+  e69       String? @db.VarChar(20)
+  e70       String? @db.VarChar(50)
+  e71       String? @db.VarChar(20)
+  e72       String? @db.VarChar(50)
+  e73       String? @db.VarChar(20)
+  e74       String? @db.VarChar(50)
+  e75       String? @db.VarChar(20)
+  e76       String? @db.VarChar(20)
+  e77       String? @db.VarChar(20)
+  e78       String? @db.VarChar(20)
+  e79       String? @db.VarChar(20)
+
+  @@id([tyear, month_sal, person_id])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tb_salary_person {
+  person_id        String  @id @default("0") @db.VarChar(20)
+  person_firstname String? @db.VarChar(50)
+  person_lastname  String? @db.VarChar(50)
+  person_prefix    Int?
+  bk_acc           String? @db.VarChar(20)
+  tax_no           String? @db.VarChar(20)
+  ccid             String? @db.VarChar(20)
+  typeposition     Int?
+  position_id      Int?
+  status           Int?
+  status_acc       Int?
+  support          Int?
+  tax_number       Int?
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model tumbon {
+  tumbon_id   String? @db.VarChar(7)
+  amphur_id   String  @db.VarChar(5)
+  tumbon_name String? @db.Text
+
+  @@index([tumbon_id], map: "tumbon_id")
+  @@ignore
+}
+
+model type_money {
+  type_money_id   Int     @id @default(autoincrement())
+  type_money_name String? @db.VarChar(100)
+}
+
+model typeacademic {
+  typeac_id   Int    @id @default(autoincrement())
+  typeac_name String @db.VarChar(100)
+}
+
+model typeposition {
+  typeposition_id   Int    @id @default(autoincrement())
+  typeposition_name String @db.VarChar(100)
+}
+
+model users {
+  userId    Int      @id @default(autoincrement())
+  username  String   @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  createdAt DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.DateTime(0)
+}
+
+model ward {
+  ward_id    Int    @id @default(autoincrement())
+  ward_name  String @db.VarChar(150)
+  faction_id Int
+  depart_id  Int
+  ward_pct   Int
+  hosward_id String @db.VarChar(4)
+}
 
 model User {
-    id            Int            @id @default(autoincrement())
-    name          String
-    email         String         @unique
-    image         String?
-    password      String
-    role          Role           @default(MEMBER)
-    createdAt     DateTime       @default(now())
-    updatedAt     DateTime       @default(now())
-    leaves        Leave[]
-    articles      Article[]
-    announcements Announcement[]
+  id            Int            @id @default(autoincrement())
+  name          String
+  email         String         @unique
+  image         String?
+  password      String
+  role          Role           @default(MEMBER)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now())
+  announcements Announcement[]
+  articles      Article[]
+  leaves        Leave[]
 }
 
 model Leave {
-    id                   Int         @id @default(autoincrement())
-    userId               Int
-    startLeaveDate       String
-    endLeaveDate         String
-    totalLeaveDays       Int
-    typeLeave            String
-    reason               String
-    rejectionReason      String?
-    status               LeaveStatus @default(PENDING)
-    managerStatus        LeaveStatus @default(PENDING)
-    departmentHeadStatus LeaveStatus @default(PENDING)
-    hrStatus             LeaveStatus @default(PENDING)
-    createdAt            DateTime    @default(now())
-    updatedAt            DateTime    @default(now())
-    user                 User        @relation(fields: [userId], references: [id])
+  id                   Int         @id @default(autoincrement())
+  userId               Int
+  startLeaveDate       String
+  endLeaveDate         String
+  totalLeaveDays       Int
+  typeLeave            String
+  reason               String
+  rejectionReason      String?
+  status               LeaveStatus @default(PENDING)
+  managerStatus        LeaveStatus @default(PENDING)
+  departmentHeadStatus LeaveStatus @default(PENDING)
+  hrStatus             LeaveStatus @default(PENDING)
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @default(now())
+  personalUser_id      Int?
+  personal             personal?   @relation(fields: [personalUser_id], references: [user_id])
+  user                 User        @relation(fields: [userId], references: [id])
 
-    @@unique([userId, startLeaveDate, endLeaveDate, typeLeave])
+  @@unique([userId, startLeaveDate, endLeaveDate, typeLeave])
+  @@index([personalUser_id], map: "Leave_personalUser_id_fkey")
 }
 
 model Announcement {
-    id        Int      @id @default(autoincrement())
-    title     String
-    slug      String   @unique
-    excerpt   String
-    content   String
-    userId    Int
-    createdAt DateTime @default(now())
-    updatedAt DateTime @default(now())
-    user      User     @relation(fields: [userId], references: [id])
+  id        Int      @id @default(autoincrement())
+  title     String
+  slug      String   @unique
+  excerpt   String
+  content   String
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId], map: "Announcement_userId_fkey")
 }
 
 model Article {
-    id        Int      @id @default(autoincrement())
-    title     String
-    slug      String   @unique
-    excerpt   String
-    content   String
-    image     String
-    userId    Int
-    createdAt DateTime @default(now())
-    updatedAt DateTime @default(now())
-    user      User     @relation(fields: [userId], references: [id])
+  id        Int      @id @default(autoincrement())
+  title     String
+  slug      String   @unique
+  excerpt   String
+  content   String
+  image     String
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId], map: "Article_userId_fkey")
 }
 
 model HolidayDate {
-    id          Int      @id @default(autoincrement())
-    holidayDate String
-    holidayName String
-    holidayType String
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  holidayDate String
+  holidayName String
+  holidayType String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
 }
 
 model LeaveApproveEvent {
-    id            Int         @id @default(autoincrement())
-    leaveId       Int
-    userApproveId Int
-    statusApprove LeaveStatus @default(APPROVED)
-    createdAt     DateTime    @default(now())
-    updatedAt     DateTime    @default(now())
+  id            Int         @id @default(autoincrement())
+  leaveId       Int
+  userApproveId Int
+  statusApprove LeaveStatus @default(APPROVED)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @default(now())
 }
 
 model LeaveRejectEvent {
-    id           Int         @id @default(autoincrement())
-    leaveId      Int
-    userId       Int
-    reasonReject String
-    status       LeaveStatus @default(REJECTED)
-    createdAt    DateTime    @default(now())
-    updatedAt    DateTime    @default(now())
+  id           Int         @id @default(autoincrement())
+  leaveId      Int
+  userId       Int
+  reasonReject String
+  status       LeaveStatus @default(REJECTED)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @default(now())
 }
 
 model LeaveType {
-    id                   Int      @id @default(autoincrement())
-    leaveTypeDescription String
-    maxAllowPerYear      Int
-    createdAt            DateTime @default(now())
-    updatedAt            DateTime @default(now())
+  id                   Int      @id @default(autoincrement())
+  leaveTypeDescription String
+  maxAllowPerYear      Int
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @default(now())
+}
+
+enum po_level_stage {
+  Y
+  N
+}
+
+enum personal_email_person_status {
+  Y
+  N
+}
+
+enum profession_profession_status {
+  Y
+  N
+}
+
+enum Role {
+  ADMIN
+  HR
+  DEPARTMENT_HEAD
+  MANAGER
+  MEMBER
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
