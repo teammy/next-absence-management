@@ -3,12 +3,11 @@ import bcrypt from 'bcryptjs';
 import {
   getServerSession,
   type NextAuthOptions,
-  type DefaultSession,
 } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from '~/server/db';
-import { type Role } from '@prisma/client';
+import {  type Role } from '@prisma/client';
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -17,24 +16,34 @@ import { type Role } from '@prisma/client';
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
 declare module 'next-auth' {
-  interface Session extends DefaultSession {
+  interface Session {
     user: {
       id: string;
       role: Role;
       firstname: string;
       lastname: string;
-      cid: string;
-    } & DefaultSession['user'];
+      name: string;
+      email: string;
+      pic: string;
+      token?: string;
+    };
   }
 
   interface User {
     role_user: Role;
+    person_firstname: string;
+    person_lastname: string;
+    person_email: string;
   }
+
+  
 }
 
 declare module 'next-auth/jwt' {
   interface JWT {
     role_user: Role;
+   firstname: string;
+    lastname: string;
   }
 }
 
@@ -63,29 +72,34 @@ export const authOptions: NextAuthOptions = {
         if (session.name) token.name = session.name;
         if (session.email) token.email = session.email;
       }
-      console.log('jwt on console',user);
+
       if (user) {
+        // token.user = user;
         token.sub = user.id;
-        token.email = user.email;
-        token.role_user = user.role_user;
+        token.firstname = user.person_firstname;
+        token.lastname = user.person_lastname;
+        token.email = user.person_email;
         token.name = user.name;
-        token.picture = user.image;
+        token.role_user = user.role_user;
       }
       return token;
     },
     session: ({ session, token }) => {
-      console.log('session', session);
+      
+      session.user.firstname = token.firstname; // Added line
+      session.user.lastname = token.lastname; // Added line
+      session.user.role = token.role_user; // Uncomment this line if role is needed
+      // session.user.email = token.email; // Uncomment this line if email is needed
+
+      console.log('updated session', session);
+      console.log('token on console', token);
+      // console.log('session on console', session);
       return {
         ...session,
         user: {
-          // ...session.user,
           id: token.sub,
-          // role_user: token.role_user,
-          firstname: token.firstname,
-          // lastname: token.lastname,
-          name: token.name,
-          // email: token.email,
-          // image: token.picture,
+          pic: token.picture,
+          email: token.email,
         },
       };
     },
@@ -102,6 +116,15 @@ export const authOptions: NextAuthOptions = {
         const user = await prisma.personal.findUnique({
           where: {
             person_username: credentials?.person_username,
+          },
+          select: {
+            user_id: true,
+            person_id: true,
+            person_firstname: true,
+            person_lastname: true,
+            person_password_hash: true,
+            person_email: true,
+            role_user: true,
           },
         });
         // const user = await prisma.user.findUnique({
