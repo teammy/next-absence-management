@@ -10,7 +10,7 @@ import { useAppStore } from '~/features/store'
 const CreateHolidayDate = () => {
   const setUiToast = useAppStore((state) => state.setUiToast)
   const router = useRouter()
-  const utils = api.useContext()
+  const utils = api.useUtils()
   const list = utils.admin.settingHoliday.listHoliday
   const { mutate: AddSettingHolidayInput } = api.admin.settingHoliday.addHoliday.useMutation({
     async onMutate(input) {

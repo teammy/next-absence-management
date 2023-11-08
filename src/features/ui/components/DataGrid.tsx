@@ -50,7 +50,6 @@ export function DataGrid<T extends DataRow>({
   title,
   columns,
   rows,
-  actions,
 }: DataGridProps<T>) {
   const [page, setPage] = useState(1);
   const rowsPerPage = 4;

@@ -24,8 +24,7 @@ declare module 'next-auth' {
       lastname: string;
       name: string;
       email: string;
-      pic: string;
-      token?: string;
+      image: string;
     };
   }
 
@@ -34,6 +33,8 @@ declare module 'next-auth' {
     person_firstname: string;
     person_lastname: string;
     person_email: string;
+    // person_photo?: string;
+    // image: string;
   }
 
   
@@ -42,7 +43,7 @@ declare module 'next-auth' {
 declare module 'next-auth/jwt' {
   interface JWT {
     role_user: Role;
-   firstname: string;
+    firstname: string;
     lastname: string;
   }
 }
@@ -74,7 +75,7 @@ export const authOptions: NextAuthOptions = {
       }
 
       if (user) {
-        // token.user = user;
+        token.user = user;
         token.sub = user.id;
         token.firstname = user.person_firstname;
         token.lastname = user.person_lastname;
@@ -91,15 +92,17 @@ export const authOptions: NextAuthOptions = {
       session.user.role = token.role_user; // Uncomment this line if role is needed
       // session.user.email = token.email; // Uncomment this line if email is needed
 
-      console.log('updated session', session);
-      console.log('token on console', token);
-      // console.log('session on console', session);
+      // console.log('token session', session.user.image);
+      console.log('session on console', session);
       return {
         ...session,
         user: {
           id: token.sub,
-          pic: token.picture,
+          image: token.picture,
           email: token.email,
+          role: token.role_user,
+          firstname: token.firstname,
+          lastname: token.lastname,
         },
       };
     },
@@ -125,6 +128,7 @@ export const authOptions: NextAuthOptions = {
             person_password_hash: true,
             person_email: true,
             role_user: true,
+            person_photo: true,
           },
         });
         // const user = await prisma.user.findUnique({
@@ -138,8 +142,7 @@ export const authOptions: NextAuthOptions = {
         if (!(await bcrypt.compare(credentials.person_password, user.person_password_hash))) {
           return null;
         }
-        
-        return { ...user,id:user.user_id.toString()};
+        return { ...user,id:user.user_id.toString(),image:user.person_photo};
       },
     }),
   ],

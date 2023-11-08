@@ -243,7 +243,7 @@ model personal {
   person_password_hash String
   person_datetime      DateTime? @db.DateTime(0)
   person_op            Int?
-  person_photo         String?   @db.VarChar(30)
+  person_photo         String?    
   person_createdAt     DateTime  @default(now())
   person_updatedAt     DateTime  @default(now())
   role_user            Role      @default(MEMBER)

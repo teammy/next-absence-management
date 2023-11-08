@@ -30,8 +30,8 @@ import { number } from 'zod';
 
 export function SettingHolidayList() {
   const { data, isLoading } = api.admin.settingHoliday.listHoliday.useQuery();
-  const utils = api.useContext();
-  const list = utils.admin.settingHoliday.listHoliday;
+  const utils = api.useUtils();
+  const list = api.admin.settingHoliday.listHoliday;
   const router = useRouter();
   const { isOpen, onOpen, onOpenChange,onClose  } = useDisclosure();
   const [selectedHoliday, setSelectedHoliday] = useState<number | null>(null);
@@ -40,7 +40,7 @@ export function SettingHolidayList() {
       if (status) {
         setSelectedHoliday(null);
         onClose();
-        list.invalidate();
+        utils.invalidate();
       }
     },
   });
