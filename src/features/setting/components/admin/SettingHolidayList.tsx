@@ -74,7 +74,7 @@ export function SettingHolidayList() {
     {
       field: 'holidayType',
       headerName: 'ประเภทวันหยุด',
-      value: (holiday) => holiday.holidayType,
+      value: (holiday) => holiday.holidayDate,
     },
     {
       field: 'id',

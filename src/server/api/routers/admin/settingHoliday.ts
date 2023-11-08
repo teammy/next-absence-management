@@ -12,7 +12,7 @@ export const adminSettingHolidayRouter = createTRPCRouter({
           id: true,
           holidayDate: true,
           holidayName: true,
-          holidayType: true,
+          holidayTypeId: true,
         }
       });
       return holidaySetting;
@@ -35,7 +35,7 @@ export const adminSettingHolidayRouter = createTRPCRouter({
         id: true,
         holidayDate: true,
         holidayName: true,
-        holidayType: true,
+        holidayTypeId: true,
       },
     });
 
@@ -85,4 +85,16 @@ export const adminSettingHolidayRouter = createTRPCRouter({
     });
     return holidaySetting;
   }),
+
+  listHolidayType: protectedProcedure
+    .meta({ roles: ['ADMIN', 'HR'] })
+    .query(async ({ ctx }) => {
+      const holidayType = await ctx.prisma.holidayType.findMany({
+        select: {
+          id: true,
+          holidayType: true,
+        }
+      });
+      return holidayType;
+    }),
 });

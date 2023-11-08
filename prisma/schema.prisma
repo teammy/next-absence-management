@@ -692,9 +692,16 @@ model HolidayDate {
   id          Int      @id @default(autoincrement())
   holidayDate String
   holidayName String
-  holidayType String
+  holidayTypeId Int 
+  holidayType HolidayType @relation(fields: [holidayTypeId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
+}
+
+model HolidayType {
+  id  Int   @id @default(autoincrement())
+  holidayType String
+  holidayDates  HolidayDate[]
 }
 
 model LeaveApproveEvent {
