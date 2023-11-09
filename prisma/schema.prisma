@@ -238,7 +238,7 @@ model personal {
   person_course        String?   @db.VarChar(150)
   person_startdate     DateTime? @db.Date
   person_enddate       DateTime? @db.Date
-  person_username      String    @unique @db.VarChar(15)
+  person_username      String    @unique
   person_password      String
   person_password_hash String
   person_datetime      DateTime? @db.DateTime(0)

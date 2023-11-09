@@ -24,23 +24,27 @@ import { useRouter } from 'next/router';
 import EditIcon from '~/features/ui/components/icon/edit-icon';
 import TrashIcon from '~/features/ui/components/icon/trash-icon';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useMemo } from 'react';
 import { number } from 'zod';
+import { useQueryClient } from '@tanstack/react-query';
+
 
 
 export function SettingHolidayList() {
   const { data, isLoading } = api.admin.settingHoliday.listHoliday.useQuery();
   const utils = api.useUtils();
-  const list = api.admin.settingHoliday.listHoliday;
   const router = useRouter();
   const { isOpen, onOpen, onOpenChange,onClose  } = useDisclosure();
+  const queryClient = useQueryClient();
+
+
   const [selectedHoliday, setSelectedHoliday] = useState<number | null>(null);
   const { mutateAsync } = api.admin.settingHoliday.destroyHoliday.useMutation({
     onSuccess(status) {
       if (status) {
         setSelectedHoliday(null);
         onClose();
-        utils.invalidate();
+        queryClient.invalidateQueries(data);
       }
     },
   });

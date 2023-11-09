@@ -3,7 +3,7 @@ import {
   type ReactElement,
   type ReactNode,
   useState,
-  use,
+  useMemo,
   useEffect,
 } from 'react';
 import {
@@ -15,6 +15,7 @@ import {
   TableCell,
   getKeyValue,
   Tab,
+  Input,
   Pagination,
   PaginationItem,
   PaginationCursor,
@@ -23,6 +24,7 @@ import {
 import React from 'react';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
+import { SearchIcon } from './icon/searchicon';
 
 export type DataRow = {
   id: number | string;
@@ -47,13 +49,92 @@ export interface DataGridItemProps<T extends DataRow>
 }
 
 export function DataGrid<T extends DataRow>({
-  title,
   columns,
   rows,
 }: DataGridProps<T>) {
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [page, setPage] = useState(1);
-  const rowsPerPage = 4;
+  const [filterValue, setFilterValue] = useState("");
+  const hasSearchFilter = Boolean(filterValue);
 
+  const filteredItems = React.useMemo(() => {
+    let filteredData = [rows];
+    if (hasSearchFilter) {
+      filteredData = rows.filter((row) => {
+        return Object.values(row).some((value) => {
+          if (typeof value === "string") {
+            return value.toLowerCase().includes(filterValue.toLowerCase());
+          }
+          return false;
+        });
+      });
+    }
+    console.log("filteredData",filteredData)
+
+    return filteredData;
+  }, [rows, filterValue]);
+
+
+  const totalData = rows ?? [];
+  const pages = Math.ceil(totalData.length / rowsPerPage);
+
+  const items_pagination = useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    return totalData.slice(start, end);
+  }, [page, rowsPerPage]);
+
+
+  const onRowsPerPageChange = React.useCallback((e:any) => {
+    // console.log("PerPageChange",e.target.value)
+    setRowsPerPage(Number(e.target.value));
+    setPage(1);
+  }, []);
+
+  const onSearchChange = React.useCallback((value?: string) => {
+    if (value) {
+      setFilterValue(value);
+      setPage(1);
+    } else {
+      setFilterValue("");
+    }
+  }, []);
+
+  const onClear = React.useCallback(()=>{
+    setFilterValue("")
+    setPage(1)
+  },[])
+
+  const topContent = useMemo(() => {
+    return (
+      <div className="flex justify-between items-center">
+        <Input
+            isClearable
+            className="w-full sm:max-w-[44%]"
+            placeholder="ค้นหาข้อมูล..."
+            startContent={<SearchIcon />}
+            value={filterValue}
+            onClear={() => onClear()}
+            onValueChange={onSearchChange}
+          />
+      {/* <span className="text-default-400 text-small">Total {rows.length} users</span> */}
+      <label className="flex items-center text-default-400 text-small">
+        จำนวนข้อมูล:
+        <select
+          className="bg-transparent outline-none text-default-400 text-small"
+          onChange={onRowsPerPageChange}
+        >
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+        </select>
+      </label>
+    </div>
+    );
+  },[onRowsPerPageChange,filterValue,onSearchChange,hasSearchFilter]);
+
+ 
   const generateRow = (row: T) => {
     const result = [];
 
@@ -86,14 +167,6 @@ export function DataGrid<T extends DataRow>({
     return result;
   };
 
-  // const pages = Math.ceil(rows.length / rowsPerPage);
-
-  const rowsPage = useEffect(() => {
-    const startIndex = (page - 1) * rowsPerPage;
-    const endIndex = startIndex + rowsPerPage;
-    // return rows.slice(startIndex, endIndex);
-  }, [page, rows]);
-
 
   return (
     <Table
@@ -103,6 +176,20 @@ export function DataGrid<T extends DataRow>({
         th: 'bg-[#FCDCBB] font-medium text-base text-[#002d63] dark:bg-gray-700 dark:text-gray-400',
         // tbody: 'bg-white divide-y dark:divide-gray-700 dark:bg-gray-800',
       }}
+      bottomContent={
+        <div className="flex w-full justify-center">
+          <Pagination
+            isCompact
+            showControls
+            showShadow
+            color="secondary"
+            page={page}
+            total={pages}
+            onChange={(page) => setPage(page)}
+          />
+        </div>
+      }
+      topContent={topContent}
     >
       <TableHeader
         columns={columns}
@@ -117,7 +204,7 @@ export function DataGrid<T extends DataRow>({
           </TableColumn>
         ))} */}
       </TableHeader>
-      <TableBody items={rows}>
+      <TableBody items={items_pagination}>
         {(row) => (
           <TableRow
             key={row.id}

@@ -73,7 +73,9 @@ export const adminSettingHolidayRouter = createTRPCRouter({
         id: input.id,
       },
       data: {
-        ...input,
+        holidayDate: input.data.holidayDate,
+        holidayName: input.data.holidayName,
+        holidayTypeId: input.data.holidayTypeId,
       }
     });
     return holidaySetting;
