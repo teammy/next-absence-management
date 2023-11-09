@@ -13,6 +13,12 @@ export const adminSettingHolidayRouter = createTRPCRouter({
           holidayDate: true,
           holidayName: true,
           holidayTypeId: true,
+          holidayType: {
+            select: {
+              id: true,
+              holidayType: true,
+            }
+          },
         }
       });
       return holidaySetting;
@@ -36,6 +42,12 @@ export const adminSettingHolidayRouter = createTRPCRouter({
         holidayDate: true,
         holidayName: true,
         holidayTypeId: true,
+        holidayType: {
+          select: {
+            id: true,
+            holidayType: true,
+          }
+        },
       },
     });
 
@@ -43,6 +55,7 @@ export const adminSettingHolidayRouter = createTRPCRouter({
 
     return holidaySetting;
   }),
+
   updateHoliday: protectedProcedure
   .meta({ roles: ['ADMIN', 'HR'] })
   .input(validators.updateSettingHoliday)

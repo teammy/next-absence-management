@@ -1,4 +1,4 @@
-import { type SubmitHandler, useForm } from 'react-hook-form';
+import { type SubmitHandler, useForm,useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { capitalize, set } from 'lodash';
 import { ThaiDatePicker } from 'thaidatepicker-react';
@@ -20,6 +20,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/th';
 dayjs.locale('th');
 
+
 export type SettingHolidayProps =
   | {
       kind: 'create';
@@ -32,15 +33,16 @@ export type SettingHolidayProps =
     };
 
 const SettingHolidayDateForm = (props: SettingHolidayProps) => {
-  const { data: listTypes, status } = api.admin.settingHoliday.listHolidayType.useQuery();
-  const { kind, onSubmit } = props;
+  const { data: listTypes } = api.admin.settingHoliday.listHolidayType.useQuery();
+  const { kind, onSubmit  } = props;
+  
 
   const {
     register,
     handleSubmit,
     setValue,
     getValues,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isDirty, isSubmitting },
   } = useForm<
     typeof onSubmit extends SubmitHandler<AddSettingHolidayInput>
       ? AddSettingHolidayInput
@@ -50,14 +52,13 @@ const SettingHolidayDateForm = (props: SettingHolidayProps) => {
     resolver: zodResolver(
       kind === 'create'
         ? validators.addSettingHoliday
-        : validators.updateSettingHoliday,
+        : validators.addSettingHoliday
     ),
     defaultValues: kind === 'edit' ? props.settingHoliday : undefined,
   });
 
   const currentEndLeaveDate = getValues('holidayDate');
   const handleSettingHolidayDatePickerChange = (christDate: any) => {
-    console.log('christDate', christDate);
     setValue('holidayDate', christDate, {
       shouldValidate: true,
       shouldDirty: true,
@@ -73,6 +74,24 @@ const SettingHolidayDateForm = (props: SettingHolidayProps) => {
     const head_text = 'เพิ่มข้อมูลวันหยุดนักขัตฤกษ์';
     const bttn_text = 'บันทึกข้อมูล';
   }
+
+
+
+
+  // useEffect(() => {
+  //   if (kind === 'edit') {
+  //     setValue('holidayTypeId', props.settingHoliday.holidayTypeId, {
+  //       shouldValidate: true
+  //     });
+  //     setValue('holidayName', props.settingHoliday.holidayName, {
+  //       shouldValidate: true
+  //     });
+  //     setValue('holidayDate', props.settingHoliday.holidayDate, {
+  //       shouldValidate: true
+  //     });
+  //   }
+  //   console.log("is Valid",isValid)
+  // },[isValid]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -115,9 +134,10 @@ const SettingHolidayDateForm = (props: SettingHolidayProps) => {
                 placeholder=" "
                 classNames={{ label: 'text-default-500 text-base' }}
                 errorMessage={errors.holidayTypeId?.message}
+                defaultSelectedKeys={kind === 'edit' ? getValues('holidayTypeId').toString() : undefined}
               >
                 {listTypes?.map((item,index) => (
-                  <SelectItem key={item.id}>
+                  <SelectItem key={item.id} value={item.id}>
                     {item.holidayType}
                   </SelectItem>
                 )) || []}

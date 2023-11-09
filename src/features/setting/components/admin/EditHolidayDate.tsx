@@ -7,7 +7,7 @@ import { type UpdateSettingHolidayInput }  from '../../types';
 import React from 'react'
 
 const EditHolidayDate = () => {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const router = useRouter();
 
   const id = +(router.query.id as string);
@@ -17,12 +17,13 @@ const { mutateAsync: update } = api.admin.settingHoliday.updateHoliday.useMutati
   },
 });
 const { data: settingholiday, isLoading } = api.admin.settingHoliday.byId.useQuery(id);
+
 const editLeave = async (settingholiday: UpdateSettingHolidayInput['data']) => {
   await update({
     id,
     data: settingholiday,
   });
-  router.push('/setting/holidayDate');
+  router.push('/admin/setting/holidayDate');
 };
 
 if (isLoading) return <Loading></Loading>;
