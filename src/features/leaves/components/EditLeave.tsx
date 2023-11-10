@@ -5,7 +5,7 @@ import Loading from '~/features/ui/components/Loading';
 import { type UpdateLeaveInput } from '../types';
 
 const EditLeave = () => {
-  const utils = api.useContext();
+  const utils = api.useUtils();
 
   const router = useRouter();
   const id = +(router.query.id as string);

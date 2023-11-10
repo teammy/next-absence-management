@@ -8,6 +8,7 @@ import React from 'react'
 
 const EditHolidayDate = () => {
   const utils = api.useUtils();
+
   const router = useRouter();
 
   const id = +(router.query.id as string);

@@ -5,6 +5,7 @@ import {
   useState,
   useMemo,
   useEffect,
+  use,
 } from 'react';
 import {
   Table,
@@ -19,11 +20,12 @@ import {
   Pagination,
   PaginationItem,
   PaginationCursor,
+  Button
 } from '@nextui-org/react';
 // import DataGridItem from './DataGridItem';
 import React from 'react';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { SearchIcon } from './icon/searchicon';
 
 export type DataRow = {
@@ -56,11 +58,14 @@ export function DataGrid<T extends DataRow>({
   const [page, setPage] = useState(1);
   const [filterValue, setFilterValue] = useState("");
   const hasSearchFilter = Boolean(filterValue);
+  const router = useRouter();
+
 
   const filteredItems = React.useMemo(() => {
-    let filteredData = [rows];
+    let filteredData = rows;
+
     if (hasSearchFilter) {
-      filteredData = rows.filter((row) => {
+      filteredData = rows?.filter((row) => {
         return Object.values(row).some((value) => {
           if (typeof value === "string") {
             return value.toLowerCase().includes(filterValue.toLowerCase());
@@ -69,25 +74,28 @@ export function DataGrid<T extends DataRow>({
         });
       });
     }
-    console.log("filteredData",filteredData)
+    console.log("filteredData In filteredItems",filteredData)
 
     return filteredData;
   }, [rows, filterValue]);
 
+  console.log("filteredItems",filteredItems)
 
-  const totalData = rows ?? [];
-  const pages = Math.ceil(totalData.length / rowsPerPage);
+
+  const totalDatas = filteredItems?.length ?? 0;
+  // const totalDatas = filteredItems.length ?? 0;
+  const pages = Math.ceil(totalDatas / rowsPerPage);
 
   const items_pagination = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
-    return totalData.slice(start, end);
-  }, [page, rowsPerPage]);
+    return filteredItems?.slice(start, end);
+    // return rows?.slice(start, end);
+  }, [page, rowsPerPage,rows,filteredItems]);
 
 
   const onRowsPerPageChange = React.useCallback((e:any) => {
-    // console.log("PerPageChange",e.target.value)
     setRowsPerPage(Number(e.target.value));
     setPage(1);
   }, []);
@@ -119,8 +127,21 @@ export function DataGrid<T extends DataRow>({
             onValueChange={onSearchChange}
           />
       {/* <span className="text-default-400 text-small">Total {rows.length} users</span> */}
-      <label className="flex items-center text-default-400 text-small">
-        จำนวนข้อมูล:
+      <Button
+            onPress={() => router.push('/admin/setting/holidayDate/create')}
+          >
+            เพิ่มข้อมูล
+          </Button>
+    </div>
+    );
+  },[onRowsPerPageChange,filterValue,onSearchChange,hasSearchFilter]);
+
+  const bottomContent = useMemo(() => {
+    return (
+      <div className="py-2 px-2 flex justify-between items-center">
+          <span className="w-[30%] text-small text-default-400">
+          <label className="flex items-center text-default-400 text-small">
+      แสดงข้อมูลต่อหน้า:
         <select
           className="bg-transparent outline-none text-default-400 text-small"
           onChange={onRowsPerPageChange}
@@ -130,9 +151,23 @@ export function DataGrid<T extends DataRow>({
           <option value="15">15</option>
         </select>
       </label>
-    </div>
+        </span>
+
+        <Pagination
+            isCompact
+            showControls
+            showShadow
+            color="secondary"
+            page={page}
+            total={pages}
+            onChange={(page) => setPage(page)}
+          />
+
+
+          
+        </div>
     );
-  },[onRowsPerPageChange,filterValue,onSearchChange,hasSearchFilter]);
+  },[onRowsPerPageChange,page,pages]);
 
  
   const generateRow = (row: T) => {
@@ -176,19 +211,7 @@ export function DataGrid<T extends DataRow>({
         th: 'bg-[#FCDCBB] font-medium text-base text-[#002d63] dark:bg-gray-700 dark:text-gray-400',
         // tbody: 'bg-white divide-y dark:divide-gray-700 dark:bg-gray-800',
       }}
-      bottomContent={
-        <div className="flex w-full justify-center">
-          <Pagination
-            isCompact
-            showControls
-            showShadow
-            color="secondary"
-            page={page}
-            total={pages}
-            onChange={(page) => setPage(page)}
-          />
-        </div>
-      }
+      bottomContent={bottomContent}
       topContent={topContent}
     >
       <TableHeader

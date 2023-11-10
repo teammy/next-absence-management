@@ -25,18 +25,13 @@ import EditIcon from '~/features/ui/components/icon/edit-icon';
 import TrashIcon from '~/features/ui/components/icon/trash-icon';
 import Link from 'next/link';
 import { useEffect, useState,useMemo } from 'react';
-import { number } from 'zod';
-import { useQueryClient } from '@tanstack/react-query';
-
-
 
 export function SettingHolidayList() {
-  const { data, isLoading } = api.admin.settingHoliday.listHoliday.useQuery();
   const utils = api.useUtils();
+  const lists = utils.admin.settingHoliday.listHoliday;
+  const { data, isLoading } = api.admin.settingHoliday.listHoliday.useQuery();
   const router = useRouter();
   const { isOpen, onOpen, onOpenChange,onClose  } = useDisclosure();
-  const queryClient = useQueryClient();
-
 
   const [selectedHoliday, setSelectedHoliday] = useState<number | null>(null);
   const { mutateAsync } = api.admin.settingHoliday.destroyHoliday.useMutation({
@@ -44,7 +39,7 @@ export function SettingHolidayList() {
       if (status) {
         setSelectedHoliday(null);
         onClose();
-        queryClient.invalidateQueries(data);
+        lists.invalidate();
       }
     },
   });
@@ -57,6 +52,7 @@ export function SettingHolidayList() {
   const handelConfirmDelete = async () => {
     if (selectedHoliday) {
       try {
+        // console.log("selectedHoliday",selectedHoliday);
         await mutateAsync(selectedHoliday);
       } catch (err) {
         console.error(err);
@@ -84,7 +80,7 @@ export function SettingHolidayList() {
       field: 'id',
       headerName: '',
       value: (holiday) => (
-        <div className="relative flex items-center gap-3">
+        <div className="relative flex items-center gap-3 justify-end">
           <Tooltip content="แก้ไข" showArrow={true}>
             <span className="cursor-pointer text-lg text-default-400 active:opacity-50">
               <Link href={`/admin/setting/holidayDate/${holiday.id}/edit`}>
@@ -112,11 +108,7 @@ export function SettingHolidayList() {
       <div>
         <h1>Setting Holiday List</h1>
         <p>
-          <Button
-            onPress={() => router.push('/admin/setting/holidayDate/create')}
-          >
-            Button Link
-          </Button>
+         
         </p>
       </div>
       <DataGrid
