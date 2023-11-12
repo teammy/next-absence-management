@@ -22,12 +22,12 @@ function Icon({ icon, ...props }: IconProps) {
 
 const routes = [
   {
-    path: '/app/dashboard', // the url
+    path: '/dashboard', // the url
     icon: 'HomeIcon', // the component being exported from icons/index.js
     name: 'หน้าหลัก', // name that appear in Sidebar
   },
   {
-    path: '/app/forms',
+    path: '/employees',
     icon: 'UserIcon',
     name: 'ข้อมูลบุคคล',
   },
@@ -100,7 +100,7 @@ function SidebarContent() {
             <li className="relative px-6 py-3" key={route.name}>
               <Link
                 href={route.path}
-                className="inline-flex items-center w-full text-lg font-semibold transition-colors duration-150 hover:text-[#0050f0] dark:hover:text-gray-200"
+                className="inline-flex items-center w-full text-lg font-semibold transition-colors duration-150 hover:text-[#ffffff] dark:hover:text-gray-200 text-[#a6abae]"
                 // activeClassName="text-gray-800 dark:text-gray-100"
               >
                 <span className='w-6 h-6'>
@@ -114,6 +114,13 @@ function SidebarContent() {
 
 <Accordion>
       <AccordionItem key="1" aria-label="Accordion 1" title="ตั้งค่า">
+        <ul>
+          <li><Link href="/admin/setting/holidayDate">ประเภทการลา</Link></li>
+          <li><Link href="/admin/setting/holidayDate">ตั้งค่าวันหยุด</Link></li>
+          <li><Link href="/admin/setting/holidayDate">ตั้งค่าเงื่อนไขการลา</Link></li>
+        
+        </ul>
+      
       <Link href="/admin/setting/holidayDate">กำหนดวันหยุดนักขัตฤกษ์</Link>
       </AccordionItem>
       </Accordion>

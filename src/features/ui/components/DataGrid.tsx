@@ -20,16 +20,22 @@ import {
   Pagination,
   PaginationItem,
   PaginationCursor,
-  Button
+  Button,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
 } from '@nextui-org/react';
 // import DataGridItem from './DataGridItem';
 import React from 'react';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
 import { SearchIcon } from './icon/searchicon';
+import { PlusIcon,ChevronDownIcon } from '@heroicons/react/24/outline';
 
 export type DataRow = {
   id: number | string;
+  holidayDate: string;  
 } & Record<string, unknown>;
 
 export interface DataGridColumn<T extends DataRow> {
@@ -50,6 +56,8 @@ export interface DataGridItemProps<T extends DataRow>
   row: T;
 }
 
+
+
 export function DataGrid<T extends DataRow>({
   columns,
   rows,
@@ -58,8 +66,25 @@ export function DataGrid<T extends DataRow>({
   const [page, setPage] = useState(1);
   const [filterValue, setFilterValue] = useState("");
   const hasSearchFilter = Boolean(filterValue);
+  type Selection = "all" | Set<React.Key>;
+  const [yearlyFilter, setYearlyFilter] = useState<Selection>();
   const router = useRouter();
 
+  const getUniqueYears = (data:DataRow[]) => {
+    console.log("data",data)
+    const years = new Set(data?.map(item => {
+      if (item.holidayDate) {
+        const date = new Date(item.holidayDate);
+        return date.getFullYear();
+      }
+    }).filter(year => year !== undefined));
+    return Array.from(years);
+  };
+  
+  const yearOptions = rows ? getUniqueYears(rows) : [];
+  console.log("yearOptions",yearOptions)
+  
+  
 
   const filteredItems = React.useMemo(() => {
     let filteredData = rows;
@@ -74,10 +99,20 @@ export function DataGrid<T extends DataRow>({
         });
       });
     }
-    console.log("filteredData In filteredItems",filteredData)
+
+
+
+    if (yearlyFilter) {
+      filteredData = filteredData?.filter((item) => {
+        const itemYear = new Date(item.holidayDate).getFullYear().toString();
+
+        return yearlyFilter.has(itemYear);
+      });
+      console.log("filteredData selection",filteredData)
+    }
 
     return filteredData;
-  }, [rows, filterValue]);
+  }, [rows, filterValue,yearlyFilter]);
 
   console.log("filteredItems",filteredItems)
 
@@ -93,6 +128,7 @@ export function DataGrid<T extends DataRow>({
     return filteredItems?.slice(start, end);
     // return rows?.slice(start, end);
   }, [page, rowsPerPage,rows,filteredItems]);
+
 
 
   const onRowsPerPageChange = React.useCallback((e:any) => {
@@ -126,15 +162,36 @@ export function DataGrid<T extends DataRow>({
             onClear={() => onClear()}
             onValueChange={onSearchChange}
           />
-      {/* <span className="text-default-400 text-small">Total {rows.length} users</span> */}
+
       <Button
             onPress={() => router.push('/admin/setting/holidayDate/create')}
           >
             เพิ่มข้อมูล
           </Button>
+          <Dropdown>
+              <DropdownTrigger className="hidden sm:flex">
+                <Button endContent={<ChevronDownIcon className="h-4 w-4" />} variant="flat">
+                  ประจำปี
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                disallowEmptySelection
+                aria-label="Table Columns"
+                closeOnSelect={false}
+                selectedKeys={yearlyFilter}
+                selectionMode="multiple"
+                onSelectionChange={setYearlyFilter}
+              >
+                {yearOptions.map((year) => (
+                  <DropdownItem textValue={year?.toString()} key={year} className="capitalize">
+                    {year}
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
     </div>
     );
-  },[onRowsPerPageChange,filterValue,onSearchChange,hasSearchFilter]);
+  },[onRowsPerPageChange,filterValue,onSearchChange,hasSearchFilter,yearlyFilter]);
 
   const bottomContent = useMemo(() => {
     return (

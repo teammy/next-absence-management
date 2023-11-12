@@ -25,6 +25,10 @@ import EditIcon from '~/features/ui/components/icon/edit-icon';
 import TrashIcon from '~/features/ui/components/icon/trash-icon';
 import Link from 'next/link';
 import { useEffect, useState,useMemo } from 'react';
+import localFont from 'next/font/local'
+const mlpFont = localFont({ src: '../../../../../public/fonts/maledpan.woff2' })
+
+
 
 export function SettingHolidayList() {
   const utils = api.useUtils();
@@ -116,7 +120,7 @@ export function SettingHolidayList() {
         columns={columns}
         rows={data}
       ></DataGrid>
-      <Modal isOpen={isOpen} backdrop="blur" onOpenChange={onOpenChange}>
+      <Modal isOpen={isOpen} backdrop="blur" onOpenChange={onOpenChange} className={mlpFont.className}>
         <ModalContent>
           {(onClose) => (
             <>
