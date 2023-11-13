@@ -32,7 +32,6 @@ export const authRouter = createTRPCRouter({
     // });
 
     return user;
-    console.log(user);
   }),
   update: protectedProcedure
     .input(profile)

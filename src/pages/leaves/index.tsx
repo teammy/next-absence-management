@@ -36,7 +36,7 @@ const IndexPage: NextPageWithLayout = () => {
           </Card>
         </div>
       </div>
-      <LeaveList></LeaveList>
+      {/* <LeaveList></LeaveList> */}
     </>
   );
 };

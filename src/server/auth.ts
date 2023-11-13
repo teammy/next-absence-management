@@ -25,6 +25,7 @@ declare module 'next-auth' {
       name: string;
       email: string;
       image: string;
+      office_id : number;
     };
   }
 
@@ -33,6 +34,8 @@ declare module 'next-auth' {
     person_firstname: string;
     person_lastname: string;
     person_email: string;
+    office_id : number;
+    // person_username: string;
     // person_photo?: string;
     // image: string;
   }
@@ -42,6 +45,7 @@ declare module 'next-auth' {
 
 declare module 'next-auth/jwt' {
   interface JWT {
+    office_id : number;
     role_user: Role;
     firstname: string;
     lastname: string;
@@ -82,7 +86,9 @@ export const authOptions: NextAuthOptions = {
         token.email = user.person_email;
         token.name = user.name;
         token.role_user = user.role_user;
+        token.office_id = user.office_id;
       }
+      console.log('token on console', token);
       return token;
     },
     session: ({ session, token }) => {
@@ -90,6 +96,7 @@ export const authOptions: NextAuthOptions = {
       session.user.firstname = token.firstname; // Added line
       session.user.lastname = token.lastname; // Added line
       session.user.role = token.role_user; // Uncomment this line if role is needed
+      session.user.office_id = token.office_id; // Uncomment this line if role is needed
       // session.user.email = token.email; // Uncomment this line if email is needed
 
       // console.log('token session', session.user.image);
@@ -103,6 +110,7 @@ export const authOptions: NextAuthOptions = {
           role: token.role_user,
           firstname: token.firstname,
           lastname: token.lastname,
+          office_id: token.office_id,
         },
       };
     },
@@ -129,15 +137,12 @@ export const authOptions: NextAuthOptions = {
             person_email: true,
             role_user: true,
             person_photo: true,
+            office_id: true,
           },
         });
-        // const user = await prisma.user.findUnique({
-        //   where: {
-        //     email: credentials?.email,
-        //   },
-        // });
 
-        if (!user) return null;
+
+        if (!user) return undefined;
         if (!credentials?.person_password) return null;
         if (!(await bcrypt.compare(credentials.person_password, user.person_password_hash))) {
           return null;

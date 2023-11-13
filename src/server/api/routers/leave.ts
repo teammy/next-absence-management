@@ -62,6 +62,8 @@ export const leaveRouter = createTRPCRouter({
         },
       });
 
+      if (!leave) throw new TRPCError({ code: 'FORBIDDEN' });
+
       return leave;
     }),
   update: protectedProcedure

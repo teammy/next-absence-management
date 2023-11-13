@@ -2,6 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter,protectedProcedure } from "../trpc";
 import * as validators from '~/features/setting/helpers/validators';
 import { TRPCError } from '@trpc/server';
+import { tr } from "@faker-js/faker";
 
 export const employeeRouter = createTRPCRouter({
   listEmployeeName: protectedProcedure
@@ -25,12 +26,30 @@ export const employeeRouter = createTRPCRouter({
           person_lastname: true,
           person_tel: true,
           person_email: true,
+          office_id: true,
         },
       });
   
       if (!profileByid) throw new TRPCError({ code: 'NOT_FOUND' });
-  
       return profileByid;
+    }),
+
+    listEmployeePerDepartment: protectedProcedure
+    .input(z.number())
+    .query(async ({ input,ctx }) => {
+      const listEmployeeByDepartment = await ctx.prisma.personal.findMany({
+        where: {
+          office_id: input,
+        },
+        select: {
+          person_firstname: true,
+          person_lastname: true,
+          user_id: true,
+        }
+      });
+      if(!listEmployeeByDepartment) throw new TRPCError({ code: 'NOT_FOUND' });
+      
+      return listEmployeeByDepartment;
     }),
 
 });

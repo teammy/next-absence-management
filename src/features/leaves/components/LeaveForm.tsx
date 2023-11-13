@@ -6,7 +6,8 @@ import { ThaiDatePicker } from "thaidatepicker-react";
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { capitalize, set } from 'lodash';
-
+import { api } from '~/utils/api';
+import { useSession } from "next-auth/react";
 
 
 import { Input, Textarea, Button,Select, SelectSection, SelectItem } from '@nextui-org/react';
@@ -17,6 +18,7 @@ import {
 } from '../types';
 import * as validators from '../helpers/validators';
 import { useState,useEffect } from 'react';
+
 
 
 export type LeaveFormProps =
@@ -31,7 +33,11 @@ export type LeaveFormProps =
     };
 
 const LeaveForm = (props: LeaveFormProps) => {
+  const { data: session } = useSession();
   const { kind, onSubmit } = props;
+  const officeId = session?.user.office_id ? session?.user.office_id : -1;
+  const { data: listPerAssigns } = api.employee.listEmployeePerDepartment.useQuery(officeId);
+
   
   const {
     register,
@@ -49,6 +55,7 @@ const LeaveForm = (props: LeaveFormProps) => {
       kind === 'create' ? validators.add : validators.updateForm,
     ),
     defaultValues: kind === 'edit' ? props.leave : undefined,
+    
   });
 
   const calculateDiffDays = (startDate:any, endDate:any) => {
@@ -128,6 +135,7 @@ const LeaveForm = (props: LeaveFormProps) => {
     setSelectedThaiDate(buddhistDate);
   };
 
+  if (!listPerAssigns) return <div>ไม่มีผู้ปฏิบัติงานแทน</div>;
 
 
   return (
@@ -218,7 +226,7 @@ const LeaveForm = (props: LeaveFormProps) => {
       classNames={{
         label: 'text-lg',
       }}
-
+      {...register('leaveLocation')}
     />
     <Input 
       variant="bordered"
@@ -229,6 +237,7 @@ const LeaveForm = (props: LeaveFormProps) => {
       classNames={{
         label: 'text-lg',
       }}
+      {...register('leaveContact')}
     />
     <div>
         <Select
@@ -236,15 +245,21 @@ const LeaveForm = (props: LeaveFormProps) => {
         labelPlacement="outside"
         placeholder="เลือกผู้ปฏิบัติงานแทน"
         variant="bordered"
+        items={listPerAssigns}
         className="mb-6"
         classNames={{
           label: 'text-lg',
         }}
         radius="sm"
+        {...register('assignUser')}
         >
-          <SelectItem key={2}>
-            ลากิจ
+          {(listPerAssign) => 
+
+          <SelectItem key={listPerAssign.user_id} textValue={listPerAssign.person_firstname}>
+            {listPerAssign.person_firstname} {listPerAssign.person_lastname}
           </SelectItem>
+          }
+
         </Select>
         </div>
         <div>

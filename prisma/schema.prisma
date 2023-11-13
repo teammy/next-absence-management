@@ -126,8 +126,9 @@ model office {
 }
 
 model office_sit {
-  ward_id   Int    @id @default(autoincrement())
-  ward_name String @db.VarChar(150)
+  ward_id   Int        @id @default(autoincrement())
+  ward_name String     @db.VarChar(150)
+  personal  personal[]
 }
 
 model ot {
@@ -193,8 +194,8 @@ model percount {
 }
 
 model personal {
-  user_id              Int       @id @default(autoincrement())
-  person_id            String    @unique
+  user_id              Int         @id @default(autoincrement())
+  person_id            String      @unique
   person_prefix        Int?
   person_firstname     String
   person_lastname      String
@@ -202,27 +203,27 @@ model personal {
   person_cult          Int?
   person_blood         Int?
   person_status        Int?
-  person_birth         DateTime? @db.Date
-  person_no            String?   @db.VarChar(10)
-  person_moo           String?   @db.VarChar(5)
-  person_road          String?   @db.VarChar(100)
-  person_tumbon        String?   @db.VarChar(7)
-  person_amphur        String?   @db.VarChar(5)
-  person_province      String?   @db.VarChar(3)
-  person_postcode      String?   @db.VarChar(5)
-  person_noT           String?   @db.VarChar(10)
-  person_mooT          String?   @db.VarChar(5)
-  person_roadT         String?   @db.VarChar(100)
-  person_tumbonT       String?   @db.VarChar(7)
-  person_amphurT       String?   @db.VarChar(5)
-  person_provinceT     String?   @db.VarChar(3)
-  person_postcodeT     String?   @db.VarChar(5)
-  person_tel           String    @unique
-  person_email         String    @unique
-  person_da            String?   @db.VarChar(150)
-  person_ma            String?   @db.VarChar(150)
-  person_nopo          String?   @db.VarChar(50)
-  position_id          String?   @db.VarChar(10)
+  person_birth         DateTime?   @db.Date
+  person_no            String?     @db.VarChar(10)
+  person_moo           String?     @db.VarChar(5)
+  person_road          String?     @db.VarChar(100)
+  person_tumbon        String?     @db.VarChar(7)
+  person_amphur        String?     @db.VarChar(5)
+  person_province      String?     @db.VarChar(3)
+  person_postcode      String?     @db.VarChar(5)
+  person_noT           String?     @db.VarChar(10)
+  person_mooT          String?     @db.VarChar(5)
+  person_roadT         String?     @db.VarChar(100)
+  person_tumbonT       String?     @db.VarChar(7)
+  person_amphurT       String?     @db.VarChar(5)
+  person_provinceT     String?     @db.VarChar(3)
+  person_postcodeT     String?     @db.VarChar(5)
+  person_tel           String      @unique
+  person_email         String      @unique
+  person_da            String?     @db.VarChar(150)
+  person_ma            String?     @db.VarChar(150)
+  person_nopo          String?     @db.VarChar(50)
+  position_id          String?     @db.VarChar(10)
   money_id             Int?
   typeac_id            Int?
   ac_id                Int?
@@ -231,23 +232,24 @@ model personal {
   po_id                Int?
   po_level_id          Int?
   profession_id        Int?
-  office_id            Int?
-  person_singin        DateTime? @db.Date
+  office_id            Int
+  person_singin        DateTime?   @db.Date
   person_state         Int?
-  person_univer        String?   @db.VarChar(150)
-  person_course        String?   @db.VarChar(150)
-  person_startdate     DateTime? @db.Date
-  person_enddate       DateTime? @db.Date
-  person_username      String    @unique
+  person_univer        String?     @db.VarChar(150)
+  person_course        String?     @db.VarChar(150)
+  person_startdate     DateTime?   @db.Date
+  person_enddate       DateTime?   @db.Date
+  person_username      String      @unique
   person_password      String
   person_password_hash String
-  person_datetime      DateTime? @db.DateTime(0)
+  person_datetime      DateTime?   @db.DateTime(0)
   person_op            Int?
-  person_photo         String?    
-  person_createdAt     DateTime  @default(now())
-  person_updatedAt     DateTime  @default(now())
-  role_user            Role      @default(MEMBER)
+  person_photo         String?
+  person_createdAt     DateTime    @default(now())
+  person_updatedAt     DateTime    @default(now())
+  role_user            Role        @default(MEMBER)
   leaves               Leave[]
+  officeSit            office_sit @relation(fields: [office_id], references: [ward_id])
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -645,6 +647,11 @@ model Leave {
   typeLeave            String
   reason               String
   rejectionReason      String?
+  leaveLocation        String
+  leaveContactNumber   String
+  assignUser           Int   
+  managerUser          Int
+  departmentHeadUser   Int
   status               LeaveStatus @default(PENDING)
   managerStatus        LeaveStatus @default(PENDING)
   departmentHeadStatus LeaveStatus @default(PENDING)
@@ -689,19 +696,19 @@ model Article {
 }
 
 model HolidayDate {
-  id          Int      @id @default(autoincrement())
-  holidayDate String
-  holidayName String
-  holidayTypeId Int 
-  holidayType HolidayType @relation(fields: [holidayTypeId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
+  id            Int         @id @default(autoincrement())
+  holidayDate   String
+  holidayName   String
+  holidayTypeId Int
+  holidayType   HolidayType @relation(fields: [holidayTypeId], references: [id])
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @default(now())
 }
 
 model HolidayType {
-  id  Int   @id @default(autoincrement())
-  holidayType String
-  holidayDates  HolidayDate[]
+  id           Int           @id @default(autoincrement())
+  holidayType  String
+  holidayDates HolidayDate[]
 }
 
 model LeaveApproveEvent {
