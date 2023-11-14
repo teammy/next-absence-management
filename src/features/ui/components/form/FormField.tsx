@@ -9,8 +9,7 @@ export interface FormFieldProps extends ComponentPropsWithoutRef<'input'> {
 const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
   ({ id, type = 'text', label, placeholder, error, ...props }, ref) => {
     return (
-
-      <div className="mb-4">
+      <>
         <Input
           ref={ref}
           id={id}
@@ -20,13 +19,15 @@ const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
           labelPlacement='outside'
           variant='bordered'
           radius='sm'
+          className="block w-full p-4 rounded-sm"
           classNames={{
             label: 'text-lg',
           }}
           {...props}
         ></Input>
-        {error && <div className="mt-2 text-md text-red-500">{error}</div>}
-      </div>
+        {error && <div className="text-md text-red-500 pt-2">{error}</div>}
+
+      </>
     );
   },
 );

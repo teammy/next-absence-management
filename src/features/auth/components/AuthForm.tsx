@@ -6,6 +6,7 @@ import { capitalize } from 'lodash';
 import Button from '~/features/ui/components/Button';
 import FormField from '~/features/ui/components/form/FormField';
 import Link from 'next/link';
+import { Input } from '@nextui-org/react';
 
 export type AuthFormProps =
   | {
@@ -34,87 +35,104 @@ const AuthForm = ({ kind, onSubmit }: AuthFormProps) => {
   });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-lg">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="mx-auto w-full px-4 sm:w-2/3 lg:px-0"
+    >
       {isRegisterForm && (
         <>
-        <div className="flex flex-row">
-          <div className="flex flex-col mr-6"><FormField
-        id="person_firstname"
-        label="ชื่อ *"
-        placeholder="กรอกชื่อจริง ไม่ต้องใส่คำนำหน้า"
-        error={errors.person_firstname?.message}
-        {...register('person_firstname')}
-      ></FormField></div>
-          <div className="flex flex-col"><FormField
-        id="person_lastname"
-        label="นามสกุล *"
-        placeholder="กรอกนามสกุล"
-
-        error={errors.person_lastname?.message}
-        {...register('person_lastname')}
-      ></FormField></div>
-        </div>
-        <FormField
-        id="person_id"
-        label="เลขบัตรประชาชน *"
-        maxLength={13}
-        placeholder="กรอกเลขบัตรประชาชน"
-        error={errors.person_id?.message}
-        {...register('person_id')}
-      ></FormField>
-       <FormField
-        id="person_tel"
-        label="เบอร์โทรศัพท์มือถือ *"
-        maxLength={10}
-        placeholder="กรอกเบอร์โทรศัพท์มือถือ"
-        error={errors.person_tel?.message}
-        {...register('person_tel')}
-      ></FormField>
-      <FormField
-        id="person_email"
-        label="อีเมล *"
-        placeholder="กรอกอีเมล"
-        error={errors.person_email?.message}
-        {...register('person_email')}
-      ></FormField>
+            <div className="pb-5">
+              <FormField
+                id="person_firstname"
+                label="ชื่อ *"
+                placeholder="กรอกชื่อจริง ไม่ต้องใส่คำนำหน้า"
+                error={errors.person_firstname?.message}
+                {...register('person_firstname')}
+              ></FormField>
+            </div>
+            <div className="pb-5">
+              <FormField
+                id="person_lastname"
+                label="นามสกุล *"
+                placeholder="กรอกนามสกุล"
+                error={errors.person_lastname?.message}
+                {...register('person_lastname')}
+              ></FormField>
+            </div>
+          <div className="pb-5">
+          <FormField
+            id="person_id"
+            label="เลขบัตรประชาชน *"
+            maxLength={13}
+            placeholder="กรอกเลขบัตรประชาชน"
+            className="block w-full rounded-sm pt-4 text-lg text-[#002d63]"
+            error={errors.person_id?.message}
+            {...register('person_id')}
+          ></FormField>
+          </div>
+          <div className="pb-5">
+          <FormField
+            id="person_tel"
+            label="เบอร์โทรศัพท์มือถือ *"
+            maxLength={10}
+            placeholder="กรอกเบอร์โทรศัพท์มือถือ"
+            className="block w-full rounded-sm pt-4 text-lg text-[#002d63]"
+            error={errors.person_tel?.message}
+            {...register('person_tel')}
+          ></FormField>
+          </div>
+          <div className="pb-5">
+          <FormField
+            id="person_email"
+            label="อีเมล *"
+            placeholder="กรอกอีเมล"
+            className="block w-full rounded-sm pt-4 text-lg text-[#002d63]"
+            error={errors.person_email?.message}
+            {...register('person_email')}
+          ></FormField>
+          </div>
         </>
-
-      
       )}
-      <FormField
-        id="username"
-        type="text"
-        label="ชื่อผู้ใช้งาน (Username) *"
-        placeholder="กรอกชื่อผู้ใช้งาน (Username)"
-        className="text-[#002d63]"
-        error={errors.person_username?.message}
-        {...register('person_username')}
-      ></FormField>
-      <FormField
-        id="password"
-        type="password"
-        label="รหัสผ่าน *"
-        placeholder="กรอกรหัสผ่าน"
-        error={errors.person_password?.message}
-        {...register('person_password')}
-      ></FormField>
-     
-      <div className="flex items-center justify-between">
-        <Button type="submit" color="primary" 
-        className="block w-full px-4 py-2 mt-4 text-base font-medium leading-5 text-center text-white transition-colors duration-150 bg-[#0050f0] border border-transparent rounded-lg active:bg-purple-600 hover:bg-[#f68b1f] focus:outline-none focus:shadow-outline-purple">
-           {isRegisterForm
-            ? 'สมัครบัญชี'
-            : 'เข้าสู่ระบบ'}
-        </Button>
-        
+
+      <div className="pb-5 pt-4">
+        <FormField
+          id="username"
+          type="text"
+          label="ชื่อผู้ใช้งาน (Username) *"
+          placeholder="กรอกชื่อผู้ใช้งาน (Username)"
+          className="block w-full rounded-sm  text-lg text-[#002d63]"
+          error={errors.person_username?.message}
+          {...register('person_username')}
+        ></FormField>
       </div>
-      <p className="mt-5 text-right ">
-        <Link href={isRegisterForm ? '/auth/sign-in' : '/auth/sign-up'}>
+      <div className="pb-5">
+        <FormField
+          id="password"
+          type="password"
+          label="รหัสผ่าน *"
+          placeholder="กรอกรหัสผ่าน"
+          className="block w-full rounded-sm pt-4 text-lg text-[#002d63]"
+          error={errors.person_password?.message}
+          {...register('person_password')}
+        ></FormField>
+      </div>
+           
+      <div className=" block w-full items-center justify-between pb-2 pt-4">
+        <Button
+          type="submit"
+          color="primary"
+          className="focus:shadow-outline-purple mt-4 block w-full rounded-lg border border-transparent bg-[#0050f0] py-2 text-center text-base font-medium leading-5 text-white transition-colors duration-150 hover:bg-[#f68b1f] focus:outline-none active:bg-purple-600"
+        >
+          {isRegisterForm ? 'สมัครบัญชี' : 'เข้าสู่ระบบ'}
+        </Button>
+      </div>
+      <div className="text-right mt-2">
+        <Link href={isRegisterForm ? '/auth/sign-in' : '/auth/sign-up'} className="text-[#F46F09] font-medium">
           {isRegisterForm
             ? 'ต้องการเข้าสู่ระบบ?'
             : 'ต้องการสมัครบัญชีเข้าใช้งาน?'}
         </Link>
-        </p>
+        </div>
     </form>
   );
 };

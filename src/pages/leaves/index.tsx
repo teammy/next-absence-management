@@ -1,9 +1,11 @@
 import Layout from '~/features/ui/components/layouts/Normal';
 import { type NextPageWithLayout } from '../_app';
 import LeaveList from '~/features/leaves/components/LeaveList';
-import { Card, CardBody } from '@nextui-org/react';
+import { Card, CardBody,Button } from '@nextui-org/react';
+import { useRouter } from 'next/router';
 
 const IndexPage: NextPageWithLayout = () => {
+  const router = useRouter();
   return (
     <>
       <div className="flex flex-col md:flex-row">
@@ -37,6 +39,9 @@ const IndexPage: NextPageWithLayout = () => {
         </div>
       </div>
       {/* <LeaveList></LeaveList> */}
+      <Button onPress={() => router.push('/leaves/selectType')}>
+        เขียนใบลา
+      </Button>
     </>
   );
 };

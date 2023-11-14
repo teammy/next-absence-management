@@ -9,6 +9,7 @@ const SarabunFont = Sarabun({ subsets: ['thai'],weight: "400"})
 const mlpFont = localFont({ src: '../../../public/fonts/maledpan.woff2' })
 import { useRouter } from 'next/router';
 
+
 type Props = {}
 
 
