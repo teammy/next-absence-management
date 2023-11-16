@@ -24,7 +24,7 @@ function Header() {
 
   return (
     <header className="border-b-1 border-gray-200 z-40 py-4 bg-white shadow-bottom dark:bg-gray-800">
-      <div className="container flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark:text-purple-300">
+      <div className=" flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark:text-purple-300">
         {/* <!-- Mobile hamburger --> */}
         <button
           className="p-1 mr-5 -ml-1 rounded-md lg:hidden focus:outline-none focus:shadow-outline-purple"
@@ -36,7 +36,7 @@ function Header() {
         </button>
         {/* <!-- Search input --> */}
 
-        <ul>
+        <ul className="flex justify-end w-full">
           {/* <!-- Profile menu --> */}
           <li>
           <Dropdown placement="bottom-end">
@@ -45,7 +45,7 @@ function Header() {
             isBordered
             as="button"
             className="transition-transform"
-            src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+            // src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
           />
         </DropdownTrigger>
         <DropdownMenu aria-label="Profile Actions" variant="flat">

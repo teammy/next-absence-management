@@ -20,7 +20,7 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <SidebarProvider>
         <div
-      className={`flex h-screen bg-[#f3f3f3] dark:bg-gray-900 ${isSidebarOpen && 'overflow-hidden'}`}
+      className={`flex h-screen  dark:bg-gray-900 ${isSidebarOpen && 'overflow-hidden'}`}
       >
       <Sidebar />
       <div className="flex flex-col flex-1 w-full">
