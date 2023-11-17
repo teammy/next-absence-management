@@ -26,7 +26,7 @@ export const employeeRouter = createTRPCRouter({
           person_lastname: true,
           person_tel: true,
           person_email: true,
-          office_id: true,
+          // office_id: true,
         },
       });
   
