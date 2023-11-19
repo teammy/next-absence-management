@@ -66,6 +66,7 @@ export const leaveRouter = createTRPCRouter({
 
       return leave;
     }),
+    
   update: protectedProcedure
     .input(validators.update)
     .mutation(async ({ input, ctx }) => {

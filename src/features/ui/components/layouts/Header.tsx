@@ -23,7 +23,7 @@ function Header() {
   }
 
   return (
-    <header className="border-b-1 border-gray-200 z-40 py-4 bg-white shadow-bottom dark:bg-gray-800">
+    <header className="border-b-1 border-gray-200 z-40 py-4 bg-[#0050F0] shadow-bottom dark:bg-gray-800">
       <div className=" flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark:text-purple-300">
         {/* <!-- Mobile hamburger --> */}
         <button
@@ -38,6 +38,10 @@ function Header() {
 
         <ul className="flex justify-end w-full">
           {/* <!-- Profile menu --> */}
+          <li className="pr-5 text-white text-right">
+            <p>วิทวัส หมายมั่น</p>
+            <p>นักวิชาการคอมพิวเตอร์</p>
+          </li>
           <li>
           <Dropdown placement="bottom-end">
         <DropdownTrigger>

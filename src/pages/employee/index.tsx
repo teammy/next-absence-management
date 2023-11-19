@@ -12,6 +12,9 @@ import {
 import { UserIcon, BookOpenIcon } from '@heroicons/react/24/solid';
 import Layout from '~/features/ui/components/layouts/Normal';
 import { type NextPageWithLayout } from '../_app';
+import localFont from 'next/font/local'
+const mlpFont_bold = localFont({ src: '../../../public/fonts/maledpan-bold.woff2' })
+import clsx from 'clsx';
 
 const EmployeePage: NextPageWithLayout = () => {
   
@@ -46,7 +49,7 @@ const EmployeePage: NextPageWithLayout = () => {
 
   return (
     <>
-    <h1 className="text-2xl text-[#030966] font-semibold my-5">จัดการข้อมูลบุคคล</h1>
+    <h1 className={clsx(mlpFont_bold.className,"text-2xl text-[#0050F0] my-4")}>จัดการข้อมูลบุคคล</h1>
       <div className="flex">
         
         <div className=" flex-1">

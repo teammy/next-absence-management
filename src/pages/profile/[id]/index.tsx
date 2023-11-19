@@ -21,6 +21,9 @@ import {
   DevicePhoneMobileIcon,
   BuildingOffice2Icon,
 } from '@heroicons/react/24/outline';
+import localFont from 'next/font/local'
+// const mlpFont_bold = localFont({ src: '../../public/fonts/maledpan-bold.woff2' })
+
 
 type Props = {};
 
@@ -66,22 +69,30 @@ const PageProfile: NextPageWithLayout = () => {
           <Tabs
             aria-label="Options"
             color="primary"
-            variant="solid"
+            variant="light"
+            radius="sm"
+            size="lg"
+            disableAnimation={true}
             className="my-5"
+            classNames={{
+              cursor: 'bg-[#0150F0] border-[#0150F0] hover:bg-[#0150F0] ',
+              tabContent: 'text-[#0150F0] ',
+              tab: 'bg-[#F7FAFF] hover:opacity-100 border-[#0150F0] border-2 text-[#0150F0] hover:border-[#f68b1f] hover:bg-[#f68b1f]',
+            }}
           >
             <Tab
               key="personal"
               title={
-                <div className="flex items-center space-x-2 text-lg text-[#0050f0]">
+                <div className="flex items-center space-x-2 text-lg ">
                   <UserIcon className="h-5 w-5" />
                   <span>ข้อมูลส่วนตัว</span>
                 </div>
               }
             >
-              <Card shadow="none" className="bg-[#F7FAFF] px-3">
+              <Card shadow="none" className="bg-[#EFF3FA] px-3">
                 <CardBody>
                   <div className="flex flex-col gap-4">
-                    <h2 className="text-xl text-[#0050f0]">ข้อมูลทั่วไป</h2>
+                    <h2 className="text-xl text-[#0050F0]">ข้อมูลทั่วไป</h2>
                     <div className="flex items-center justify-end">
                       <label className="block  w-1/3">คำนำหน้า *</label>
                       <Input
@@ -127,7 +138,7 @@ const PageProfile: NextPageWithLayout = () => {
               </Card>
               <Card shadow="none" className="bg-[#F7FAFF] px-3">
                 <CardBody>
-                  <h1 className="text-xl text-[#0050f0]">ข้อมูลส่วนตัว</h1>
+                  <h1 className="text-xl text-[#002d63]">ข้อมูลส่วนตัว</h1>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                   Ut enim ad minim veniam, quis nostrud exercitation ullamco
@@ -138,7 +149,7 @@ const PageProfile: NextPageWithLayout = () => {
             <Tab
               key="family"
               title={
-                <div className="flex items-center space-x-2 text-lg text-[#0050f0]">
+                <div className="flex items-center space-x-2 text-lg ">
                   <UserGroupIcon className="h-5 w-5" />
                   <span>ข้อมูลครอบครัว</span>
                 </div>
@@ -156,7 +167,7 @@ const PageProfile: NextPageWithLayout = () => {
             <Tab
               key="education"
               title={
-                <div className="flex items-center space-x-2 text-lg text-[#0050f0]">
+                <div className="flex items-center space-x-2 text-lg ">
                   <AcademicCapIcon className="h-5 w-5" />
                   <span>ข้อมูลการศึกษา</span>
                 </div>
@@ -174,7 +185,7 @@ const PageProfile: NextPageWithLayout = () => {
             <Tab
               key="work"
               title={
-                <div className="flex items-center space-x-2 text-lg text-[#0050f0]">
+                <div className="flex items-center space-x-2 text-lg">
                   <BuildingOffice2Icon className="h-5 w-5" />
                   <span>ข้อมูลการทำงาน</span>
                 </div>
@@ -190,7 +201,7 @@ const PageProfile: NextPageWithLayout = () => {
             <Tab
               key="contact"
               title={
-                <div className="flex items-center space-x-2 text-lg text-[#0050f0]">
+                <div className="flex items-center space-x-2 text-lg">
                   <DevicePhoneMobileIcon className="h-5 w-5" />
                   <span>ข้อมูลติดต่อ</span>
                 </div>

@@ -138,7 +138,7 @@ function SidebarContent() {
     //     </div>
 
     <div className="flex bg-white text-gray-900">
-      <aside className="flex h-screen w-20 flex-col items-center border-r border-gray-200 bg-[#002d64]">
+      <aside className="flex h-screen w-20 flex-col items-center border-r border-gray-200 bg-[#002A66]">
         <div className="flex h-[4.5rem] w-full items-center justify-center border-b border-gray-200 p-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"

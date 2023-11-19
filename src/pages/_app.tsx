@@ -18,6 +18,7 @@ const ttFont = localFont({ src: '../../public/fonts/thongterm-reg.woff2' })
 const ttFont_bold = localFont({ src: '../../public/fonts/thongterm-bold.woff2' })
 const mlpFont = localFont({ src: '../../public/fonts/maledpan.woff2' })
 const mlpFont_bold = localFont({ src: '../../public/fonts/maledpan-bold.woff2' })
+const fciconic = localFont({ src: '../../public/fonts/fc-iconic-bold.woff2' })
 import clsx from 'clsx';
 
 export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {

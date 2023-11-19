@@ -2,3 +2,56 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+@font-face {
+  font-family: 'mlp_bold';
+  src: url('../../public/fonts/maledpan-bold.woff2') format('woff2'),
+}
+
+.mlp_bold {
+  font-family: 'mlp_bold';
+}
+
+.grayBlack {
+  color: #6f6f6f;
+}
+
+.blueDark {
+  color: #002D63;
+}
+
+.blue {
+  color: #0050F0;
+}
+
+.orange {
+  color:#f68b1f;
+}
+
+.bg-orange-ttb {
+  background-color: #f68b1f;
+}
+
+.btn-orange {
+  background-color: #f68b1f;
+  color: white;
+}
+
+.btn-normal-blue {
+  background-color: #0056ff;
+  border: 1px solid #0056ff;
+  color: white;
+  padding: 5px 10px
+}
+
+.btn-normal-blue:hover {
+  background-color: #0056ff;
+  border: 1px solid #0056ff;
+  color: white;
+  padding: 5px 10px
+}
+
+.btn-orange-transparent {
+  background-color: white;
+  color: #f68b1f;
+  border: 2px solid #f68b1f;
+}
