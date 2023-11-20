@@ -7,8 +7,17 @@
   src: url('../../public/fonts/maledpan-bold.woff2') format('woff2'),
 }
 
+@font-face {
+  font-family: 'mlp';
+  src: url('../../public/fonts/maledpan.woff2') format('woff2'),
+}
+
 .mlp_bold {
   font-family: 'mlp_bold';
+}
+
+.mlp {
+  font-family: 'mlp';
 }
 
 .grayBlack {

@@ -8,6 +8,7 @@ import { capitalize, set } from 'lodash';
 import { api } from '~/utils/api';
 import { useSession } from 'next-auth/react';
 import { ArrowUpTrayIcon } from '@heroicons/react/24/outline';
+import FileUploadLeave  from '~/features/ui/components/FileUploadLeave';
 
 import {
   Input,
@@ -23,7 +24,7 @@ import {
   type UpdateLeaveInput,
 } from '../types';
 import * as validators from '../helpers/validators';
-import { useState, useEffect } from 'react';
+import { useState, useEffect,useRef } from 'react';
 
 export type LeaveFormProps =
   | {
@@ -43,11 +44,28 @@ export const typeLeaves = [
 ];
 
 const LeaveForm = (props: LeaveFormProps) => {
+  const [fileCount, setFileCount] = useState(0);
   const { data: session } = useSession();
   const { kind, onSubmit } = props;
   const officeId = session?.user.office_id ? session?.user.office_id : -1;
-  const { data: listPerAssigns } =
-    api.employee.listEmployeePerDepartment.useQuery(officeId);
+  const { data: listPerAssigns } =api.employee.listEmployeePerDepartment.useQuery(officeId);
+
+  const fileInputRef = useRef(null);
+
+  const handleClick = () => {
+    fileInputRef?.current.click(); // Opens the file dialog when the button is clicked
+  };
+
+  const handleFileChange = (event:any) => {
+    const files = event.target.files;
+    if (files.length > 10) {
+      alert('You can only upload up to 10 files.');
+      return;
+    }
+    setFileCount(files.length);
+    console.log("count",files);
+    // Handle the file upload logic here
+  };
 
   const {
     register,
@@ -173,7 +191,7 @@ const LeaveForm = (props: LeaveFormProps) => {
                 value: 'blueDark',
                 base: 'blueDark',
                 label: 'text-base lg:text-lg',
-
+                listbox: 'mlp text-base lg:text-lg',
               }}
             >
               {(typeLeave) => (
@@ -311,10 +329,21 @@ const LeaveForm = (props: LeaveFormProps) => {
           </div>
           <div className="mb-5">
               <h2 className="blueDark mlp_bold mb-2">เอกสารแนบ (ไม่บังคับ)</h2>
-              <div className="grayBlack text-base mb-5">รองรับไฟล์ JPG,JPEG,PNG,PDF ไม่เกิน 10 ไฟล์ แต่ละไฟล์มีขนาดไม่เกิน 3 MB รวมกันไม่เกิน 30 MB</div>
-              <Button className="btn-orange-transparent mlp_bold" variant="bordered" startContent={<ArrowUpTrayIcon className="w-5 h-5" />}>
+              
+              <div className="grayBlack text-base mb-5">รองรับไฟล์ JPG,JPEG,PNG,PDF,HEIC,HEIF ไม่เกิน 10 ไฟล์ แต่ละไฟล์มีขนาดไม่เกิน 3 MB รวมกันไม่เกิน 30 MB</div>
+              {/* <Button className="btn-orange-transparent mlp_bold" variant="bordered" startContent={<ArrowUpTrayIcon className="w-5 h-5" />} onPress={handleClick} >
         อัพโหลดเอกสาร
       </Button>
+      {fileCount > 0 && <span className="ml-5 grayBlack text-base">{fileCount} ไฟล์</span>}
+      <Input 
+      type="file"
+      multiple
+      ref={fileInputRef}
+      accept="image/jpg,image/jpeg, .pdf"
+      onChange={handleFileChange}
+      className="hidden"
+      /> */}
+           
             </div>
         </div>
       </div>

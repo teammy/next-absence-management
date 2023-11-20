@@ -1,23 +1,15 @@
-import Image from 'next/image';
-import { type ChangeEventHandler, useState } from 'react';
-import { ACCEPTED_FILE_TYPES } from '../helpers/validators';
-import Loading from './Loading';
+import React,{useState , type ChangeEventHandler } from 'react'
+import { ACCEPTED_FILE_TYPES } from '../../ui/helpers/validators'
+import { Image } from '@nextui-org/react';
 
 export interface AvatarUploaderProps {
-  defaultImage?: string;
-  onImageChanged: (url: string) => void;
   error?: string | undefined;
 }
 
-const AvatarUploader = ({
-  defaultImage,
-  onImageChanged,
+export default function FileUploadLeave({
   error,
-}: AvatarUploaderProps) => {
+}: AvatarUploaderProps) {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [image, setImage] = useState(
-    defaultImage ?? '/assets/images/avatar.png',
-  );
 
   const uploadImage = async (image: File) => {
     const formData = new FormData();
@@ -30,11 +22,8 @@ const AvatarUploader = ({
     const data = (await res.json()) as { filename: string };
 
     return data.filename;
-  };
+  }
 
-  const previewAvatar = (image: string) => {
-    setImage(image);
-  };
 
   const handleImageUpload: ChangeEventHandler<HTMLInputElement> = async (
     event,
@@ -45,25 +34,22 @@ const AvatarUploader = ({
 
     setIsButtonDisabled(true);
     const filename = await uploadImage(image);
-    previewAvatar(`/uploads/${filename}`);
-    onImageChanged(filename);
+    console.log("filename",filename);
   };
-
   return (
     <div className="mx-auto w-48 rounded-lg bg-white px-4 py-5 text-center shadow-lg">
       <div className="mb-4">
         <Image
-          priority
           src={image}
           alt="Avatar Upload"
           width={100}
           height={100}
-          onLoadingComplete={() => setIsButtonDisabled(false)}
+          onLoad={() => setIsButtonDisabled(false)}
           className="mx-auto w-auto rounded-full object-cover object-center"
         ></Image>
       </div>
       {isButtonDisabled ? (
-        <Loading></Loading>
+        <div>Not Content</div>
       ) : (
         <label className="mt-6 cursor-pointer">
           <span className="mt-2 rounded-full bg-blue-500 px-4 py-2 text-sm leading-normal text-white">
@@ -80,7 +66,5 @@ const AvatarUploader = ({
 
       <div className="mt-2 text-sm text-red-500">{error}</div>
     </div>
-  );
-};
-
-export default AvatarUploader;
+  )
+}
