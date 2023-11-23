@@ -8,7 +8,8 @@ import { capitalize, set } from 'lodash';
 import { api } from '~/utils/api';
 import { useSession } from 'next-auth/react';
 import { ArrowUpTrayIcon } from '@heroicons/react/24/outline';
-import FileUploadLeave  from '~/features/ui/components/FileUploadLeave';
+import FileUploadLeave from './FileUploadLeave';
+import AvatarUploader from '~/features/ui/components/AvatarUploader';
 
 import {
   Input,
@@ -183,14 +184,13 @@ const LeaveForm = (props: LeaveFormProps) => {
               radius="sm"
               placeholder=" "
               size="lg"
-              labelPlacement="outside"
               defaultSelectedKeys={['1']}
               variant="bordered"
               className="border-gray-300"
               classNames={{
                 value: 'blueDark',
                 base: 'blueDark',
-                label: 'text-base lg:text-lg',
+                label: 'text-base',
                 listbox: 'mlp text-base lg:text-lg',
               }}
             >
@@ -200,15 +200,15 @@ const LeaveForm = (props: LeaveFormProps) => {
             </Select>
           </div>
           <div className="my-4 flex justify-between text-base lg:text-lg" id="remainingLeaveDays">
-            <p className="text-[#6F6F6F]">ยอดวันลาสะสม</p>
-            <p className="blueDark mlp_bold">0 วัน</p>
+            <p className="text-[#6F6F6F] Ekachon_Light">ยอดวันลาสะสม</p>
+            <p className="blueDark Ekachon_Bold">0 วัน</p>
           </div>
           <div className="my-4 flex justify-between text-base lg:text-lg" id="remainingLeaveDays">
-            <p className="text-[#6F6F6F]">วันลาคงเหลือรวม</p>
-            <p className="blueDark mlp_bold">0 วัน</p>
+            <p className="text-[#6F6F6F] Ekachon_Light">วันลาคงเหลือรวม</p>
+            <p className="blueDark Ekachon_Bold">0 วัน</p>
           </div>
           <div className="my-5">
-            <h1 className="blueDark mlp_bold mb-2">ช่วงเวลา</h1>
+            <h1 className="blueDark Ekachon_Bold mb-2">ช่วงเวลา</h1>
               <label className="blueDark text-base lg:text-lg">เริ่มต้น *</label>
               <ThaiDatePicker
                 id="startLeaveDate"
@@ -240,8 +240,8 @@ const LeaveForm = (props: LeaveFormProps) => {
               />
             </div>
           <div className="my-4 flex justify-between text-base lg:text-lg" id="remainingLeaveDays">
-            <p className="text-[#6F6F6F]">ระยะเวลา</p>
-            <p className="blueDark mlp_bold">{totalLeaveDate} วัน</p>
+            <p className="text-[#6F6F6F] Ekachon_Light">ระยะเวลา</p>
+            <p className="blueDark Ekachon_Bold">{totalLeaveDate} วัน</p>
             <Input
               variant="bordered"
               id="totalLeaveDays"
@@ -261,13 +261,12 @@ const LeaveForm = (props: LeaveFormProps) => {
           <div className="pt-4">
             <Select
               label="มอบหมายงานให้ *"
-              labelPlacement="outside"
               placeholder="เลือกผู้ปฏิบัติงานแทน"
               variant="bordered"
               items={listPerAssigns}
               className="mb-6"
               classNames={{
-                label: 'text-base lg:text-lg',
+                label: 'text-base',
               }}
               radius="sm"
               {...register('assignUser')}
@@ -285,11 +284,10 @@ const LeaveForm = (props: LeaveFormProps) => {
           </div>
         </div>
         <div className="flex-1 md:w-1/2 mt-5 lg:mt-0">
-          <h1 className="mb-3 blueDark mlp_bold">รายละเอียดเพิ่มเติม</h1>
+          <h1 className="mb-3 blueDark Ekachon_Bold">รายละเอียดเพิ่มเติม</h1>
           <div id="reasonLeave" className="mb-5">
             <Textarea
               label="รายละเอียดการลา (ไม่บังคับกรอก)"
-              labelPlacement="outside"
               variant="bordered"
               placeholder=" "
               radius="sm"
@@ -303,7 +301,6 @@ const LeaveForm = (props: LeaveFormProps) => {
           <div id="contactLocation" className="mb-5">
             <Textarea
               label="สถานที่ติดต่อระหว่างการลา *"
-              labelPlacement="outside"
               variant="bordered"
               placeholder=" "
               cols={3}
@@ -318,7 +315,6 @@ const LeaveForm = (props: LeaveFormProps) => {
             <Input
               variant="bordered"
               label="เบอร์ติดต่อ *"
-              labelPlacement="outside"
               placeholder=" "
               radius="sm"
               classNames={{
@@ -328,9 +324,8 @@ const LeaveForm = (props: LeaveFormProps) => {
             />
           </div>
           <div className="mb-5">
-              <h2 className="blueDark mlp_bold mb-2">เอกสารแนบ (ไม่บังคับ)</h2>
-              
-              <div className="grayBlack text-base mb-5">รองรับไฟล์ JPG,JPEG,PNG,PDF,HEIC,HEIF ไม่เกิน 10 ไฟล์ แต่ละไฟล์มีขนาดไม่เกิน 3 MB รวมกันไม่เกิน 30 MB</div>
+              <h2 className="blueDark Ekachon_Bold mb-2">เอกสารแนบ (ไม่บังคับ)</h2>
+              <div className="grayBlack text-base mb-5 Ekachon_Light">รองรับไฟล์ JPG,JPEG,PNG,PDF,HEIC,HEIF ไม่เกิน 10 ไฟล์ แต่ละไฟล์มีขนาดไม่เกิน 3 MB รวมกันไม่เกิน 30 MB</div>
               {/* <Button className="btn-orange-transparent mlp_bold" variant="bordered" startContent={<ArrowUpTrayIcon className="w-5 h-5" />} onPress={handleClick} >
         อัพโหลดเอกสาร
       </Button>
@@ -343,7 +338,7 @@ const LeaveForm = (props: LeaveFormProps) => {
       onChange={handleFileChange}
       className="hidden"
       /> */}
-           
+           <AvatarUploader />
             </div>
         </div>
       </div>

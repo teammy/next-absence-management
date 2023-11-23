@@ -12,13 +12,9 @@ import { type ReactElement, type ReactNode } from 'react';
 import { Noto_Sans_Thai } from 'next/font/google'
 import localFont from 'next/font/local'
 
-const kvlFont = localFont({ src: '../../public/fonts/kvl-reg.woff2' })
-const kvlFont_bold = localFont({ src: '../../public/fonts/kvl-bold.woff2' })
 const ttFont = localFont({ src: '../../public/fonts/thongterm-reg.woff2' })
 const ttFont_bold = localFont({ src: '../../public/fonts/thongterm-bold.woff2' })
-const mlpFont = localFont({ src: '../../public/fonts/maledpan.woff2' })
-const mlpFont_bold = localFont({ src: '../../public/fonts/maledpan-bold.woff2' })
-const fciconic = localFont({ src: '../../public/fonts/fc-iconic-bold.woff2' })
+const Ekachon = localFont({ src: '../../public/fonts/Ekachon-Regular.ttf' })
 import clsx from 'clsx';
 
 export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
@@ -38,7 +34,7 @@ const MyApp = ({
   return (
     <SessionProvider session={session}>
       <Layout >
-        <NextUIProvider className={clsx(mlpFont.className,"text-lg")}>
+        <NextUIProvider className={clsx(Ekachon.className,"text-lg")}>
         <Component {...pageProps} />
         </NextUIProvider>
         <ReactQueryDevtools initialIsOpen />

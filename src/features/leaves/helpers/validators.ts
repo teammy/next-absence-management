@@ -31,13 +31,13 @@ export const ACCEPTED_FILE_TYPES = [
 ];
 
 export const image = z
-  .custom<File | null>((image) => image instanceof File, 'Avatar is required.')
+  .custom<File | null>((fileFromField) => fileFromField instanceof File, 'Avatar is required.')
   .refine(
-    (image) => image && image.size <= MAX_FILE_SIZE,
+    (fileFromField) => fileFromField && fileFromField.size <= MAX_FILE_SIZE,
     'Max file size is 3 MB',
   )
   .refine(
-    (image) => image && ACCEPTED_FILE_TYPES.includes(image.type),
+    (fileFromField) => fileFromField && ACCEPTED_FILE_TYPES.includes(fileFromField.type),
     '.jpg, .jpeg, .png, .pdf,.heic,.heif files are accepted.',
   )
   .nullable();

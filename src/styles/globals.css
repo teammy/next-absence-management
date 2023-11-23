@@ -3,22 +3,45 @@
 @import 'tailwindcss/utilities';
 
 @font-face {
-  font-family: 'mlp_bold';
-  src: url('../../public/fonts/maledpan-bold.woff2') format('woff2'),
+  font-family: 'Ekachon';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../../public/fonts/Ekachon-Regular.ttf') format('truetype'),
 }
 
 @font-face {
-  font-family: 'mlp';
-  src: url('../../public/fonts/maledpan.woff2') format('woff2'),
+  font-family: 'Ekachon_Bold';
+  font-weight: 700;
+  font-style: normal;
+  src: url('../../public/fonts/Ekachon-Bold.ttf') format('truetype'),
 }
 
-.mlp_bold {
-  font-family: 'mlp_bold';
+@font-face {
+  font-family: 'Ekachon_Italic';
+  font-style: italic;
+  font-weight: 400;
+  src: url('../../public/fonts/Ekachon-Italic.ttf') format('truetype'),
 }
 
-.mlp {
-  font-family: 'mlp';
+@font-face {
+  font-family: 'Ekachon_Light';
+  font-style: normal;
+  font-weight: lighter;
+  src: url('../../public/fonts/Ekachon-Light.ttf') format('truetype'),
 }
+
+
+.Ekachon_Bold {
+  font-family: 'Ekachon_Bold';
+}
+.Ekachon_Italic {
+  font-family: 'Ekachon_Italic';
+}
+
+.Ekachon_Light {
+  font-family: 'Ekachon_Light';
+}
+
 
 .grayBlack {
   color: #6f6f6f;
