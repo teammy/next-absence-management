@@ -1,7 +1,7 @@
 import { useState, type ChangeEventHandler, useRef, useEffect } from 'react';
 import { ACCEPTED_FILE_TYPES } from '../../ui/helpers/validators';
 import { Image, Button } from '@nextui-org/react';
-import { ArrowUpTrayIcon } from '@heroicons/react/24/solid';
+import { ArrowUpTrayIcon,XMarkIcon } from '@heroicons/react/24/solid';
 import { set } from 'lodash';
 
 export interface AvatarUploaderProps {
@@ -11,7 +11,6 @@ export interface AvatarUploaderProps {
 export default function FileUploadLeave({ error }: AvatarUploaderProps) {
 
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const uploadImage = async (image: File) => {
     const formData = new FormData();
@@ -35,9 +34,15 @@ export default function FileUploadLeave({ error }: AvatarUploaderProps) {
     const files = Array.from(event.target.files || []);
     const image = event.target.files?.[0];
     if (!files) return;
-   
-    setSelectedFiles(files);
-    console.log('files', files);
+
+    const updatedFiles = [...selectedFiles];
+    files.forEach(newFile => {
+      if (!updatedFiles.some(file => file.name === newFile.name)) {
+        updatedFiles.push(newFile);
+      }
+    });
+
+    setSelectedFiles(updatedFiles);
 
 
     for (const file of files) {
@@ -47,31 +52,29 @@ export default function FileUploadLeave({ error }: AvatarUploaderProps) {
 
     // if (!image) return;
 
-    setIsButtonDisabled(true);
     // const filename = await uploadImage(image);
     // setUploadedFiles(filename);
 
   };
 
+  const handleDeleteFile = (fileName:string) => {
+    setSelectedFiles(selectedFiles.filter(file => file.name !== fileName));
+  };
+
   return (
-    <div className="mx-auto w-48 rounded-lg bg-white px-4 py-5 text-center shadow-lg">
-      <div className="mb-4">
-        {/* <Image
-          src="/assets/images/avatar.png"
-          alt="Avatar Upload"
-          width={100}
-          height={100}
-          onLoad={() => setIsButtonDisabled(false)}
-          className="mx-auto w-auto rounded-full object-cover object-center"
-        ></Image> */}
-      </div>
-      {isButtonDisabled ? (
-        <div><ul>
-        {selectedFiles.map((file, index) => (
-          <li key={index}>{file.name}</li> // Displaying the file name
-        ))}
-      </ul></div>
-      ) : (
+    <div className="">
+      {selectedFiles.map((file, index) => (
+      <div className="mb-5 rounded-md bg-[#E5EDFE] py-4 px-8" key={index}>
+          <div className="flex items-center justify-between">
+            <span className="truncate pr-3 text-base font-medium text-[#07074D]">
+            {file.name}
+            </span>
+            <button onClick={() => handleDeleteFile(file.name)}><XMarkIcon className="w-5 h-" /></button>
+          </div>
+        </div>
+         ))}
+
+    
         <label className="mt-6 cursor-pointer">
           <Button
             className="btn-orange-transparent"
@@ -79,7 +82,7 @@ export default function FileUploadLeave({ error }: AvatarUploaderProps) {
             startContent={<ArrowUpTrayIcon className="h-5 w-5" />}
             onPress={handleButtonUploadClick}
           >
-            อัพโหลดเอกสาร
+            เลือกไฟล์
           </Button>
           <input
           ref={fileInputRef}
@@ -90,8 +93,6 @@ export default function FileUploadLeave({ error }: AvatarUploaderProps) {
             onChange={handleFileSelect}
           ></input>
         </label>
-      )}
-
       <div className="mt-2 text-sm text-red-500">{error}</div>
     </div>
   );

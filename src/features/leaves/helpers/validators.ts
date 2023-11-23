@@ -8,7 +8,7 @@ export const add = z.object({
   reason: z.string().min(1),
   // assignUser : z.number().min(1),
   leaveLocation : z.string().min(1),
-  // leaveContact : z.string().min(1),
+  leaveContact : z.string().min(1),
 });
 
 export const updateForm = add.partial();

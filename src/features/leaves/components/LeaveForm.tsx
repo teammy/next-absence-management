@@ -16,7 +16,6 @@ import {
   Textarea,
   Button,
   Select,
-  SelectSection,
   SelectItem,
 } from '@nextui-org/react';
 import {
@@ -25,7 +24,7 @@ import {
   type UpdateLeaveInput,
 } from '../types';
 import * as validators from '../helpers/validators';
-import { useState, useEffect,useRef } from 'react';
+import { useState, useEffect, useRef, type ChangeEventHandler } from 'react';
 
 export type LeaveFormProps =
   | {
@@ -46,26 +45,14 @@ export const typeLeaves = [
 
 const LeaveForm = (props: LeaveFormProps) => {
   const [fileCount, setFileCount] = useState(0);
+  const [selectTypeLeave, setSelectTypeLeave] = useState<string>("1");
   const { data: session } = useSession();
   const { kind, onSubmit } = props;
   const officeId = session?.user.office_id ? session?.user.office_id : -1;
-  const { data: listPerAssigns } =api.employee.listEmployeePerDepartment.useQuery(officeId);
+  const { data: listPerAssigns } = api.employee.listEmployeePerDepartment.useQuery(officeId);
 
-  const fileInputRef = useRef(null);
-
-  const handleClick = () => {
-    fileInputRef?.current.click(); // Opens the file dialog when the button is clicked
-  };
-
-  const handleFileChange = (event:any) => {
-    const files = event.target.files;
-    if (files.length > 10) {
-      alert('You can only upload up to 10 files.');
-      return;
-    }
-    setFileCount(files.length);
-    console.log("count",files);
-    // Handle the file upload logic here
+  const handleSelectionTypeLeaveChange:ChangeEventHandler<HTMLSelectElement> = (event) => {
+    setSelectTypeLeave(event.target.value);
   };
 
   const {
@@ -86,7 +73,7 @@ const LeaveForm = (props: LeaveFormProps) => {
     defaultValues: kind === 'edit' ? props.leave : undefined,
   });
 
-  const calculateDiffDays = (startDate: any, endDate: any) => {
+  const calculateDiffDays = (startDate: string, endDate: string) => {
     const oneDay = 24 * 60 * 60 * 1000; // milliseconds in a day
     const holidays = [
       new Date('2023-10-02'), // public holiday
@@ -174,7 +161,7 @@ const LeaveForm = (props: LeaveFormProps) => {
       {/* <h1>{capitalize(kind)}</h1> */}
       <div className="flex flex-col md:flex-row md:space-x-7">
         <div className="flex-1 md:w-1/2">
-        <h1 className="blueDark mlp_bold">รายละเอียด</h1>
+          <h1 className="blueDark Ekachon_Bold">รายละเอียด</h1>
           <div id="select-typeLeave" className="pt-5">
             <Select
               id="typeLeave"
@@ -184,7 +171,8 @@ const LeaveForm = (props: LeaveFormProps) => {
               radius="sm"
               placeholder=" "
               size="lg"
-              defaultSelectedKeys={['1']}
+              selectedKeys={[selectTypeLeave]}
+              onChange={handleSelectionTypeLeaveChange}
               variant="bordered"
               className="border-gray-300"
               classNames={{
@@ -199,48 +187,57 @@ const LeaveForm = (props: LeaveFormProps) => {
               )}
             </Select>
           </div>
-          <div className="my-4 flex justify-between text-base lg:text-lg" id="remainingLeaveDays">
-            <p className="text-[#6F6F6F] Ekachon_Light">ยอดวันลาสะสม</p>
+          <div
+            className="my-4 flex justify-between text-base lg:text-lg"
+            id="remainingLeaveDays"
+          >
+            <p className="Ekachon_Light text-[#6F6F6F]">ยอดวันลาสะสม</p>
             <p className="blueDark Ekachon_Bold">0 วัน</p>
           </div>
-          <div className="my-4 flex justify-between text-base lg:text-lg" id="remainingLeaveDays">
-            <p className="text-[#6F6F6F] Ekachon_Light">วันลาคงเหลือรวม</p>
+          <div
+            className="my-4 flex justify-between text-base lg:text-lg"
+            id="remainingLeaveDays"
+          >
+            <p className="Ekachon_Light text-[#6F6F6F]">วันลาคงเหลือรวม</p>
             <p className="blueDark Ekachon_Bold">0 วัน</p>
           </div>
           <div className="my-5">
             <h1 className="blueDark Ekachon_Bold mb-2">ช่วงเวลา</h1>
-              <label className="blueDark text-base lg:text-lg">เริ่มต้น *</label>
-              <ThaiDatePicker
-                id="startLeaveDate"
-                onChange={handleDatePickerStartChange}
-                value={currentStartLeaveDate}
-                placeholder="เลือกวันที่เริ่มต้นลา"
-                yearBoundary={1}
-                inputProps={{
-                  displayFormat: 'D MMM YYYY',
-                  className:
-                    'border w-full rounded-md border-gray-300 text-base px-3 py-2 mt-1',
-                }}
-              />
-            </div>
-            <div>
-              <label className="blueDark text-base lg:text-lg">สิ้นสุด *</label>
-              <ThaiDatePicker
-                id="endLeaveDate"
-                yearBoundary={1}
-                placeholder="เลือกวันที่สิ้นสุดลา"
-                onChange={handleDatePickerEndChange}
-                value={currentEndLeaveDate}
-                minDate={new Date(currentStartLeaveDate)}
-                inputProps={{
-                  displayFormat: 'D MMM YYYY',
-                  className:
-                    'border w-full rounded-md text-base border-gray-300 px-3 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500',
-                }}
-              />
-            </div>
-          <div className="my-4 flex justify-between text-base lg:text-lg" id="remainingLeaveDays">
-            <p className="text-[#6F6F6F] Ekachon_Light">ระยะเวลา</p>
+            <label className="blueDark text-base lg:text-lg">เริ่มต้น *</label>
+            <ThaiDatePicker
+              id="startLeaveDate"
+              onChange={handleDatePickerStartChange}
+              value={currentStartLeaveDate}
+              placeholder="เลือกวันที่เริ่มต้นลา"
+              yearBoundary={1}
+              inputProps={{
+                displayFormat: 'D MMM YYYY',
+                className:
+                  'border w-full rounded-md border-gray-300 text-base px-3 py-2 mt-1',
+              }}
+            />
+          </div>
+          <div>
+            <label className="blueDark text-base lg:text-lg">สิ้นสุด *</label>
+            <ThaiDatePicker
+              id="endLeaveDate"
+              yearBoundary={1}
+              placeholder="เลือกวันที่สิ้นสุดลา"
+              onChange={handleDatePickerEndChange}
+              value={currentEndLeaveDate}
+              minDate={new Date(currentStartLeaveDate)}
+              inputProps={{
+                displayFormat: 'D MMM YYYY',
+                className:
+                  'border w-full rounded-md text-base border-gray-300 px-3 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500',
+              }}
+            />
+          </div>
+          <div
+            className="my-4 flex justify-between text-base lg:text-lg"
+            id="remainingLeaveDays"
+          >
+            <p className="Ekachon_Light text-[#6F6F6F]">ระยะเวลา</p>
             <p className="blueDark Ekachon_Bold">{totalLeaveDate} วัน</p>
             <Input
               variant="bordered"
@@ -283,8 +280,8 @@ const LeaveForm = (props: LeaveFormProps) => {
             </Select>
           </div>
         </div>
-        <div className="flex-1 md:w-1/2 mt-5 lg:mt-0">
-          <h1 className="mb-3 blueDark Ekachon_Bold">รายละเอียดเพิ่มเติม</h1>
+        <div className="mt-5 flex-1 md:w-1/2 lg:mt-0">
+          <h1 className="blueDark Ekachon_Bold mb-5">รายละเอียดเพิ่มเติม</h1>
           <div id="reasonLeave" className="mb-5">
             <Textarea
               label="รายละเอียดการลา (ไม่บังคับกรอก)"
@@ -323,23 +320,19 @@ const LeaveForm = (props: LeaveFormProps) => {
               {...register('leaveContact')}
             />
           </div>
-          <div className="mb-5">
-              <h2 className="blueDark Ekachon_Bold mb-2">เอกสารแนบ (ไม่บังคับ)</h2>
-              <div className="grayBlack text-base mb-5 Ekachon_Light">รองรับไฟล์ JPG,JPEG,PNG,PDF,HEIC,HEIF ไม่เกิน 10 ไฟล์ แต่ละไฟล์มีขนาดไม่เกิน 3 MB รวมกันไม่เกิน 30 MB</div>
-              {/* <Button className="btn-orange-transparent mlp_bold" variant="bordered" startContent={<ArrowUpTrayIcon className="w-5 h-5" />} onPress={handleClick} >
-        อัพโหลดเอกสาร
-      </Button>
-      {fileCount > 0 && <span className="ml-5 grayBlack text-base">{fileCount} ไฟล์</span>}
-      <Input 
-      type="file"
-      multiple
-      ref={fileInputRef}
-      accept="image/jpg,image/jpeg, .pdf"
-      onChange={handleFileChange}
-      className="hidden"
-      /> */}
-           <AvatarUploader />
+
+          {selectTypeLeave[0] === '2' && (
+            <div className="mb-5">
+              <h2 className="blueDark Ekachon_Bold mb-2">
+                เอกสารแนบ (ไม่บังคับ)
+              </h2>
+              <div className="grayBlack Ekachon_Light mb-5 text-base">
+                รองรับไฟล์ JPG,JPEG,PNG,PDF,HEIC,HEIF ไม่เกิน 10 ไฟล์
+                แต่ละไฟล์มีขนาดไม่เกิน 3 MB รวมกันไม่เกิน 30 MB
+              </div>
+              <FileUploadLeave />
             </div>
+          )}
         </div>
       </div>
 
