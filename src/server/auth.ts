@@ -18,7 +18,7 @@ import {  type Role } from '@prisma/client';
 declare module 'next-auth' {
   interface Session {
     user: {
-      id: string;
+      user_id: number;
       role: Role;
       firstname: string;
       lastname: string;
@@ -31,10 +31,15 @@ declare module 'next-auth' {
 
   interface User {
     role_user: Role;
+    user_id: number;
     person_firstname: string;
     person_lastname: string;
     person_email: string;
     office_id : number;
+    duty_id: number;
+    faction_id: number;
+    depart_id: number;
+    ward_id: number;
     // person_username: string;
     // person_photo?: string;
     // image: string;
@@ -49,6 +54,7 @@ declare module 'next-auth/jwt' {
     role_user: Role;
     firstname: string;
     lastname: string;
+    user_id: number;
   }
 }
 
@@ -80,37 +86,34 @@ export const authOptions: NextAuthOptions = {
 
       if (user) {
         token.user = user;
-        token.sub = user.id;
+        token.user_id = user.user_id;
         token.firstname = user.person_firstname;
         token.lastname = user.person_lastname;
         token.email = user.person_email;
         token.name = user.name;
         token.role_user = user.role_user;
-        token.office_id = user.office_id;
       }
       console.log('token on console', token);
       return token;
     },
     session: ({ session, token }) => {
-      
-      session.user.firstname = token.firstname; // Added line
-      session.user.lastname = token.lastname; // Added line
-      session.user.role = token.role_user; // Uncomment this line if role is needed
-      session.user.office_id = token.office_id; // Uncomment this line if role is needed
-      // session.user.email = token.email; // Uncomment this line if email is needed
+      session.user.firstname = token.firstname; 
+      session.user.lastname = token.lastname; 
+      session.user.role = token.role_user; 
+      session.user.user_id = token.user_id; 
+      // session.user.email = token.email; 
 
       // console.log('token session', session.user.image);
       console.log('session on console', session);
       return {
         ...session,
         user: {
-          id: token.sub,
+          user_id: token.sub,
           image: token.picture,
           email: token.email,
           role: token.role_user,
           firstname: token.firstname,
           lastname: token.lastname,
-          office_id: token.office_id,
         },
       };
     },
@@ -137,7 +140,6 @@ export const authOptions: NextAuthOptions = {
             person_email: true,
             role_user: true,
             person_photo: true,
-            office_id: true,
           },
         });
 
@@ -147,7 +149,24 @@ export const authOptions: NextAuthOptions = {
         if (!(await bcrypt.compare(credentials.person_password, user.person_password_hash))) {
           return null;
         }
-        return { ...user,id:user.user_id.toString(),image:user.person_photo};
+
+        const userDepartment = await prisma.level.findMany({
+          where: {
+            person_id: user.person_id
+          },
+          select: {
+            duty_id: true,
+            faction_id: true,
+            depart_id: true,
+            ward_id: true,
+          }
+        });
+        if (!userDepartment) return undefined;
+        
+        console.log("user",user); // After the first query
+        console.log("User Department",userDepartment); // After the second query
+
+        return { ...user,user_id:user.user_id,image:user.person_photo};
       },
     }),
   ],

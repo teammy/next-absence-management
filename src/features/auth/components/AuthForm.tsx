@@ -47,6 +47,7 @@ const AuthForm = ({ kind, onSubmit }: AuthFormProps) => {
                 label="ชื่อ *"
                 placeholder="กรอกชื่อจริง ไม่ต้องใส่คำนำหน้า"
                 error={errors.person_firstname?.message}
+                className="block w-full rounded-sm pt-4 text-lg text-[#002d63]"
                 {...register('person_firstname')}
               ></FormField>
             </div>
@@ -55,6 +56,7 @@ const AuthForm = ({ kind, onSubmit }: AuthFormProps) => {
                 id="person_lastname"
                 label="นามสกุล *"
                 placeholder="กรอกนามสกุล"
+                className="block w-full rounded-sm pt-4 text-lg text-[#002d63]"
                 error={errors.person_lastname?.message}
                 {...register('person_lastname')}
               ></FormField>

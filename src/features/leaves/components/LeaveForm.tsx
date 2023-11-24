@@ -47,13 +47,25 @@ const LeaveForm = (props: LeaveFormProps) => {
   const [fileCount, setFileCount] = useState(0);
   const [selectTypeLeave, setSelectTypeLeave] = useState<string>("1");
   const { data: session } = useSession();
+  const [selectAssignUser, setSelectAssignUser] = useState<string>("1");
+  const [totalLeaveDate, setTotalLeaveDate] = useState<string>('');
+  const [selectedThaiDate, setSelectedThaiDate] = useState();
+
   const { kind, onSubmit } = props;
   const officeId = session?.user.office_id ? session?.user.office_id : -1;
   const { data: listPerAssigns } = api.employee.listEmployeePerDepartment.useQuery(officeId);
 
   const handleSelectionTypeLeaveChange:ChangeEventHandler<HTMLSelectElement> = (event) => {
     setSelectTypeLeave(event.target.value);
+    setValue('typeLeave', event.target.value);
   };
+
+  const handleSelectAssignUserChange:ChangeEventHandler<HTMLSelectElement> = (event) => {
+    setSelectAssignUser(event.target.value);
+    setValue('assignUser', Number(event.target.value));
+  };
+
+
 
   const {
     register,
@@ -101,15 +113,14 @@ const LeaveForm = (props: LeaveFormProps) => {
     return diffDays;
   };
 
-  const [totalLeaveDate, setTotalLeaveDate] = useState('');
-  const [selectedThaiDate, setSelectedThaiDate] = useState();
 
   const currentStartLeaveDate = getValues('startLeaveDate');
   const currentEndLeaveDate = getValues('endLeaveDate');
 
   useEffect(() => {
+
     setTotalLeaveDate(
-      calculateDiffDays(currentStartLeaveDate, currentEndLeaveDate),
+      calculateDiffDays(currentStartLeaveDate, currentEndLeaveDate).toString(),
     );
     setValue(
       'totalLeaveDays',
@@ -258,6 +269,7 @@ const LeaveForm = (props: LeaveFormProps) => {
           <div className="pt-4">
             <Select
               label="มอบหมายงานให้ *"
+              {...register('assignUser')}
               placeholder="เลือกผู้ปฏิบัติงานแทน"
               variant="bordered"
               items={listPerAssigns}
@@ -266,7 +278,8 @@ const LeaveForm = (props: LeaveFormProps) => {
                 label: 'text-base',
               }}
               radius="sm"
-              {...register('assignUser')}
+              selectedKeys={[selectAssignUser]}
+              onChange={handleSelectAssignUserChange}
             >
               {(listPerAssign) => (
                 <SelectItem
@@ -317,7 +330,7 @@ const LeaveForm = (props: LeaveFormProps) => {
               classNames={{
                 label: 'text-base lg:text-lg',
               }}
-              {...register('leaveContact')}
+              {...register('leaveContactNumber')}
             />
           </div>
 

@@ -6,9 +6,9 @@ export const add = z.object({
   totalLeaveDays: z.number().min(1),
   typeLeave: z.string().min(1),
   reason: z.string().min(1),
-  // assignUser : z.number().min(1),
+  assignUser : z.number().min(1),
   leaveLocation : z.string().min(1),
-  leaveContact : z.string().min(1),
+  leaveContactNumber : z.string().min(1),
 });
 
 export const updateForm = add.partial();
