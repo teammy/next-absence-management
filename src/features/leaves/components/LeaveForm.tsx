@@ -44,7 +44,6 @@ export const typeLeaves = [
 ];
 
 const LeaveForm = (props: LeaveFormProps) => {
-  const [fileCount, setFileCount] = useState(0);
   const [selectTypeLeave, setSelectTypeLeave] = useState<string>("1");
   const { data: session } = useSession();
   const [selectAssignUser, setSelectAssignUser] = useState<string>("1");
@@ -52,8 +51,11 @@ const LeaveForm = (props: LeaveFormProps) => {
   const [selectedThaiDate, setSelectedThaiDate] = useState();
 
   const { kind, onSubmit } = props;
-  const officeId = session?.user.office_id ? session?.user.office_id : -1;
-  const { data: listPerAssigns } = api.employee.listEmployeePerDepartment.useQuery(officeId);
+  const userId = session?.user.user_id ? session?.user.duty_id : 0;
+  const dutyId = session?.user.duty_id ? session?.user.duty_id : 0;
+  const wardId = session?.user.ward_id ? session?.user.ward_id : 0;
+  const { data: listPerAssigns } = api.employee.listEmployeeInDepartment.useQuery({dutyId, wardId,userId});
+  console.log('listPerAssigns', listPerAssigns);
 
   const handleSelectionTypeLeaveChange:ChangeEventHandler<HTMLSelectElement> = (event) => {
     setSelectTypeLeave(event.target.value);
@@ -283,11 +285,11 @@ const LeaveForm = (props: LeaveFormProps) => {
             >
               {(listPerAssign) => (
                 <SelectItem
-                  key={listPerAssign.user_id}
-                  textValue={listPerAssign.person_firstname}
+                  key={listPerAssign.personal.user_id}
+                  textValue={listPerAssign.personal.person_firstname}
                 >
-                  {listPerAssign.person_firstname}{' '}
-                  {listPerAssign.person_lastname}
+                  {listPerAssign.personal.person_firstname}{' '}
+                  {listPerAssign.personal.person_lastname}
                 </SelectItem>
               )}
             </Select>

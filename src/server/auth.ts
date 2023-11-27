@@ -8,6 +8,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from '~/server/db';
 import {  type Role } from '@prisma/client';
+import { setEngine } from 'crypto';
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -26,6 +27,16 @@ declare module 'next-auth' {
       email: string;
       image: string;
       office_id : number;
+      duty_id : number;
+      person_id : string;
+      ward_id : number;
+    };
+
+    userDepartment: {
+      duty_id: number;
+      faction_id: number;
+      depart_id: number;
+      ward_id: number;
     };
   }
 
@@ -36,13 +47,18 @@ declare module 'next-auth' {
     person_lastname: string;
     person_email: string;
     office_id : number;
-    duty_id: number;
-    faction_id: number;
-    depart_id: number;
-    ward_id: number;
+    person_id: string;
+
+    user_department: {
+      duty_id: number;
+      faction_id: number;
+      depart_id: number;
+      ward_id: number;
+    };
     // person_username: string;
     // person_photo?: string;
     // image: string;
+
   }
 
   
@@ -55,6 +71,9 @@ declare module 'next-auth/jwt' {
     firstname: string;
     lastname: string;
     user_id: number;
+    person_id: string;
+    duty_id: number;  
+    ward_id: number;
   }
 }
 
@@ -87,11 +106,13 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.user = user;
         token.user_id = user.user_id;
+        token.person_id = user.person_id;
         token.firstname = user.person_firstname;
         token.lastname = user.person_lastname;
         token.email = user.person_email;
-        token.name = user.name;
         token.role_user = user.role_user;
+        token.duty_id = user.user_department.depart_id;
+        token.ward_id = user.user_department.ward_id;
       }
       console.log('token on console', token);
       return token;
@@ -101,6 +122,9 @@ export const authOptions: NextAuthOptions = {
       session.user.lastname = token.lastname; 
       session.user.role = token.role_user; 
       session.user.user_id = token.user_id; 
+      session.user.duty_id = token.duty_id;
+      session.user.ward_id = token.ward_id;
+      session.user.person_id = token.person_id;
       // session.user.email = token.email; 
 
       // console.log('token session', session.user.image);
@@ -114,6 +138,8 @@ export const authOptions: NextAuthOptions = {
           role: token.role_user,
           firstname: token.firstname,
           lastname: token.lastname,
+          duty_id: token.duty_id,
+          ward_id: token.ward_id,
         },
       };
     },
@@ -152,7 +178,7 @@ export const authOptions: NextAuthOptions = {
 
         const userDepartment = await prisma.level.findMany({
           where: {
-            person_id: user.person_id
+            person_id: user?.person_id
           },
           select: {
             duty_id: true,
@@ -161,12 +187,13 @@ export const authOptions: NextAuthOptions = {
             ward_id: true,
           }
         });
-        if (!userDepartment) return undefined;
+        const userDepart = userDepartment[0];
+        if (!userDepart) return undefined;
         
         console.log("user",user); // After the first query
-        console.log("User Department",userDepartment); // After the second query
+        console.log("User Department",userDepart); // After the second query
 
-        return { ...user,user_id:user.user_id,image:user.person_photo};
+        return { ...user,user_department:userDepart,user_id:user.user_id,image:user.person_photo};
       },
     }),
   ],

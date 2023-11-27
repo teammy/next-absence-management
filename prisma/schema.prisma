@@ -102,6 +102,7 @@ model level {
   faction_id Int
   depart_id  Int
   ward_id    Int
+  personal  personal  @relation(fields: [person_id], references: [person_id])
 }
 
 model massage {
@@ -248,6 +249,7 @@ model personal {
   person_updatedAt     DateTime    @default(now())
   role_user            Role        @default(MEMBER)
   leaves               Leave[]
+  levels      level[]
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
