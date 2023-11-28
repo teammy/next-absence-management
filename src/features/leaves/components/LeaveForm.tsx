@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { th } from "date-fns/locale";
 import 'dayjs/locale/th';
 dayjs.locale('th');
 import { ThaiDatePicker } from 'thaidatepicker-react';
@@ -7,16 +8,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { capitalize, set } from 'lodash';
 import { api } from '~/utils/api';
 import { useSession } from 'next-auth/react';
-import { ArrowUpTrayIcon } from '@heroicons/react/24/outline';
+import { ArrowUpTrayIcon,SpeakerXMarkIcon,BriefcaseIcon,PhotoIcon } from '@heroicons/react/24/outline';
 import FileUploadLeave from './FileUploadLeave';
 import AvatarUploader from '~/features/ui/components/AvatarUploader';
+import { DatePicker,TextInput , DatePickerValue,Select, SelectItem,Textarea  } from "@tremor/react";
 
 import {
-  Input,
-  Textarea,
   Button,
-  Select,
-  SelectItem,
 } from '@nextui-org/react';
 import {
   type AddLeaveInput,
@@ -48,7 +46,6 @@ const LeaveForm = (props: LeaveFormProps) => {
   const { data: session } = useSession();
   const [selectAssignUser, setSelectAssignUser] = useState<string>("1");
   const [totalLeaveDate, setTotalLeaveDate] = useState<string>('');
-  const [selectedThaiDate, setSelectedThaiDate] = useState();
 
   const { kind, onSubmit } = props;
   const userId = session?.user.user_id ? session?.user.duty_id : 0;
@@ -149,22 +146,24 @@ const LeaveForm = (props: LeaveFormProps) => {
   //   }
   // }
 
-  const handleDatePickerStartChange = (christDate: any, buddhistDate: any) => {
-    setValue('startLeaveDate', christDate, {
+  const handleDatePickerStartChange = (startDate:Date) => {
+    // console.log('christDate', startDate);
+    setValue('startLeaveDate', startDate, {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true,
     });
-    setSelectedThaiDate(buddhistDate);
+
   };
 
-  const handleDatePickerEndChange = (christDate: any, buddhistDate: any) => {
-    setValue('endLeaveDate', christDate, {
+  const handleDatePickerEndChange = (endDate: Date) => {
+    // console.log("endDate",endDate)
+    const convertEnddateTostring = endDate;
+    setValue('endLeaveDate', endDate, {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true,
     });
-    setSelectedThaiDate(buddhistDate);
   };
 
   if (!listPerAssigns) return <div>ไม่มีผู้ปฏิบัติงานแทน</div>;
@@ -174,9 +173,24 @@ const LeaveForm = (props: LeaveFormProps) => {
       {/* <h1>{capitalize(kind)}</h1> */}
       <div className="flex flex-col md:flex-row md:space-x-7">
         <div className="flex-1 md:w-1/2">
-          <h1 className="blueDark Ekachon_Bold">รายละเอียด</h1>
-          <div id="select-typeLeave" className="pt-5">
-            <Select
+          <div id="detailMain" className="mb-10">
+          <h1 className="blueDark Ekachon_Bold mb-5">รายละเอียด</h1>
+          <label htmlFor="typeLeave" className="text-base text-slate-500">
+              ประเภทการลา *
+        </label>
+          <div id="select-typeLeave" className="pt-2">
+            <Select value={selectTypeLeave} id="typeLeave" onValueChange={setSelectTypeLeave} placeholder="เลือกประเภทการลา">
+            <SelectItem value="1" icon={BriefcaseIcon}>
+          ลากิจ
+          </SelectItem>
+            <SelectItem value="2" icon={SpeakerXMarkIcon}>
+          ลาป่วย
+          </SelectItem>
+            <SelectItem value="3" icon={PhotoIcon}>
+          ลาพักผ่อน
+          </SelectItem>
+            </Select>
+            {/* <Select
               id="typeLeave"
               {...register('typeLeave')}
               items={typeLeaves}
@@ -198,26 +212,29 @@ const LeaveForm = (props: LeaveFormProps) => {
               {(typeLeave) => (
                 <SelectItem key={typeLeave.value}>{typeLeave.label}</SelectItem>
               )}
-            </Select>
+            </Select> */}
           </div>
           <div
-            className="my-4 flex justify-between text-base lg:text-lg"
+            className="my-4 flex justify-between text-base"
             id="remainingLeaveDays"
           >
-            <p className="Ekachon_Light text-[#6F6F6F]">ยอดวันลาสะสม</p>
+            <p className="Ekachon_Light grayBlack">ยอดวันลาสะสม</p>
             <p className="blueDark Ekachon_Bold">0 วัน</p>
           </div>
           <div
-            className="my-4 flex justify-between text-base lg:text-lg"
+            className="my-4 flex justify-between text-base"
             id="remainingLeaveDays"
           >
             <p className="Ekachon_Light text-[#6F6F6F]">วันลาคงเหลือรวม</p>
             <p className="blueDark Ekachon_Bold">0 วัน</p>
           </div>
+          </div>
+          <div id="dateRange">
           <div className="my-5">
-            <h1 className="blueDark Ekachon_Bold mb-2">ช่วงเวลา</h1>
-            <label className="blueDark text-base lg:text-lg">เริ่มต้น *</label>
-            <ThaiDatePicker
+            <h1 className="blueDark Ekachon_Bold mb-5">ช่วงเวลา</h1>
+            <label className="text-base grayBlack">เริ่มต้น *</label>
+            <DatePicker className="mx-auto"  locale={th} maxDate={new Date(currentEndLeaveDate)} placeholder="เลือกวันที่เริ่มต้นลา" onValueChange={handleDatePickerStartChange} value={currentStartLeaveDate} />
+            {/* <ThaiDatePicker
               id="startLeaveDate"
               onChange={handleDatePickerStartChange}
               value={currentStartLeaveDate}
@@ -228,11 +245,12 @@ const LeaveForm = (props: LeaveFormProps) => {
                 className:
                   'border w-full rounded-md border-gray-300 text-base px-3 py-2 mt-1',
               }}
-            />
+            /> */}
           </div>
           <div>
-            <label className="blueDark text-base lg:text-lg">สิ้นสุด *</label>
-            <ThaiDatePicker
+            <label className="grayBlack text-base">สิ้นสุด *</label>
+            <DatePicker className="mx-auto"  locale={th} minDate={new Date(currentStartLeaveDate)} value={currentEndLeaveDate} placeholder="เลือกวันที่สิ้นสุดลา" onValueChange={handleDatePickerEndChange} />
+            {/* <ThaiDatePicker
               id="endLeaveDate"
               yearBoundary={1}
               placeholder="เลือกวันที่สิ้นสุดลา"
@@ -244,15 +262,16 @@ const LeaveForm = (props: LeaveFormProps) => {
                 className:
                   'border w-full rounded-md text-base border-gray-300 px-3 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500',
               }}
-            />
+            /> */}
           </div>
+
           <div
-            className="my-4 flex justify-between text-base lg:text-lg"
+            className="my-6 flex justify-between text-base"
             id="remainingLeaveDays"
           >
             <p className="Ekachon_Light text-[#6F6F6F]">ระยะเวลา</p>
             <p className="blueDark Ekachon_Bold">{totalLeaveDate} วัน</p>
-            <Input
+            <TextInput 
               variant="bordered"
               id="totalLeaveDays"
               label="จำนวนวันลา"
@@ -268,11 +287,20 @@ const LeaveForm = (props: LeaveFormProps) => {
               {...register('totalLeaveDays')}
             />
           </div>
-          <div className="pt-4">
+          
+          </div> {/*  dateRange */}
+        </div>
+        <div className="mt-5 flex-1 md:w-1/2 lg:mt-0">
+          <h1 className="blueDark Ekachon_Bold mb-5">รายละเอียดเพิ่มเติม</h1>
+          <div className="" id="selectAssignUser">
+          <label htmlFor="assignUser" className="text-sm text-slate-500">
+          เลือกผู้ปฏิบัติงานแทน *
+        </label>
             <Select
               label="มอบหมายงานให้ *"
               {...register('assignUser')}
-              placeholder="เลือกผู้ปฏิบัติงานแทน"
+              
+              id="assignUser"
               variant="bordered"
               items={listPerAssigns}
               className="mb-6"
@@ -294,15 +322,14 @@ const LeaveForm = (props: LeaveFormProps) => {
               )}
             </Select>
           </div>
-        </div>
-        <div className="mt-5 flex-1 md:w-1/2 lg:mt-0">
-          <h1 className="blueDark Ekachon_Bold mb-5">รายละเอียดเพิ่มเติม</h1>
           <div id="reasonLeave" className="mb-5">
+          <label htmlFor="reason" className="text-sm text-slate-500">
+              เหตุผลการลา *
+        </label>
             <Textarea
-              label="รายละเอียดการลา (ไม่บังคับกรอก)"
-              variant="bordered"
+
+              id="reason"
               placeholder=" "
-              radius="sm"
               classNames={{
                 label: 'text-base lg:text-lg',
               }}
@@ -311,27 +338,22 @@ const LeaveForm = (props: LeaveFormProps) => {
             {errors.reason && <div>{errors.reason.message}</div>}
           </div>
           <div id="contactLocation" className="mb-5">
+          <label htmlFor="address_contact" className="text-sm text-slate-500">
+              สถานที่ติดต่อระหว่างการลา *
+        </label>
             <Textarea
-              label="สถานที่ติดต่อระหว่างการลา *"
-              variant="bordered"
               placeholder=" "
+              id="address_contact"
               cols={3}
-              radius="sm"
-              classNames={{
-                label: 'text-base lg:text-lg',
-              }}
               {...register('leaveLocation')}
             />
           </div>
-          <div className="my-12">
-            <Input
-              variant="bordered"
-              label="เบอร์ติดต่อ *"
+          
+          <div className="mb-6">
+          <label className="grayBlack text-base" >เบอร์ติดต่อ *</label>
+            <TextInput 
+              id="leaveContactNumber"
               placeholder=" "
-              radius="sm"
-              classNames={{
-                label: 'text-base lg:text-lg',
-              }}
               {...register('leaveContactNumber')}
             />
           </div>
