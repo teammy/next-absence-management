@@ -51,7 +51,8 @@ const LeaveForm = (props: LeaveFormProps) => {
   const userId = session?.user.user_id ? session?.user.duty_id : 0;
   const dutyId = session?.user.duty_id ? session?.user.duty_id : 0;
   const wardId = session?.user.ward_id ? session?.user.ward_id : 0;
-  const { data: listPerAssigns } = api.employee.listEmployeeInDepartment.useQuery({dutyId, wardId,userId});
+  
+  const { data: listPerAssigns } = api.employee.listEmployeeInDepartment.useQuery({dutyId,userId,wardId});
   console.log('listPerAssigns', listPerAssigns);
 
   const handleSelectionTypeLeaveChange:ChangeEventHandler<HTMLSelectElement> = (event) => {

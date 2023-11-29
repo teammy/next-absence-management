@@ -38,7 +38,6 @@ export const employeeRouter = createTRPCRouter({
     // .input(z.number())
     .input(
       z.object({
-        dutyId: z.number(),
         wardId: z.number(),
         userId: z.number(),
       }),
@@ -47,11 +46,11 @@ export const employeeRouter = createTRPCRouter({
       const listEmployeeInDepartment = await ctx.prisma.level.findMany({
         where: {
           ward_id: input.wardId,
-          duty_id: input.dutyId,
           personal: {
             user_id: {
               not: input.userId,
-            }
+            },
+            office_id: input.wardId
           },
         },
         select: {
