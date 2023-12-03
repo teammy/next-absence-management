@@ -110,7 +110,7 @@ export const authOptions: NextAuthOptions = {
         token.firstname = user.person_firstname;
         token.lastname = user.person_lastname;
         token.email = user.person_email;
-        token.role_user = user.role_user;
+        token.role_user = user.role_leave_system;
         token.duty_id = user.user_department.depart_id;
         token.ward_id = user.user_department.ward_id;
       }
@@ -164,11 +164,10 @@ export const authOptions: NextAuthOptions = {
             person_lastname: true,
             person_password_hash: true,
             person_email: true,
-            role_user: true,
+            role_leave_system:true,
             person_photo: true,
           },
         });
-
 
         if (!user) return undefined;
         if (!credentials?.person_password) return null;
@@ -191,7 +190,7 @@ export const authOptions: NextAuthOptions = {
         if (!userDepart) return undefined;
         
         console.log("user",user); // After the first query
-        console.log("User Department",userDepart); // After the second query
+        // console.log("User Department",userDepart); // After the second query
 
         return { ...user,user_department:userDepart,user_id:user.user_id,image:user.person_photo};
       },

@@ -247,7 +247,7 @@ model personal {
   person_photo         String?
   person_createdAt     DateTime    @default(now())
   person_updatedAt     DateTime    @default(now())
-  role_user            Role        @default(MEMBER)
+  role_leave_system            Role        @default(MEMBER)
   leaves               Leave[]
   levels      level[]
 }

@@ -14,7 +14,6 @@ export const authRouter = createTRPCRouter({
         user_id: true,
         person_firstname: true,
         person_email: true,
-        role_user: true,
       },
     });
     // const user = await ctx.prisma.user.create({

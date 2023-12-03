@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { th } from "date-fns/locale";
+import { th } from 'date-fns/locale';
 import 'dayjs/locale/th';
 dayjs.locale('th');
 import { ThaiDatePicker } from 'thaidatepicker-react';
@@ -8,14 +8,24 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { capitalize, set } from 'lodash';
 import { api } from '~/utils/api';
 import { useSession } from 'next-auth/react';
-import { ArrowUpTrayIcon,SpeakerXMarkIcon,BriefcaseIcon,PhotoIcon } from '@heroicons/react/24/outline';
+import {
+  ArrowUpTrayIcon,
+  SpeakerXMarkIcon,
+  BriefcaseIcon,
+  PhotoIcon,
+} from '@heroicons/react/24/outline';
 import FileUploadLeave from './FileUploadLeave';
 import AvatarUploader from '~/features/ui/components/AvatarUploader';
-import { DatePicker,TextInput , DatePickerValue,Select, SelectItem,Textarea  } from "@tremor/react";
-
 import {
-  Button,
-} from '@nextui-org/react';
+  DatePicker,
+  TextInput,
+  DatePickerValue,
+  Select,
+  SelectItem,
+  Textarea,
+} from '@tremor/react';
+
+import { Button } from '@nextui-org/react';
 import {
   type AddLeaveInput,
   type LeaveDetails,
@@ -42,30 +52,33 @@ export const typeLeaves = [
 ];
 
 const LeaveForm = (props: LeaveFormProps) => {
-  const [selectTypeLeave, setSelectTypeLeave] = useState<string>("1");
+  const [selectTypeLeave, setSelectTypeLeave] = useState<string>('1');
   const { data: session } = useSession();
-  const [selectAssignUser, setSelectAssignUser] = useState<string>("1");
+  const [selectAssignUser, setSelectAssignUser] = useState<string>("");
   const [totalLeaveDate, setTotalLeaveDate] = useState<string>('');
 
   const { kind, onSubmit } = props;
-  const userId = session?.user.user_id ? session?.user.duty_id : 0;
+  const userId = session?.user.user_id ? session?.user.user_id : 0;
   const dutyId = session?.user.duty_id ? session?.user.duty_id : 0;
   const wardId = session?.user.ward_id ? session?.user.ward_id : 0;
-  
-  const { data: listPerAssigns } = api.employee.listEmployeeInDepartment.useQuery({dutyId,userId,wardId});
+
+  const { data: listPerAssigns } =
+    api.employee.listEmployeeInDepartment.useQuery({ wardId, userId });
   console.log('listPerAssigns', listPerAssigns);
 
-  const handleSelectionTypeLeaveChange:ChangeEventHandler<HTMLSelectElement> = (event) => {
+  const handleSelectionTypeLeaveChange: ChangeEventHandler<
+    HTMLSelectElement
+  > = (event) => {
     setSelectTypeLeave(event.target.value);
     setValue('typeLeave', event.target.value);
   };
 
-  const handleSelectAssignUserChange:ChangeEventHandler<HTMLSelectElement> = (event) => {
+  const handleSelectAssignUserChange: ChangeEventHandler<HTMLSelectElement> = (
+    event,
+  ) => {
     setSelectAssignUser(event.target.value);
     setValue('assignUser', Number(event.target.value));
   };
-
-
 
   const {
     register,
@@ -113,12 +126,10 @@ const LeaveForm = (props: LeaveFormProps) => {
     return diffDays;
   };
 
-
   const currentStartLeaveDate = getValues('startLeaveDate');
   const currentEndLeaveDate = getValues('endLeaveDate');
 
   useEffect(() => {
-
     setTotalLeaveDate(
       calculateDiffDays(currentStartLeaveDate, currentEndLeaveDate).toString(),
     );
@@ -147,14 +158,13 @@ const LeaveForm = (props: LeaveFormProps) => {
   //   }
   // }
 
-  const handleDatePickerStartChange = (startDate:Date) => {
+  const handleDatePickerStartChange = (startDate: Date) => {
     // console.log('christDate', startDate);
     setValue('startLeaveDate', startDate, {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true,
     });
-
   };
 
   const handleDatePickerEndChange = (endDate: Date) => {
@@ -175,23 +185,28 @@ const LeaveForm = (props: LeaveFormProps) => {
       <div className="flex flex-col md:flex-row md:space-x-7">
         <div className="flex-1 md:w-1/2">
           <div id="detailMain" className="mb-10">
-          <h1 className="blueDark Ekachon_Bold mb-5">รายละเอียด</h1>
-          <label htmlFor="typeLeave" className="text-base text-slate-500">
+            <h1 className="blueDark Ekachon_Bold mb-5">รายละเอียด</h1>
+            <label htmlFor="typeLeave" className="text-base text-slate-500">
               ประเภทการลา *
-        </label>
-          <div id="select-typeLeave" className="pt-2">
-            <Select value={selectTypeLeave} id="typeLeave" onValueChange={setSelectTypeLeave} placeholder="เลือกประเภทการลา">
-            <SelectItem value="1" icon={BriefcaseIcon}>
-          ลากิจ
-          </SelectItem>
-            <SelectItem value="2" icon={SpeakerXMarkIcon}>
-          ลาป่วย
-          </SelectItem>
-            <SelectItem value="3" icon={PhotoIcon}>
-          ลาพักผ่อน
-          </SelectItem>
-            </Select>
-            {/* <Select
+            </label>
+            <div id="select-typeLeave" className="pt-2">
+              <Select
+                value={selectTypeLeave}
+                id="typeLeave"
+                onValueChange={setSelectTypeLeave}
+                placeholder="เลือกประเภทการลา"
+              >
+                <SelectItem value="1" icon={BriefcaseIcon}>
+                  ลากิจ
+                </SelectItem>
+                <SelectItem value="2" icon={SpeakerXMarkIcon}>
+                  ลาป่วย
+                </SelectItem>
+                <SelectItem value="3" icon={PhotoIcon}>
+                  ลาพักผ่อน
+                </SelectItem>
+              </Select>
+              {/* <Select
               id="typeLeave"
               {...register('typeLeave')}
               items={typeLeaves}
@@ -214,28 +229,35 @@ const LeaveForm = (props: LeaveFormProps) => {
                 <SelectItem key={typeLeave.value}>{typeLeave.label}</SelectItem>
               )}
             </Select> */}
-          </div>
-          <div
-            className="my-4 flex justify-between text-base"
-            id="remainingLeaveDays"
-          >
-            <p className="Ekachon_Light grayBlack">ยอดวันลาสะสม</p>
-            <p className="blueDark Ekachon_Bold">0 วัน</p>
-          </div>
-          <div
-            className="my-4 flex justify-between text-base"
-            id="remainingLeaveDays"
-          >
-            <p className="Ekachon_Light text-[#6F6F6F]">วันลาคงเหลือรวม</p>
-            <p className="blueDark Ekachon_Bold">0 วัน</p>
-          </div>
+            </div>
+            <div
+              className="my-4 flex justify-between text-base"
+              id="remainingLeaveDays"
+            >
+              <p className="Ekachon_Light grayBlack">ยอดวันลาสะสม</p>
+              <p className="blueDark Ekachon_Bold">0 วัน</p>
+            </div>
+            <div
+              className="my-4 flex justify-between text-base"
+              id="remainingLeaveDays"
+            >
+              <p className="Ekachon_Light text-[#6F6F6F]">วันลาคงเหลือรวม</p>
+              <p className="blueDark Ekachon_Bold">0 วัน</p>
+            </div>
           </div>
           <div id="dateRange">
-          <div className="my-5">
-            <h1 className="blueDark Ekachon_Bold mb-5">ช่วงเวลา</h1>
-            <label className="text-base grayBlack">เริ่มต้น *</label>
-            <DatePicker className="mx-auto"  locale={th} maxDate={new Date(currentEndLeaveDate)} placeholder="เลือกวันที่เริ่มต้นลา" onValueChange={handleDatePickerStartChange} value={currentStartLeaveDate} />
-            {/* <ThaiDatePicker
+            <div className="my-5">
+              <h1 className="blueDark Ekachon_Bold mb-5">ช่วงเวลา</h1>
+              <label className="grayBlack text-base">เริ่มต้น *</label>
+              <DatePicker
+                className="mx-auto"
+                locale={th}
+                maxDate={new Date(currentEndLeaveDate)}
+                placeholder="เลือกวันที่เริ่มต้นลา"
+                onValueChange={handleDatePickerStartChange}
+                value={currentStartLeaveDate}
+              />
+              {/* <ThaiDatePicker
               id="startLeaveDate"
               onChange={handleDatePickerStartChange}
               value={currentStartLeaveDate}
@@ -247,11 +269,18 @@ const LeaveForm = (props: LeaveFormProps) => {
                   'border w-full rounded-md border-gray-300 text-base px-3 py-2 mt-1',
               }}
             /> */}
-          </div>
-          <div>
-            <label className="grayBlack text-base">สิ้นสุด *</label>
-            <DatePicker className="mx-auto"  locale={th} minDate={new Date(currentStartLeaveDate)} value={currentEndLeaveDate} placeholder="เลือกวันที่สิ้นสุดลา" onValueChange={handleDatePickerEndChange} />
-            {/* <ThaiDatePicker
+            </div>
+            <div>
+              <label className="grayBlack text-base">สิ้นสุด *</label>
+              <DatePicker
+                className="mx-auto"
+                locale={th}
+                minDate={new Date(currentStartLeaveDate)}
+                value={currentEndLeaveDate}
+                placeholder="เลือกวันที่สิ้นสุดลา"
+                onValueChange={handleDatePickerEndChange}
+              />
+              {/* <ThaiDatePicker
               id="endLeaveDate"
               yearBoundary={1}
               placeholder="เลือกวันที่สิ้นสุดลา"
@@ -264,71 +293,77 @@ const LeaveForm = (props: LeaveFormProps) => {
                   'border w-full rounded-md text-base border-gray-300 px-3 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500',
               }}
             /> */}
-          </div>
+            </div>
 
-          <div
-            className="my-6 flex justify-between text-base"
-            id="remainingLeaveDays"
-          >
-            <p className="Ekachon_Light text-[#6F6F6F]">ระยะเวลา</p>
-            <p className="blueDark Ekachon_Bold">{totalLeaveDate} วัน</p>
-            <TextInput 
-              variant="bordered"
-              id="totalLeaveDays"
-              label="จำนวนวันลา"
-              labelPlacement="outside"
-              placeholder=" "
-              radius="sm"
-              isReadOnly
-              className="hidden"
-              classNames={{
-                label: 'text-lg',
-              }}
-              value={totalLeaveDate}
-              {...register('totalLeaveDays')}
-            />
-          </div>
-          
-          </div> {/*  dateRange */}
+            <div
+              className="my-6 flex justify-between text-base"
+              id="remainingLeaveDays"
+            >
+              <p className="Ekachon_Light text-[#6F6F6F]">ระยะเวลา</p>
+              <p className="blueDark Ekachon_Bold">{totalLeaveDate} วัน</p>
+              <TextInput
+                variant="bordered"
+                id="totalLeaveDays"
+                label="จำนวนวันลา"
+                labelPlacement="outside"
+                placeholder=" "
+                radius="sm"
+                isReadOnly
+                className="hidden"
+                classNames={{
+                  label: 'text-lg',
+                }}
+                value={totalLeaveDate}
+                {...register('totalLeaveDays')}
+              />
+            </div>
+          </div>{' '}
+          {/*  dateRange */}
         </div>
         <div className="mt-5 flex-1 md:w-1/2 lg:mt-0">
           <h1 className="blueDark Ekachon_Bold mb-5">รายละเอียดเพิ่มเติม</h1>
           <div className="" id="selectAssignUser">
-          <label htmlFor="assignUser" className="text-sm text-slate-500">
-          เลือกผู้ปฏิบัติงานแทน *
-        </label>
+            <label htmlFor="assignUser" className="text-sm text-slate-500">
+              เลือกผู้ปฏิบัติงานแทน *
+            </label>
+
+            {/* <div className="max-w-sm mx-auto space-y-6">
+        <Select value={selectAssignUser} onValueChange={setSelectAssignUser}>
+          <SelectItem value="1">
+          Kilometers
+          </SelectItem>
+          <SelectItem value="2">
+          Meters
+          </SelectItem>
+          <SelectItem value="3">
+          Miles
+          </SelectItem>
+          <SelectItem value="4">
+          Nautical Miles
+          </SelectItem>
+        </Select>
+      </div> */}
             <Select
               label="มอบหมายงานให้ *"
-              {...register('assignUser')}
-              
+              // {...register('assignUser')}
               id="assignUser"
-              variant="bordered"
-              items={listPerAssigns}
               className="mb-6"
-              classNames={{
-                label: 'text-base',
-              }}
-              radius="sm"
-              selectedKeys={[selectAssignUser]}
-              onChange={handleSelectAssignUserChange}
+              value={selectAssignUser}
+              onValueChange={setSelectAssignUser}
             >
-              {(listPerAssign) => (
-                <SelectItem
-                  key={listPerAssign.personal.user_id}
-                  textValue={listPerAssign.personal.person_firstname}
-                >
+              {listPerAssigns.map((listPerAssign) => (
+                <SelectItem value={listPerAssign.personal.user_id}>
                   {listPerAssign.personal.person_firstname}{' '}
                   {listPerAssign.personal.person_lastname}
                 </SelectItem>
-              )}
+              ))}
             </Select>
           </div>
           <div id="reasonLeave" className="mb-5">
-          <label htmlFor="reason" className="text-sm text-slate-500">
+            <label htmlFor="reason" className="text-sm text-slate-500">
               เหตุผลการลา *
-        </label>
+            </label>
             <Textarea
-
               id="reason"
               placeholder=" "
               classNames={{
@@ -339,9 +374,9 @@ const LeaveForm = (props: LeaveFormProps) => {
             {errors.reason && <div>{errors.reason.message}</div>}
           </div>
           <div id="contactLocation" className="mb-5">
-          <label htmlFor="address_contact" className="text-sm text-slate-500">
+            <label htmlFor="address_contact" className="text-sm text-slate-500">
               สถานที่ติดต่อระหว่างการลา *
-        </label>
+            </label>
             <Textarea
               placeholder=" "
               id="address_contact"
@@ -349,10 +384,10 @@ const LeaveForm = (props: LeaveFormProps) => {
               {...register('leaveLocation')}
             />
           </div>
-          
+
           <div className="mb-6">
-          <label className="grayBlack text-base" >เบอร์ติดต่อ *</label>
-            <TextInput 
+            <label className="grayBlack text-base">เบอร์ติดต่อ *</label>
+            <TextInput
               id="leaveContactNumber"
               placeholder=" "
               {...register('leaveContactNumber')}
