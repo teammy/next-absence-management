@@ -96,13 +96,13 @@ model faction {
 }
 
 model level {
-  level_id   Int    @id @default(autoincrement())
-  person_id  String @db.VarChar(13)
+  level_id   Int      @id @default(autoincrement())
+  person_id  String   @db.VarChar(13)
   duty_id    Int
   faction_id Int
   depart_id  Int
   ward_id    Int
-  personal  personal  @relation(fields: [person_id], references: [person_id])
+  personal   personal @relation(fields: [person_id], references: [person_id])
 }
 
 model massage {
@@ -127,8 +127,8 @@ model office {
 }
 
 model office_sit {
-  ward_id   Int        @id @default(autoincrement())
-  ward_name String     @db.VarChar(150)
+  ward_id   Int    @id @default(autoincrement())
+  ward_name String @db.VarChar(150)
 }
 
 model ot {
@@ -194,8 +194,8 @@ model percount {
 }
 
 model personal {
-  user_id              Int         @id @default(autoincrement())
-  person_id            String      @unique
+  user_id              Int       @id @default(autoincrement())
+  person_id            String    @unique
   person_prefix        Int?
   person_firstname     String
   person_lastname      String
@@ -203,27 +203,27 @@ model personal {
   person_cult          Int?
   person_blood         Int?
   person_status        Int?
-  person_birth         DateTime?   @db.Date
-  person_no            String?     @db.VarChar(10)
-  person_moo           String?     @db.VarChar(5)
-  person_road          String?     @db.VarChar(100)
-  person_tumbon        String?     @db.VarChar(7)
-  person_amphur        String?     @db.VarChar(5)
-  person_province      String?     @db.VarChar(3)
-  person_postcode      String?     @db.VarChar(5)
-  person_noT           String?     @db.VarChar(10)
-  person_mooT          String?     @db.VarChar(5)
-  person_roadT         String?     @db.VarChar(100)
-  person_tumbonT       String?     @db.VarChar(7)
-  person_amphurT       String?     @db.VarChar(5)
-  person_provinceT     String?     @db.VarChar(3)
-  person_postcodeT     String?     @db.VarChar(5)
-  person_tel           String      @unique
-  person_email         String      @unique
-  person_da            String?     @db.VarChar(150)
-  person_ma            String?     @db.VarChar(150)
-  person_nopo          String?     @db.VarChar(50)
-  position_id          String?     @db.VarChar(10)
+  person_birth         DateTime? @db.Date
+  person_no            String?   @db.VarChar(10)
+  person_moo           String?   @db.VarChar(5)
+  person_road          String?   @db.VarChar(100)
+  person_tumbon        String?   @db.VarChar(7)
+  person_amphur        String?   @db.VarChar(5)
+  person_province      String?   @db.VarChar(3)
+  person_postcode      String?   @db.VarChar(5)
+  person_noT           String?
+  person_mooT          String?
+  person_roadT         String?
+  person_tumbonT       String?
+  person_amphurT       String?
+  person_provinceT     String?
+  person_postcodeT     String?
+  person_tel           String    @unique
+  person_email         String    @unique
+  person_da            String?
+  person_ma            String?
+  person_nopo          String?
+  position_id          Int
   money_id             Int?
   typeac_id            Int?
   ac_id                Int?
@@ -233,23 +233,23 @@ model personal {
   po_level_id          Int?
   profession_id        Int?
   office_id            Int?
-  person_singin        DateTime?   @db.Date
+  person_singin        DateTime? @db.Date
   person_state         Int?
-  person_univer        String?     @db.VarChar(150)
-  person_course        String?     @db.VarChar(150)
-  person_startdate     DateTime?   @db.Date
-  person_enddate       DateTime?   @db.Date
-  person_username      String      @unique
+  person_univer        String?   @db.VarChar(150)
+  person_course        String?   @db.VarChar(150)
+  person_startdate     DateTime? @db.Date
+  person_enddate       DateTime? @db.Date
+  person_username      String    @unique
   person_password      String
   person_password_hash String
-  person_datetime      DateTime?   @db.DateTime(0)
+  person_datetime      DateTime? @db.DateTime(0)
   person_op            Int?
   person_photo         String?
-  person_createdAt     DateTime    @default(now())
-  person_updatedAt     DateTime    @default(now())
-  role_leave_system            Role        @default(MEMBER)
+  person_createdAt     DateTime  @default(now())
+  person_updatedAt     DateTime  @default(now())
+  role_leave_system    Role      @default(MEMBER)
   leaves               Leave[]
-  levels      level[]
+  levels               level[]
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -647,28 +647,29 @@ model LeaveFileUpload {
 }
 
 model Leave {
-  id                   Int         @id @default(autoincrement())
-  userId               Int
-  startLeaveDate       String
-  endLeaveDate         String
-  totalLeaveDays       Int
-  typeLeave            String
-  reason               String
-  rejectionReason      String?
-  leaveLocation        String
-  leaveContactNumber   String
-  assignUser           Int   
-  managerUser          Int
-  departmentHeadUser   Int
-  status               LeaveStatus @default(PENDING)
-  managerStatus        LeaveStatus @default(PENDING)
-  departmentHeadStatus LeaveStatus @default(PENDING)
-  hrStatus             LeaveStatus @default(PENDING)
-  createdAt            DateTime    @default(now())
-  updatedAt            DateTime    @default(now())
-  personalUser_id      Int?
-  personal             personal?   @relation(fields: [personalUser_id], references: [user_id])
-  user                 User        @relation(fields: [userId], references: [id])
+  id                        Int         @id @default(autoincrement())
+  userId                    Int
+  startLeaveDate            String
+  endLeaveDate              String
+  totalLeaveDays            Int
+  typeLeave                 String
+  reason                    String
+  rejectionReason           String?
+  leaveLocation             String
+  leaveContactNumber        String
+  assignUser                Int
+  managerUserApprove        Int?
+  departmentHeadUserApprove Int?
+  hrUserApprove             Int?
+  status                    LeaveStatus @default(PENDING)
+  managerStatus             LeaveStatus @default(PENDING)
+  departmentHeadStatus      LeaveStatus @default(PENDING)
+  hrStatus                  LeaveStatus @default(PENDING)
+  createdAt                 DateTime    @default(now())
+  updatedAt                 DateTime    @default(now())
+  personalUser_id           Int?
+  personal                  personal?   @relation(fields: [personalUser_id], references: [user_id])
+  user                      User        @relation(fields: [userId], references: [id])
 
   @@unique([userId, startLeaveDate, endLeaveDate, typeLeave])
   @@index([personalUser_id], map: "Leave_personalUser_id_fkey")

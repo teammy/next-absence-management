@@ -32,7 +32,7 @@ import {
   type UpdateLeaveInput,
 } from '../types';
 import * as validators from '../helpers/validators';
-import { useState, useEffect, useRef, type ChangeEventHandler } from 'react';
+import { useState, useEffect, useRef, type ChangeEventHandler, use } from 'react';
 
 export type LeaveFormProps =
   | {
@@ -55,16 +55,21 @@ const LeaveForm = (props: LeaveFormProps) => {
   const [selectTypeLeave, setSelectTypeLeave] = useState<string>('1');
   const { data: session } = useSession();
   const [selectAssignUser, setSelectAssignUser] = useState<string>("");
-  const [totalLeaveDate, setTotalLeaveDate] = useState<string>('');
+  const [totalLeaveDate, setTotalLeaveDate] = useState<string>("");
 
   const { kind, onSubmit } = props;
   const userId = session?.user.user_id ? session?.user.user_id : 0;
-  const dutyId = session?.user.duty_id ? session?.user.duty_id : 0;
   const wardId = session?.user.ward_id ? session?.user.ward_id : 0;
+  const positionId = session?.user.position_id ? session?.user.position_id : 0;
 
-  const { data: listPerAssigns } =
-    api.employee.listEmployeeInDepartment.useQuery({ wardId, userId });
-  console.log('listPerAssigns', listPerAssigns);
+  type EmployeeAssings = {
+    user_id: string;
+    person_firstname : string;
+    person_lastname : string;
+  };
+
+  const {data: listPerAssigns } =
+    api.employee.listEmployeeAssign.useQuery<EmployeeAssings[]>({ wardId, userId,positionId });
 
   const handleSelectionTypeLeaveChange: ChangeEventHandler<
     HTMLSelectElement
@@ -97,6 +102,7 @@ const LeaveForm = (props: LeaveFormProps) => {
     ),
     defaultValues: kind === 'edit' ? props.leave : undefined,
   });
+
 
   const calculateDiffDays = (startDate: string, endDate: string) => {
     const oneDay = 24 * 60 * 60 * 1000; // milliseconds in a day
@@ -158,7 +164,7 @@ const LeaveForm = (props: LeaveFormProps) => {
   //   }
   // }
 
-  const handleDatePickerStartChange = (startDate: Date) => {
+  const handleDatePickerStartChange = (startDate) => {
     // console.log('christDate', startDate);
     setValue('startLeaveDate', startDate, {
       shouldValidate: true,
@@ -167,7 +173,7 @@ const LeaveForm = (props: LeaveFormProps) => {
     });
   };
 
-  const handleDatePickerEndChange = (endDate: Date) => {
+  const handleDatePickerEndChange = (endDate) => {
     // console.log("endDate",endDate)
     const convertEnddateTostring = endDate;
     setValue('endLeaveDate', endDate, {
@@ -252,7 +258,6 @@ const LeaveForm = (props: LeaveFormProps) => {
               <DatePicker
                 className="mx-auto"
                 locale={th}
-                maxDate={new Date(currentEndLeaveDate)}
                 placeholder="เลือกวันที่เริ่มต้นลา"
                 onValueChange={handleDatePickerStartChange}
                 value={currentStartLeaveDate}
@@ -302,17 +307,10 @@ const LeaveForm = (props: LeaveFormProps) => {
               <p className="Ekachon_Light text-[#6F6F6F]">ระยะเวลา</p>
               <p className="blueDark Ekachon_Bold">{totalLeaveDate} วัน</p>
               <TextInput
-                variant="bordered"
                 id="totalLeaveDays"
-                label="จำนวนวันลา"
-                labelPlacement="outside"
                 placeholder=" "
-                radius="sm"
-                isReadOnly
+                disabled={true}
                 className="hidden"
-                classNames={{
-                  label: 'text-lg',
-                }}
                 value={totalLeaveDate}
                 {...register('totalLeaveDays')}
               />
@@ -344,7 +342,6 @@ const LeaveForm = (props: LeaveFormProps) => {
         </Select>
       </div> */}
             <Select
-              label="มอบหมายงานให้ *"
               // {...register('assignUser')}
               id="assignUser"
               className="mb-6"
@@ -352,9 +349,9 @@ const LeaveForm = (props: LeaveFormProps) => {
               onValueChange={setSelectAssignUser}
             >
               {listPerAssigns.map((listPerAssign) => (
-                <SelectItem value={listPerAssign.personal.user_id}>
-                  {listPerAssign.personal.person_firstname}{' '}
-                  {listPerAssign.personal.person_lastname}
+                <SelectItem value={listPerAssign.user_id}>
+                  {listPerAssign.person_firstname}{' '}
+                  {listPerAssign.person_lastname}
                 </SelectItem>
               ))}
             </Select>
@@ -366,9 +363,6 @@ const LeaveForm = (props: LeaveFormProps) => {
             <Textarea
               id="reason"
               placeholder=" "
-              classNames={{
-                label: 'text-base lg:text-lg',
-              }}
               {...register('reason')}
             />
             {errors.reason && <div>{errors.reason.message}</div>}

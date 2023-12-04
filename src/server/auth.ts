@@ -30,6 +30,7 @@ declare module 'next-auth' {
       duty_id : number;
       person_id : string;
       ward_id : number;
+      position_id: number;
     };
 
     userDepartment: {
@@ -41,13 +42,14 @@ declare module 'next-auth' {
   }
 
   interface User {
-    role_user: Role;
+    role_leave_system: Role;
     user_id: number;
     person_firstname: string;
     person_lastname: string;
     person_email: string;
     office_id : number;
     person_id: string;
+    position_id: number;
 
     user_department: {
       duty_id: number;
@@ -74,6 +76,7 @@ declare module 'next-auth/jwt' {
     person_id: string;
     duty_id: number;  
     ward_id: number;
+    position_id: number;
   }
 }
 
@@ -113,6 +116,7 @@ export const authOptions: NextAuthOptions = {
         token.role_user = user.role_leave_system;
         token.duty_id = user.user_department.depart_id;
         token.ward_id = user.user_department.ward_id;
+        token.position_id = user.position_id;
       }
       console.log('token on console', token);
       return token;
@@ -125,14 +129,13 @@ export const authOptions: NextAuthOptions = {
       session.user.duty_id = token.duty_id;
       session.user.ward_id = token.ward_id;
       session.user.person_id = token.person_id;
+      session.user.position_id = token.position_id;
       // session.user.email = token.email; 
-
-      // console.log('token session', session.user.image);
       console.log('session on console', session);
       return {
         ...session,
         user: {
-          user_id: token.sub,
+          user_id: token.user_id,
           image: token.picture,
           email: token.email,
           role: token.role_user,
@@ -140,6 +143,7 @@ export const authOptions: NextAuthOptions = {
           lastname: token.lastname,
           duty_id: token.duty_id,
           ward_id: token.ward_id,
+          position_id: token.position_id,
         },
       };
     },
@@ -166,6 +170,7 @@ export const authOptions: NextAuthOptions = {
             person_email: true,
             role_leave_system:true,
             person_photo: true,
+            position_id: true,
           },
         });
 
