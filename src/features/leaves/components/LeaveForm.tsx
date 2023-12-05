@@ -5,7 +5,7 @@ dayjs.locale('th');
 import { ThaiDatePicker } from 'thaidatepicker-react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { capitalize, set } from 'lodash';
+import { capitalize, get, set } from 'lodash';
 import { api } from '~/utils/api';
 import { useSession } from 'next-auth/react';
 import {
@@ -20,12 +20,11 @@ import {
   DatePicker,
   TextInput,
   DatePickerValue,
-  Select,
-  SelectItem,
   Textarea,
 } from '@tremor/react';
 
-import { Button } from '@nextui-org/react';
+import { Button,  Select,
+  SelectItem,SelectSection } from '@nextui-org/react';
 import {
   type AddLeaveInput,
   type LeaveDetails,
@@ -33,6 +32,7 @@ import {
 } from '../types';
 import * as validators from '../helpers/validators';
 import { useState, useEffect, useRef, type ChangeEventHandler, use } from 'react';
+import { string } from 'zod';
 
 export type LeaveFormProps =
   | {
@@ -55,7 +55,9 @@ const LeaveForm = (props: LeaveFormProps) => {
   const [selectTypeLeave, setSelectTypeLeave] = useState<string>('1');
   const { data: session } = useSession();
   const [selectAssignUser, setSelectAssignUser] = useState<string>("");
-  const [totalLeaveDate, setTotalLeaveDate] = useState<string>("");
+  const [totalLeaveDate, setTotalLeaveDate] = useState<number>();
+  const [startDate, setStartDate] = useState<DatePickerValue>(new Date());
+  const [endDate, setEndDate] = useState<DatePickerValue>(new Date());
 
   const { kind, onSubmit } = props;
   const userId = session?.user.user_id ? session?.user.user_id : 0;
@@ -71,19 +73,9 @@ const LeaveForm = (props: LeaveFormProps) => {
   const {data: listPerAssigns } =
     api.employee.listEmployeeAssign.useQuery<EmployeeAssings[]>({ wardId, userId,positionId });
 
-  const handleSelectionTypeLeaveChange: ChangeEventHandler<
-    HTMLSelectElement
-  > = (event) => {
-    setSelectTypeLeave(event.target.value);
-    setValue('typeLeave', event.target.value);
-  };
+    
 
-  const handleSelectAssignUserChange: ChangeEventHandler<HTMLSelectElement> = (
-    event,
-  ) => {
-    setSelectAssignUser(event.target.value);
-    setValue('assignUser', Number(event.target.value));
-  };
+
 
   const {
     register,
@@ -103,8 +95,11 @@ const LeaveForm = (props: LeaveFormProps) => {
     defaultValues: kind === 'edit' ? props.leave : undefined,
   });
 
+  // console.log("typeLeave",getValues('typeLeave'))
+  console.log("isValid",isValid)
+  console.log("errors",errors)
 
-  const calculateDiffDays = (startDate: string, endDate: string) => {
+  const calculateDiffDays = (startDate: any, endDate: any) => {
     const oneDay = 24 * 60 * 60 * 1000; // milliseconds in a day
     const holidays = [
       new Date('2023-10-02'), // public holiday
@@ -132,18 +127,32 @@ const LeaveForm = (props: LeaveFormProps) => {
     return diffDays;
   };
 
-  const currentStartLeaveDate = getValues('startLeaveDate');
-  const currentEndLeaveDate = getValues('endLeaveDate');
+  
+  const handleValueAssignUserChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectAssignUser(e.target.value);
+  }
+
+  const handleSelectTypeLeaveChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectTypeLeave(e.target.value);
+  }
 
   useEffect(() => {
-    setTotalLeaveDate(
-      calculateDiffDays(currentStartLeaveDate, currentEndLeaveDate).toString(),
-    );
     setValue(
       'totalLeaveDays',
-      calculateDiffDays(currentStartLeaveDate, currentEndLeaveDate),
+      calculateDiffDays(startDate, endDate)
     );
-  }, [currentStartLeaveDate, currentEndLeaveDate]);
+    setTotalLeaveDate(getValues('totalLeaveDays'));
+
+    setValue('assignUser', selectAssignUser, {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+     });
+    setValue('typeLeave',selectTypeLeave);
+    // setValue('assignUser',Number(selectAssignUser));
+
+  }, [selectTypeLeave,selectAssignUser,startDate,endDate]);
+
 
   // const startLeaveDate = new Date(getValues("startLeaveDate"));
   // const endLeaveDate = new Date(getValues("endLeaveDate"));
@@ -164,7 +173,7 @@ const LeaveForm = (props: LeaveFormProps) => {
   //   }
   // }
 
-  const handleDatePickerStartChange = (startDate) => {
+  const handleDatePickerStartChange = (startDate:string) => {
     // console.log('christDate', startDate);
     setValue('startLeaveDate', startDate, {
       shouldValidate: true,
@@ -173,7 +182,8 @@ const LeaveForm = (props: LeaveFormProps) => {
     });
   };
 
-  const handleDatePickerEndChange = (endDate) => {
+
+  const handleDatePickerEndChange = (endDate:string) => {
     // console.log("endDate",endDate)
     const convertEnddateTostring = endDate;
     setValue('endLeaveDate', endDate, {
@@ -197,18 +207,20 @@ const LeaveForm = (props: LeaveFormProps) => {
             </label>
             <div id="select-typeLeave" className="pt-2">
               <Select
-                value={selectTypeLeave}
+                value={[selectTypeLeave]}
                 id="typeLeave"
-                onValueChange={setSelectTypeLeave}
+                variant="bordered"
+                radius="sm"
+                onChange={handleSelectTypeLeaveChange}
                 placeholder="เลือกประเภทการลา"
               >
-                <SelectItem value="1" icon={BriefcaseIcon}>
+                <SelectItem value="1" key={1}>
                   ลากิจ
                 </SelectItem>
-                <SelectItem value="2" icon={SpeakerXMarkIcon}>
+                <SelectItem value="2" key={2}>
                   ลาป่วย
                 </SelectItem>
-                <SelectItem value="3" icon={PhotoIcon}>
+                <SelectItem value="3" key={3}>
                   ลาพักผ่อน
                 </SelectItem>
               </Select>
@@ -259,8 +271,10 @@ const LeaveForm = (props: LeaveFormProps) => {
                 className="mx-auto"
                 locale={th}
                 placeholder="เลือกวันที่เริ่มต้นลา"
-                onValueChange={handleDatePickerStartChange}
-                value={currentStartLeaveDate}
+                // onValueChange={handleDatePickerStartChange}
+                // value={currentStartLeaveDate}
+                value={startDate}
+                onValueChange={setStartDate}
               />
               {/* <ThaiDatePicker
               id="startLeaveDate"
@@ -280,10 +294,12 @@ const LeaveForm = (props: LeaveFormProps) => {
               <DatePicker
                 className="mx-auto"
                 locale={th}
-                minDate={new Date(currentStartLeaveDate)}
-                value={currentEndLeaveDate}
+                minDate={startDate}
+                // value={currentEndLeaveDate}
                 placeholder="เลือกวันที่สิ้นสุดลา"
-                onValueChange={handleDatePickerEndChange}
+                value={endDate}
+                onValueChange={setEndDate}
+                // onValueChange={handleDatePickerEndChange}
               />
               {/* <ThaiDatePicker
               id="endLeaveDate"
@@ -305,13 +321,13 @@ const LeaveForm = (props: LeaveFormProps) => {
               id="remainingLeaveDays"
             >
               <p className="Ekachon_Light text-[#6F6F6F]">ระยะเวลา</p>
-              <p className="blueDark Ekachon_Bold">{totalLeaveDate} วัน</p>
+              <p className="blueDark Ekachon_Bold">{getValues('totalLeaveDays')} วัน</p>
               <TextInput
                 id="totalLeaveDays"
                 placeholder=" "
                 disabled={true}
                 className="hidden"
-                value={totalLeaveDate}
+                value={getValues('totalLeaveDays').toString()}
                 {...register('totalLeaveDays')}
               />
             </div>
@@ -321,41 +337,31 @@ const LeaveForm = (props: LeaveFormProps) => {
         <div className="mt-5 flex-1 md:w-1/2 lg:mt-0">
           <h1 className="blueDark Ekachon_Bold mb-5">รายละเอียดเพิ่มเติม</h1>
           <div className="" id="selectAssignUser">
-            <label htmlFor="assignUser" className="text-sm text-slate-500">
-              เลือกผู้ปฏิบัติงานแทน *
-            </label>
-
-            {/* <div className="max-w-sm mx-auto space-y-6">
-        <Select value={selectAssignUser} onValueChange={setSelectAssignUser}>
-          <SelectItem value="1">
-          Kilometers
-          </SelectItem>
-          <SelectItem value="2">
-          Meters
-          </SelectItem>
-          <SelectItem value="3">
-          Miles
-          </SelectItem>
-          <SelectItem value="4">
-          Nautical Miles
-          </SelectItem>
-        </Select>
-      </div> */}
+            {/* <label htmlFor="assignUser" className="text-sm text-slate-500">
+              ผู้ปฏิบัติงานแทน *
+            </label> */}
             <Select
-              // {...register('assignUser')}
               id="assignUser"
               className="mb-6"
-              value={selectAssignUser}
-              onValueChange={setSelectAssignUser}
+              label="ผู้ปฏิบัติงานแทน"
+              items={listPerAssigns}
+              variant="bordered"
+              radius="sm"
+              labelPlacement="outside"
+              selectedKeys={[selectAssignUser]}
+              onChange={handleValueAssignUserChange}
+              placeholder="เลือกผู้ปฏิบัติงานแทน"
             >
-              {listPerAssigns.map((listPerAssign) => (
-                <SelectItem value={listPerAssign.user_id}>
-                  {listPerAssign.person_firstname}{' '}
-                  {listPerAssign.person_lastname}
-                </SelectItem>
-              ))}
+
+                  {listPerAssigns.map((listPerAssign) => (
+                    <SelectItem key={listPerAssign.user_id} value={listPerAssign.user_id}>
+                    {listPerAssign.person_firstname}{' '}
+                    {listPerAssign.person_lastname}
+                  </SelectItem>
+                  ))}
+    
             </Select>
-          </div>
+                    </div>
           <div id="reasonLeave" className="mb-5">
             <label htmlFor="reason" className="text-sm text-slate-500">
               เหตุผลการลา *

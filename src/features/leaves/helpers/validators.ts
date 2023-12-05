@@ -1,14 +1,14 @@
 import { z } from "zod"
 
 export const add = z.object({
-  startLeaveDate: z.string(),
-  endLeaveDate: z.string(),
-  totalLeaveDays: z.number().min(1),
-  typeLeave: z.string().min(1),
-  reason: z.string().min(1),
-  assignUser : z.number().min(1),
-  leaveLocation : z.string().min(1),
-  leaveContactNumber : z.string().min(1),
+  // startLeaveDate: z.string(),
+  // endLeaveDate: z.string(),
+  // totalLeaveDays: z.number(),
+  // typeLeave: z.string().min(1),
+  // reason: z.string().min(1),
+  assignUser : z.string().min(1),
+  // leaveLocation : z.string().min(1),
+  // leaveContactNumber : z.string().min(1),
 });
 
 export const updateForm = add.partial();

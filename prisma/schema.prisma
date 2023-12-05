@@ -651,16 +651,16 @@ model Leave {
   userId                    Int
   startLeaveDate            String
   endLeaveDate              String
-  totalLeaveDays            Int
+  totalLeaveDays            String
   typeLeave                 String
   reason                    String
   rejectionReason           String?
   leaveLocation             String
   leaveContactNumber        String
-  assignUser                Int
-  managerUserApprove        Int?
-  departmentHeadUserApprove Int?
-  hrUserApprove             Int?
+  assignUser                String
+  managerUserApprove        String?
+  departmentHeadUserApprove String?
+  hrUserApprove             String?
   status                    LeaveStatus @default(PENDING)
   managerStatus             LeaveStatus @default(PENDING)
   departmentHeadStatus      LeaveStatus @default(PENDING)
