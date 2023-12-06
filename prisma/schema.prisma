@@ -635,7 +635,7 @@ model User {
   updatedAt     DateTime       @default(now())
   announcements Announcement[]
   articles      Article[]
-  leaves        Leave[]
+  // leaves        Leave[]
 }
 
 model LeaveFileUpload {
@@ -651,7 +651,7 @@ model Leave {
   userId                    Int
   startLeaveDate            String
   endLeaveDate              String
-  totalLeaveDays            String
+  totalLeaveDays            Int
   typeLeave                 String
   reason                    String
   rejectionReason           String?
@@ -668,10 +668,11 @@ model Leave {
   createdAt                 DateTime    @default(now())
   updatedAt                 DateTime    @default(now())
   personalUser_id           Int?
-  personal                  personal?   @relation(fields: [personalUser_id], references: [user_id])
-  user                      User        @relation(fields: [userId], references: [id])
+  // personal                  personal?   @relation(fields: [personalUser_id], references: [user_id])
+  // user                      User        @relation(fields: [userId], references: [id])
+  personal                personal?   @relation(fields: [userId], references: [user_id])
 
-  @@unique([userId, startLeaveDate, endLeaveDate, typeLeave])
+  @@unique([personalUser_id, startLeaveDate, endLeaveDate, typeLeave])
   @@index([personalUser_id], map: "Leave_personalUser_id_fkey")
 }
 

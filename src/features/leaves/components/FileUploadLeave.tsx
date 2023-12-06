@@ -3,14 +3,17 @@ import { ACCEPTED_FILE_TYPES } from '../../ui/helpers/validators';
 import { Image, Button } from '@nextui-org/react';
 import { ArrowUpTrayIcon,XMarkIcon } from '@heroicons/react/24/solid';
 import { set } from 'lodash';
+import { on } from 'events';
 
 export interface AvatarUploaderProps {
   error?: string | undefined;
+  onFileUpload?: (filenames: string[]) => void;
 }
 
-export default function FileUploadLeave({ error }: AvatarUploaderProps) {
+export default function FileUploadLeave({ error,onFileUpload }: AvatarUploaderProps) {
 
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [renamedFilesMap, setRenamedFilesMap] = useState<Map<string, string>>(new Map());
 
   const uploadImage = async (image: File) => {
     const formData = new FormData();
@@ -21,6 +24,8 @@ export default function FileUploadLeave({ error }: AvatarUploaderProps) {
       body: formData,
     });
     const data = (await res.json()) as { filename: string };
+
+    setRenamedFilesMap(prev => new Map(prev).set(image.name, data.filename));
 
     return data.filename;
   };
@@ -44,10 +49,15 @@ export default function FileUploadLeave({ error }: AvatarUploaderProps) {
 
     setSelectedFiles(updatedFiles);
 
-
+    const uploadedFilenames: string[] = [];
     for (const file of files) {
       const filename = await uploadImage(file);
+      uploadedFilenames.push(filename);
       console.log('filename', filename);
+    }
+
+    if (onFileUpload) {
+      onFileUpload(uploadedFilenames);
     }
 
     // if (!image) return;
@@ -58,7 +68,19 @@ export default function FileUploadLeave({ error }: AvatarUploaderProps) {
   };
 
   const handleDeleteFile = (fileName:string) => {
-    setSelectedFiles(selectedFiles.filter(file => file.name !== fileName));
+    const newSelectedFiles = selectedFiles.filter(file => file.name !== fileName);
+    setSelectedFiles(newSelectedFiles);
+
+    if (onFileUpload) {
+      // Map the current selected files to their renamed versions using the renamedFilesMap
+      const updatedFilenames = newSelectedFiles.map(file => renamedFilesMap.get(file.name) || file.name);
+      onFileUpload(updatedFilenames);
+    }
+
+    // setSelectedFiles(selectedFiles.filter(file => file.name !== fileName));
+    // if (onFileUpload) {
+    //   onFileUpload(selectedFiles.filter(file => file.name !== fileName).map(file => file.name));
+    // }
   };
 
   return (

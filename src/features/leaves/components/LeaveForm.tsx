@@ -16,22 +16,22 @@ import {
 } from '@heroicons/react/24/outline';
 import FileUploadLeave from './FileUploadLeave';
 import AvatarUploader from '~/features/ui/components/AvatarUploader';
-import {
-  DatePicker,
-  TextInput,
-  DatePickerValue,
-  Textarea,
-} from '@tremor/react';
+import { DatePicker, DatePickerValue } from '@tremor/react';
 
-import { Button,  Select,
-  SelectItem,SelectSection } from '@nextui-org/react';
+import { Button, Select, SelectItem, Textarea, Input } from '@nextui-org/react';
 import {
   type AddLeaveInput,
   type LeaveDetails,
   type UpdateLeaveInput,
 } from '../types';
 import * as validators from '../helpers/validators';
-import { useState, useEffect, useRef, type ChangeEventHandler, use } from 'react';
+import {
+  useState,
+  useEffect,
+  useRef,
+  type ChangeEventHandler,
+  use,
+} from 'react';
 import { string } from 'zod';
 
 export type LeaveFormProps =
@@ -54,10 +54,11 @@ export const typeLeaves = [
 const LeaveForm = (props: LeaveFormProps) => {
   const [selectTypeLeave, setSelectTypeLeave] = useState<string>('1');
   const { data: session } = useSession();
-  const [selectAssignUser, setSelectAssignUser] = useState<string>("");
+  const [selectAssignUser, setSelectAssignUser] = useState<string>('');
   const [totalLeaveDate, setTotalLeaveDate] = useState<number>();
-  const [startDate, setStartDate] = useState<DatePickerValue>(new Date());
-  const [endDate, setEndDate] = useState<DatePickerValue>(new Date());
+  const [startDate, setStartDate] = useState<DatePickerValue>();
+  const [endDate, setEndDate] = useState<DatePickerValue>();
+  const [uploadedFilenames, setUploadedFilenames] = useState<string[]>([]);
 
   const { kind, onSubmit } = props;
   const userId = session?.user.user_id ? session?.user.user_id : 0;
@@ -66,15 +67,13 @@ const LeaveForm = (props: LeaveFormProps) => {
 
   type EmployeeAssings = {
     user_id: string;
-    person_firstname : string;
-    person_lastname : string;
+    person_firstname: string;
+    person_lastname: string;
   };
 
-  const {data: listPerAssigns } =
-    api.employee.listEmployeeAssign.useQuery<EmployeeAssings[]>({ wardId, userId,positionId });
-
-    
-
+  const { data: listPerAssigns } = api.employee.listEmployeeAssign.useQuery<
+    EmployeeAssings[]
+  >({ wardId, userId, positionId });
 
 
   const {
@@ -96,8 +95,11 @@ const LeaveForm = (props: LeaveFormProps) => {
   });
 
   // console.log("typeLeave",getValues('typeLeave'))
-  console.log("isValid",isValid)
-  console.log("errors",errors)
+  console.log('isValid', isValid);
+  console.log('errors', errors);
+
+
+
 
   const calculateDiffDays = (startDate: any, endDate: any) => {
     const oneDay = 24 * 60 * 60 * 1000; // milliseconds in a day
@@ -127,32 +129,39 @@ const LeaveForm = (props: LeaveFormProps) => {
     return diffDays;
   };
 
-  
-  const handleValueAssignUserChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleValueAssignUserChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
     setSelectAssignUser(e.target.value);
-  }
+  };
 
-  const handleSelectTypeLeaveChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleSelectTypeLeaveChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
     setSelectTypeLeave(e.target.value);
-  }
+  };
 
   useEffect(() => {
-    setValue(
-      'totalLeaveDays',
-      calculateDiffDays(startDate, endDate)
-    );
+    setValue('totalLeaveDays', calculateDiffDays(startDate, endDate));
     setTotalLeaveDate(getValues('totalLeaveDays'));
 
     setValue('assignUser', selectAssignUser, {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true,
-     });
-    setValue('typeLeave',selectTypeLeave);
+    });
+    setValue('typeLeave', selectTypeLeave);
     // setValue('assignUser',Number(selectAssignUser));
+    console.log('selectAssignUser', getValues('assignUser'));
 
-  }, [selectTypeLeave,selectAssignUser,startDate,endDate]);
+    // setValue('uploadFiles', uploadedFilenames, {
+    //   shouldValidate: true,
+    //   shouldDirty: true,
+    //   shouldTouch: true,
+    // });
 
+    console.log('uploadedFilenames', uploadedFilenames);
+  }, [selectTypeLeave, selectAssignUser, startDate, endDate,uploadedFilenames]);
 
   // const startLeaveDate = new Date(getValues("startLeaveDate"));
   // const endLeaveDate = new Date(getValues("endLeaveDate"));
@@ -173,20 +182,30 @@ const LeaveForm = (props: LeaveFormProps) => {
   //   }
   // }
 
-  const handleDatePickerStartChange = (startDate:string) => {
-    // console.log('christDate', startDate);
-    setValue('startLeaveDate', startDate, {
+  const handleDatePickerStartChange = (value: DatePickerValue) => {
+    setStartDate(value);
+
+    const dateStartString = value ? (value instanceof Date ? value.toISOString().split('T')[0] : '') : '';
+    if(!dateStartString) return null;
+
+    // const dateStartString = value instanceof Date
+    // ? value.toISOString().split('T')[0]
+    // : '';
+
+    setValue('startLeaveDate',dateStartString, {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true,
     });
   };
 
+  const handleDatePickerEndChange = (value: DatePickerValue) => {
+    setEndDate(value);
 
-  const handleDatePickerEndChange = (endDate:string) => {
-    // console.log("endDate",endDate)
-    const convertEnddateTostring = endDate;
-    setValue('endLeaveDate', endDate, {
+    const dateEndString = value ? (value instanceof Date ? value.toISOString().split('T')[0] : '') : '';
+    if(!dateEndString) return null;
+
+    setValue('endLeaveDate', dateEndString, {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true,
@@ -195,6 +214,19 @@ const LeaveForm = (props: LeaveFormProps) => {
 
   if (!listPerAssigns) return <div>ไม่มีผู้ปฏิบัติงานแทน</div>;
 
+  const logCurrentValues = () => {
+    console.log('Current form values:', getValues());
+  };
+
+  const handleFileUpload = (filenames: string[]) => {
+    // Update state with new filenames
+
+    setUploadedFilenames(filenames);
+    // console.log('uploadedFilenames', uploadedFilenames);
+  };
+
+
+
   return (
     <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
       {/* <h1>{capitalize(kind)}</h1> */}
@@ -202,18 +234,20 @@ const LeaveForm = (props: LeaveFormProps) => {
         <div className="flex-1 md:w-1/2">
           <div id="detailMain" className="mb-10">
             <h1 className="blueDark Ekachon_Bold mb-5">รายละเอียด</h1>
-            <label htmlFor="typeLeave" className="text-base text-slate-500">
-              ประเภทการลา *
-            </label>
             <div id="select-typeLeave" className="pt-2">
               <Select
-                value={[selectTypeLeave]}
                 id="typeLeave"
                 variant="bordered"
+                label="ประเภทการลา"
+                labelPlacement="outside"
                 radius="sm"
                 onChange={handleSelectTypeLeaveChange}
                 placeholder="เลือกประเภทการลา"
+                isInvalid={!!errors.typeLeave}
+                errorMessage={errors.typeLeave && errors.typeLeave.message}
               >
+
+                
                 <SelectItem value="1" key={1}>
                   ลากิจ
                 </SelectItem>
@@ -262,7 +296,7 @@ const LeaveForm = (props: LeaveFormProps) => {
               <p className="Ekachon_Light text-[#6F6F6F]">วันลาคงเหลือรวม</p>
               <p className="blueDark Ekachon_Bold">0 วัน</p>
             </div>
-          </div>
+          </div>ช่วงเวลา
           <div id="dateRange">
             <div className="my-5">
               <h1 className="blueDark Ekachon_Bold mb-5">ช่วงเวลา</h1>
@@ -274,7 +308,7 @@ const LeaveForm = (props: LeaveFormProps) => {
                 // onValueChange={handleDatePickerStartChange}
                 // value={currentStartLeaveDate}
                 value={startDate}
-                onValueChange={setStartDate}
+                onValueChange={handleDatePickerStartChange}
               />
               {/* <ThaiDatePicker
               id="startLeaveDate"
@@ -298,7 +332,7 @@ const LeaveForm = (props: LeaveFormProps) => {
                 // value={currentEndLeaveDate}
                 placeholder="เลือกวันที่สิ้นสุดลา"
                 value={endDate}
-                onValueChange={setEndDate}
+                onValueChange={handleDatePickerEndChange}
                 // onValueChange={handleDatePickerEndChange}
               />
               {/* <ThaiDatePicker
@@ -321,8 +355,10 @@ const LeaveForm = (props: LeaveFormProps) => {
               id="remainingLeaveDays"
             >
               <p className="Ekachon_Light text-[#6F6F6F]">ระยะเวลา</p>
-              <p className="blueDark Ekachon_Bold">{getValues('totalLeaveDays')} วัน</p>
-              <TextInput
+              <p className="blueDark Ekachon_Bold">
+                {getValues('totalLeaveDays')} วัน
+              </p>
+              <Input
                 id="totalLeaveDays"
                 placeholder=" "
                 disabled={true}
@@ -337,59 +373,77 @@ const LeaveForm = (props: LeaveFormProps) => {
         <div className="mt-5 flex-1 md:w-1/2 lg:mt-0">
           <h1 className="blueDark Ekachon_Bold mb-5">รายละเอียดเพิ่มเติม</h1>
           <div className="" id="selectAssignUser">
-            {/* <label htmlFor="assignUser" className="text-sm text-slate-500">
-              ผู้ปฏิบัติงานแทน *
-            </label> */}
+          
             <Select
-              id="assignUser"
               className="mb-6"
               label="ผู้ปฏิบัติงานแทน"
               items={listPerAssigns}
               variant="bordered"
               radius="sm"
               labelPlacement="outside"
-              selectedKeys={[selectAssignUser]}
               onChange={handleValueAssignUserChange}
               placeholder="เลือกผู้ปฏิบัติงานแทน"
             >
-
-                  {listPerAssigns.map((listPerAssign) => (
-                    <SelectItem key={listPerAssign.user_id} value={listPerAssign.user_id}>
-                    {listPerAssign.person_firstname}{' '}
-                    {listPerAssign.person_lastname}
-                  </SelectItem>
-                  ))}
-    
+              {(listPerAssign) => (
+                <SelectItem key={listPerAssign.user_id}>
+                  {`${listPerAssign.person_firstname} ${listPerAssign.person_lastname}`}
+                </SelectItem>
+              )}
+               {/* {listPerAssigns.map((animal) => (
+          <SelectItem key={animal.user_id} value={animal.user_id}>
+            {animal.user_id}
+          </SelectItem>
+        ))} */}
             </Select>
-                    </div>
+          </div>
           <div id="reasonLeave" className="mb-5">
-            <label htmlFor="reason" className="text-sm text-slate-500">
+            {/* <label htmlFor="reason" className="text-sm text-slate-500">
               เหตุผลการลา *
-            </label>
+            </label> */}
             <Textarea
+              label="เหตุผลการลา"
               id="reason"
               placeholder=" "
+              labelPlacement='outside'
               {...register('reason')}
+              variant="bordered"
+              radius="sm"
+              isInvalid={!!errors.reason}
+              errorMessage={errors.reason && errors.reason.message}
             />
-            {errors.reason && <div>{errors.reason.message}</div>}
+            {/* {errors.reason && <div>{errors.reason.message}</div>} */}
           </div>
           <div id="contactLocation" className="mb-5">
-            <label htmlFor="address_contact" className="text-sm text-slate-500">
+            {/* <label htmlFor="address_contact" className="text-sm text-slate-500">
               สถานที่ติดต่อระหว่างการลา *
-            </label>
+            </label> */}
             <Textarea
+              label="สถานที่ติดต่อระหว่างการลา"
               placeholder=" "
+              labelPlacement='outside'
               id="address_contact"
               cols={3}
+              variant="bordered"
+              radius="sm"
               {...register('leaveLocation')}
+              isInvalid={!!errors.leaveLocation}
+              errorMessage={errors.leaveLocation && errors.leaveLocation.message}
             />
           </div>
 
           <div className="mb-6">
-            <label className="grayBlack text-base">เบอร์ติดต่อ *</label>
-            <TextInput
+            {/* <label className="grayBlack text-base">เบอร์ติดต่อ *</label> */}
+            <Input
+            label="เบอร์ติดต่อ"
+            labelPlacement='outside'
               id="leaveContactNumber"
               placeholder=" "
+              variant="bordered"
+              radius="sm"
+              isInvalid={!!errors.leaveContactNumber}
+              errorMessage={
+                errors.leaveContactNumber && errors.leaveContactNumber.message
+              }
               {...register('leaveContactNumber')}
             />
           </div>
@@ -403,7 +457,7 @@ const LeaveForm = (props: LeaveFormProps) => {
                 รองรับไฟล์ JPG,JPEG,PNG,PDF,HEIC,HEIF ไม่เกิน 10 ไฟล์
                 แต่ละไฟล์มีขนาดไม่เกิน 3 MB รวมกันไม่เกิน 30 MB
               </div>
-              <FileUploadLeave />
+              <FileUploadLeave onFileUpload={handleFileUpload} />
             </div>
           )}
         </div>
@@ -416,6 +470,10 @@ const LeaveForm = (props: LeaveFormProps) => {
           {...register('typeLeave')}
         /> */}
       </div>
+
+      <Button type="button" onClick={logCurrentValues}>
+      Log Current Values
+      </Button>
 
       <Button
         type="submit"

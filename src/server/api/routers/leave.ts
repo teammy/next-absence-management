@@ -7,7 +7,7 @@ export const leaveRouter = createTRPCRouter({
   list: protectedProcedure.query(async ({ ctx }) => {
     const leaves = await ctx.prisma.leave.findMany({
       where: {
-        userId: +ctx.session.user.id,
+        userId: +ctx.session.user.user_id,
       },
       select: {
         id: true,
@@ -58,7 +58,7 @@ export const leaveRouter = createTRPCRouter({
       const leave = await ctx.prisma.leave.create({
         data: {
           ...input,
-          userId: +ctx.session.user.id,
+          userId: +ctx.session.user.user_id,
         },
       });
 
@@ -75,7 +75,7 @@ export const leaveRouter = createTRPCRouter({
       });
 
       // ABAC => Attribute-Based Access Control
-      if (existingLeave?.userId !== +ctx.session.user.id) {
+      if (existingLeave?.userId !== +ctx.session.user.user_id) {
         throw new TRPCError({ code: 'FORBIDDEN' });
       }
 
