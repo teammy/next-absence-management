@@ -15,7 +15,6 @@ import {
   PhotoIcon,
 } from '@heroicons/react/24/outline';
 import FileUploadLeave from './FileUploadLeave';
-import AvatarUploader from '~/features/ui/components/AvatarUploader';
 import { DatePicker, DatePickerValue } from '@tremor/react';
 
 import { Button, Select, SelectItem, Textarea, Input } from '@nextui-org/react';
@@ -28,11 +27,7 @@ import * as validators from '../helpers/validators';
 import {
   useState,
   useEffect,
-  useRef,
-  type ChangeEventHandler,
-  use,
 } from 'react';
-import { string } from 'zod';
 
 export type LeaveFormProps =
   | {
@@ -220,6 +215,12 @@ const LeaveForm = (props: LeaveFormProps) => {
 
   const handleFileUpload = (filenames: string[]) => {
     setUploadedFilenames(filenames);
+    setValue('uploadFiles', filenames, {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+
   };
 
 

@@ -248,8 +248,7 @@ model personal {
   person_createdAt     DateTime  @default(now())
   person_updatedAt     DateTime  @default(now())
   role_leave_system    Role      @default(MEMBER)
-  leaves               Leave[]
-  levels               level[]
+ levels               level[]
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -608,7 +607,6 @@ model typeposition {
   typeposition_name String @db.VarChar(100)
 }
 
-
 model ward {
   ward_id    Int    @id @default(autoincrement())
   ward_name  String @db.VarChar(150)
@@ -638,12 +636,13 @@ model LeaveFileUpload {
   fileName  String
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
-  leaves     Leave    @relation(fields: [leaveId], references: [id])
+  leaves    Leave    @relation(fields: [leaveId], references: [id])
+
   @@index([leaveId], map: "LeaveFileUpload_leaveId_fkey")
 }
 
 model Leave {
-  id                        Int         @id @default(autoincrement())
+  id                        Int               @id @default(autoincrement())
   userId                    Int
   startLeaveDate            String
   endLeaveDate              String
@@ -657,20 +656,19 @@ model Leave {
   managerUserApprove        String?
   departmentHeadUserApprove String?
   hrUserApprove             String?
-  status                    LeaveStatus @default(PENDING)
-  managerStatus             LeaveStatus @default(PENDING)
-  departmentHeadStatus      LeaveStatus @default(PENDING)
-  hrStatus                  LeaveStatus @default(PENDING)
-  createdAt                 DateTime    @default(now())
-  updatedAt                 DateTime    @default(now())
+  status                    LeaveStatus       @default(PENDING)
+  managerStatus             LeaveStatus       @default(PENDING)
+  departmentHeadStatus      LeaveStatus       @default(PENDING)
+  hrStatus                  LeaveStatus       @default(PENDING)
+  createdAt                 DateTime          @default(now())
+  updatedAt                 DateTime          @default(now())
   // personalUser_id           Int?
-  user                  personal   @relation(fields: [userId], references: [user_id])
+  // user                      personal          @relation(fields: [userId], references: [user_id])
   // user                      personal    @relation(fields: [userId], references: [user_id])
   // personal                personal?   @relation(fields: [userId], references: [user_id])
   fileuploads               LeaveFileUpload[]
 
   @@unique([userId, startLeaveDate, endLeaveDate, typeLeave])
-  @@index([userId], map: "Leave_userId_fkey")
 }
 
 // model Announcement {
