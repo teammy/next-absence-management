@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   db:
-    image: bitnami/mariadb:10.5
+    image: bitnami/mariadb:10.5-debian-11
     ports:
       - 33061:3306
     container_name: leave_db

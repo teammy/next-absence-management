@@ -608,12 +608,6 @@ model typeposition {
   typeposition_name String @db.VarChar(100)
 }
 
-model users {
-  userId    Int      @id @default(autoincrement())
-  username  String   @db.VarChar(255)
-  password  String   @db.VarChar(255)
-  createdAt DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.DateTime(0)
-}
 
 model ward {
   ward_id    Int    @id @default(autoincrement())
@@ -624,19 +618,19 @@ model ward {
   hosward_id String @db.VarChar(4)
 }
 
-model User {
-  id            Int            @id @default(autoincrement())
-  name          String
-  email         String         @unique
-  image         String?
-  password      String
-  role          Role           @default(MEMBER)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @default(now())
-  announcements Announcement[]
-  articles      Article[]
-  // leaves        Leave[]
-}
+// model User {
+//   id            Int            @id @default(autoincrement())
+//   name          String
+//   email         String         @unique
+//   image         String?
+//   password      String
+//   role          Role           @default(MEMBER)
+//   createdAt     DateTime       @default(now())
+//   updatedAt     DateTime       @default(now())
+//   announcements Announcement[]
+//   articles      Article[]
+//   // leaves        Leave[]
+// }
 
 model LeaveFileUpload {
   id        Int      @id @default(autoincrement())
@@ -644,6 +638,8 @@ model LeaveFileUpload {
   fileName  String
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+  leaves     Leave    @relation(fields: [leaveId], references: [id])
+  @@index([leaveId], map: "LeaveFileUpload_leaveId_fkey")
 }
 
 model Leave {
@@ -667,43 +663,44 @@ model Leave {
   hrStatus                  LeaveStatus @default(PENDING)
   createdAt                 DateTime    @default(now())
   updatedAt                 DateTime    @default(now())
-  personalUser_id           Int?
-  // personal                  personal?   @relation(fields: [personalUser_id], references: [user_id])
-  // user                      User        @relation(fields: [userId], references: [id])
-  personal                personal?   @relation(fields: [userId], references: [user_id])
+  // personalUser_id           Int?
+  user                  personal   @relation(fields: [userId], references: [user_id])
+  // user                      personal    @relation(fields: [userId], references: [user_id])
+  // personal                personal?   @relation(fields: [userId], references: [user_id])
+  fileuploads               LeaveFileUpload[]
 
-  @@unique([personalUser_id, startLeaveDate, endLeaveDate, typeLeave])
-  @@index([personalUser_id], map: "Leave_personalUser_id_fkey")
+  @@unique([userId, startLeaveDate, endLeaveDate, typeLeave])
+  @@index([userId], map: "Leave_userId_fkey")
 }
 
-model Announcement {
-  id        Int      @id @default(autoincrement())
-  title     String
-  slug      String   @unique
-  excerpt   String
-  content   String
-  userId    Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
+// model Announcement {
+//   id        Int      @id @default(autoincrement())
+//   title     String
+//   slug      String   @unique
+//   excerpt   String
+//   content   String
+//   userId    Int
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @default(now())
+//   user      User     @relation(fields: [userId], references: [id])
 
-  @@index([userId], map: "Announcement_userId_fkey")
-}
+//   @@index([userId], map: "Announcement_userId_fkey")
+// }
 
-model Article {
-  id        Int      @id @default(autoincrement())
-  title     String
-  slug      String   @unique
-  excerpt   String
-  content   String
-  image     String
-  userId    Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
+// model Article {
+//   id        Int      @id @default(autoincrement())
+//   title     String
+//   slug      String   @unique
+//   excerpt   String
+//   content   String
+//   image     String
+//   userId    Int
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @default(now())
+//   user      User     @relation(fields: [userId], references: [id])
 
-  @@index([userId], map: "Article_userId_fkey")
-}
+//   @@index([userId], map: "Article_userId_fkey")
+// }
 
 model HolidayDate {
   id            Int         @id @default(autoincrement())

@@ -219,10 +219,7 @@ const LeaveForm = (props: LeaveFormProps) => {
   };
 
   const handleFileUpload = (filenames: string[]) => {
-    // Update state with new filenames
-
     setUploadedFilenames(filenames);
-    // console.log('uploadedFilenames', uploadedFilenames);
   };
 
 
