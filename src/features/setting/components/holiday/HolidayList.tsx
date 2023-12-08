@@ -15,7 +15,7 @@ import DataTable from '~/features/ui/components/table/DataTable';
 import { ThaiDatePicker } from 'thaidatepicker-react';
 import { type SubmitHandler , useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { capitalize, set } from 'lodash';
+import { capitalize } from 'lodash';
 import * as validators from '../../helpers/validators';
 import { type } from 'os';
 import {

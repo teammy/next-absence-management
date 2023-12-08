@@ -637,7 +637,6 @@ model LeaveFileUpload {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
   leaves    Leave    @relation(fields: [leaveId], references: [id])
-
   @@index([leaveId], map: "LeaveFileUpload_leaveId_fkey")
 }
 
@@ -705,15 +704,8 @@ model HolidayDate {
   holidayDate   String
   holidayName   String
   holidayTypeId Int
-  holidayType   HolidayType @relation(fields: [holidayTypeId], references: [id])
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @default(now())
-}
-
-model HolidayType {
-  id           Int           @id @default(autoincrement())
-  holidayType  String
-  holidayDates HolidayDate[]
 }
 
 model LeaveApproveEvent {

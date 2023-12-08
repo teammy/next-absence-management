@@ -10,9 +10,7 @@ export const add = z.object({
   assignUser : z.string().min(1,{message:"** กรุณาเลือกผู้รับผิดชอบ"}),
   leaveLocation : z.string().min(1,{message:"** กรุณาระบุสถานที่ติดต่อระหว่างการลา"}),
   leaveContactNumber : z.string().min(1,{message:"** กรุณาระบุเบอร์โทรศัพท์ติดต่อระหว่างการลา"}),
-  uploadFiles: z.object({
-    file: z.string().min(1,{message:"** กรุณาเลือกไฟล์แนบ"})
-  }),
+  uploadFiles: z.array(z.string())
 });
 
 

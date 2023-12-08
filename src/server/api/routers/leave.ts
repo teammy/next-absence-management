@@ -56,30 +56,38 @@ export const leaveRouter = createTRPCRouter({
     .input(validators.add)
     .mutation(async ({ input, ctx }) => {
       const leave = await ctx.prisma.leave.create({
-        data: {
-          ...input,
+        data : {
+          startLeaveDate: input.startLeaveDate,
+          endLeaveDate: input.endLeaveDate,
+          totalLeaveDays: input.totalLeaveDays,
+          typeLeave: input.typeLeave,
+          reason: input.reason,
+          assignUser : input.assignUser,
+          leaveLocation : input.leaveLocation,
+          leaveContactNumber : input.leaveContactNumber,
           userId: +ctx.session.user.user_id,
-        },
+        }
+        // data: {
+        //   ...input,
+        //   userId: +ctx.session.user.user_id,
+        // },
       });
 
+      if (input.uploadFiles.length > 0) {
+
+      await ctx.prisma.leaveFileUpload.createMany({
+        data: input.uploadFiles.map((file) => ({
+          leaveId: leave.id,
+          fileName:file,
+        })),
+      });
+    }
+
       if (!leave) throw new TRPCError({ code: 'FORBIDDEN' });
+    
 
       return leave;
     }),
-  
-  addfileuploadleave: protectedProcedure
-  .input(validators.fileuploadleave)
-  .mutation(async ({ input, ctx }) => {
-    const fileuploadleave = await ctx.prisma.leaveFileUpload.create({
-      data: {
-        ...input
-      },
-    });
-
-    if (!fileuploadleave) throw new TRPCError({ code: 'FORBIDDEN' });
-
-    return fileuploadleave;
-  }),
     
   update: protectedProcedure
     .input(validators.update)

@@ -149,11 +149,11 @@ const LeaveForm = (props: LeaveFormProps) => {
     // setValue('assignUser',Number(selectAssignUser));
     console.log('selectAssignUser', getValues('assignUser'));
 
-    // setValue('uploadFiles', uploadedFilenames, {
-    //   shouldValidate: true,
-    //   shouldDirty: true,
-    //   shouldTouch: true,
-    // });
+    setValue('uploadFiles', uploadedFilenames, {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
 
     console.log('uploadedFilenames', uploadedFilenames);
   }, [selectTypeLeave, selectAssignUser, startDate, endDate,uploadedFilenames]);
@@ -215,11 +215,11 @@ const LeaveForm = (props: LeaveFormProps) => {
 
   const handleFileUpload = (filenames: string[]) => {
     setUploadedFilenames(filenames);
-    setValue('uploadFiles', filenames, {
-      shouldValidate: true,
-      shouldDirty: true,
-      shouldTouch: true,
-    });
+    // setValue('uploadFiles', filenames, {
+    //   shouldValidate: true,
+    //   shouldDirty: true,
+    //   shouldTouch: true,
+    // });
 
   };
 

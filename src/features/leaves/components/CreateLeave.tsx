@@ -55,16 +55,16 @@ const CreateLeave = () => {
     // router.push('/leaves');
   };
 
-  const { mutate: addFileUpload } = api.leave.addfileuploadleave.useMutation({});
+  // const { mutate: addFileUpload } = api.leave.addfileuploadleave.useMutation({});
 
-  const createLeaveFileUpload = async (filenames: AddFileLeaveUpload) => {
-    try {
-      await addFileUpload(filenames);
-    }
-    catch (err) {
-      console.log("Not add",err);
-    }
-  };
+  // const createLeaveFileUpload = async (filenames: AddFileLeaveUpload) => {
+  //   try {
+  //     await addFileUpload(filenames);
+  //   }
+  //   catch (err) {
+  //     console.log("Not add",err);
+  //   }
+  // };
   
 
   return <LeaveForm kind="create" onSubmit={createLeave}></LeaveForm>;

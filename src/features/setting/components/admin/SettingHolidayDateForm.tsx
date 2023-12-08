@@ -33,7 +33,18 @@ export type SettingHolidayProps =
     };
 
 const SettingHolidayDateForm = (props: SettingHolidayProps) => {
-  const { data: listTypes } = api.admin.settingHoliday.listHolidayType.useQuery();
+  // const { data: listTypes } = api.admin.settingHoliday.listHolidayType.useQuery();
+
+  const listTypes = [
+    {
+      id: 1,
+      holidayType: 'วันหยุดนักขัตฤกษ์',
+    },
+    {
+      id: 2,
+      holidayType: 'วันหยุดราชการ',
+    },
+  ]
   const { kind, onSubmit  } = props;
   
 
