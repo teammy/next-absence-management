@@ -51,6 +51,14 @@
   color: #002D63;
 }
 
+.bg-blueDark {
+  background-color: #1A477F;
+}
+
+.bg-grayWhite {
+  background-color: #F5F5F7;
+}
+
 .blue {
   color: #0050F0;
 }
@@ -87,3 +95,11 @@
   color: #f68b1f;
   border: 2px solid #f68b1f;
 }
+
+.border-maincontent {
+  border: 1px solid #ccd5e0;
+}
+
+.item-leaveDetail > li {
+  margin: 10px 0;
+} 

@@ -636,11 +636,11 @@ model LeaveFileUpload {
   fileName  String
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
-  leaves    Leave    @relation(fields: [leaveId], references: [id])
+  leaves    LeaveItem    @relation(fields: [leaveId], references: [id])
   @@index([leaveId], map: "LeaveFileUpload_leaveId_fkey")
 }
 
-model Leave {
+model LeaveItem {
   id                        Int               @id @default(autoincrement())
   userId                    Int
   startLeaveDate            String
@@ -653,8 +653,11 @@ model Leave {
   leaveContactNumber        String
   assignUser                String
   managerUserApprove        String?
+  managerUserApproveUpdatedAt    DateTime @default(now())
   departmentHeadUserApprove String?
+  departmentHeadUserApproveUpdatedAt  DateTime  @default(now())
   hrUserApprove             String?
+  hrUserApproveUpdatedAt             DateTime   @default(now())
   status                    LeaveStatus       @default(PENDING)
   managerStatus             LeaveStatus       @default(PENDING)
   departmentHeadStatus      LeaveStatus       @default(PENDING)

@@ -11,16 +11,17 @@ const IndexCreateLeave:NextPageWithLayout = () => {
 
   return (
     <>
-    <div className="my-5">
+
     <Breadcrumbs size="lg">
-      <BreadcrumbItem>หน้าแรก</BreadcrumbItem>
-      <BreadcrumbItem>เขียนคำขอลา</BreadcrumbItem>
+      <BreadcrumbItem>หน้าหลัก</BreadcrumbItem>
+      <BreadcrumbItem>เขียนใบลา</BreadcrumbItem>
     </Breadcrumbs>
 
+    <div className="head-title my-5">
+      <h2 className="text-2xl Ekachon_Bold blueDark">เขียนใบขอลา</h2>
     </div>
     
     <Card classNames={{ header: 'justify-center' }}>
-      <CardHeader className="text-2xl blueDark mlp_bold" >คำขอลา</CardHeader>
       <CardBody>
     <CreateLeave/>
       </CardBody>

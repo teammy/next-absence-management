@@ -11,6 +11,12 @@ import { type NextPage } from 'next';
 import { type ReactElement, type ReactNode } from 'react';
 import { Noto_Sans_Thai } from 'next/font/google'
 import localFont from 'next/font/local'
+import '@mantine/core/styles.css';
+import { MantineProvider, createTheme } from '@mantine/core';
+
+const theme = createTheme({
+  /** Put your mantine theme override here */
+});
 
 const ttFont = localFont({ src: '../../public/fonts/thongterm-reg.woff2' })
 const ttFont_bold = localFont({ src: '../../public/fonts/thongterm-bold.woff2' })
@@ -35,7 +41,9 @@ const MyApp = ({
     <SessionProvider session={session}>
       <Layout >
         <NextUIProvider className={clsx(Ekachon.className,"text-lg")}>
+        <MantineProvider theme={theme}>
         <Component {...pageProps} />
+        </MantineProvider>
         </NextUIProvider>
         <ReactQueryDevtools initialIsOpen />
       </Layout>

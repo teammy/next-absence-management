@@ -22,26 +22,16 @@ const Layout = ({ children }: LayoutProps) => {
         <div
       className={`flex h-screen  dark:bg-gray-900 ${isSidebarOpen && 'overflow-hidden'}`}
       >
-      <Sidebar />
-      <div className="flex flex-col flex-1 w-full">
+      <div className="w-full flex flex-col h-screen">
         <Header />
+        <div className="flex flex-1">
+          <Sidebar />
         <Main>
           {children}
         </Main>
+        </div>
       </div>
     </div>
-      {/* <Navbar>
-        <Navbar.Navbrand></Navbar.Navbrand>
-        <ProtectedResource roles={['ADMIN', 'MANAGER']}>
-          <Navbar.NavItem to="/admin">Admin</Navbar.NavItem>
-        </ProtectedResource>
-        <Navbar.NavItem to="/leaves">Leaves</Navbar.NavItem>
-        <Navbar.NavItem to="/announcements">Announcements</Navbar.NavItem>
-        <Navbar.NavItem to="/articles">Blog</Navbar.NavItem>
-        <AuthMenu></AuthMenu>
-      </Navbar>
-      <main>{children}</main>
-      <Toast></Toast> */}
     </SidebarProvider>
   );
 };

@@ -20,7 +20,7 @@ function DesktopSidebar() {
     <aside
       id="desktopSidebar"
       ref={sidebarRef}
-      className={clsx(mlpFont.className, "z-30 flex-shrink-0 hidden overflow-y-auto bg-[#373F45] dark:bg-gray-800 lg:block border-grey-200 border-r-1")}
+      className={clsx(mlpFont.className, "flex-shrink-0 hidden bg-white dark:bg-gray-800 lg:block border-r-1 border-gray-20 drop-shadow-lg z-50")}
       // className={mlpFont.className}
     >
       <SidebarContent linkClicked={linkClickedHandler} />

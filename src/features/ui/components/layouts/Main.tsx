@@ -6,9 +6,11 @@ interface IMain{
 
 function Main({ children }: IMain) {
   return (
-    <main className="h-full overflow-y-auto text-base">
-      <div className="grid px-0 lg:px-6 mx-auto">{children}</div>
-    </main>
+
+      <div className="grid px-0 lg:px-10 lg:py-5 mx-auto w-full bg-[#E9F4FF]">
+      {children}
+      </div>
+
   );
 }
 

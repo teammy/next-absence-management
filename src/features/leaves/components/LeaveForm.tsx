@@ -215,12 +215,6 @@ const LeaveForm = (props: LeaveFormProps) => {
 
   const handleFileUpload = (filenames: string[]) => {
     setUploadedFilenames(filenames);
-    // setValue('uploadFiles', filenames, {
-    //   shouldValidate: true,
-    //   shouldDirty: true,
-    //   shouldTouch: true,
-    // });
-
   };
 
 
@@ -354,14 +348,14 @@ const LeaveForm = (props: LeaveFormProps) => {
             >
               <p className="Ekachon_Light text-[#6F6F6F]">ระยะเวลา</p>
               <p className="blueDark Ekachon_Bold">
-                {getValues('totalLeaveDays')} วัน
+                {totalLeaveDate} วัน
               </p>
               <Input
                 id="totalLeaveDays"
                 placeholder=" "
                 disabled={true}
                 className="hidden"
-                value={getValues('totalLeaveDays').toString()}
+                value={totalLeaveDate?.toString()}
                 {...register('totalLeaveDays')}
               />
             </div>
@@ -433,6 +427,8 @@ const LeaveForm = (props: LeaveFormProps) => {
             {/* <label className="grayBlack text-base">เบอร์ติดต่อ *</label> */}
             <Input
             label="เบอร์ติดต่อ"
+            type="number"
+            maxLength={10}
             labelPlacement='outside'
               id="leaveContactNumber"
               placeholder=" "

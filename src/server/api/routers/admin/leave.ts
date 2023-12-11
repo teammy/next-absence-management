@@ -5,7 +5,7 @@ export const adminLeaveRouter = createTRPCRouter({
   list: protectedProcedure
     .meta({ roles: ['ADMIN', 'MANAGER'] })
     .query(async ({ ctx }) => {
-      const leaves = await ctx.prisma.leave.findMany({
+      const leaves = await ctx.prisma.leaveItem.findMany({
         select: {
           id: true,
           startLeaveDate: true,
@@ -33,7 +33,7 @@ export const adminLeaveRouter = createTRPCRouter({
     .meta({ roles: ['ADMIN', 'MANAGER'] })
     .input(z.number())
     .query(async ({ input, ctx }) => {
-      const leave = await ctx.prisma.leave.findUnique({
+      const leave = await ctx.prisma.leaveItem.findUnique({
         where: {
           id: input,
         },
@@ -61,7 +61,7 @@ export const adminLeaveRouter = createTRPCRouter({
     .meta({ roles: ['ADMIN', 'MANAGER'] })
     .input(z.number())
     .mutation(async ({ input, ctx }) => {
-      const leave = await ctx.prisma.leave.update({
+      const leave = await ctx.prisma.leaveItem.update({
         where: {
           id: input,
         },
@@ -76,7 +76,7 @@ export const adminLeaveRouter = createTRPCRouter({
     .meta({ roles: ['ADMIN', 'MANAGER'] })
     .input(z.number())
     .mutation(async ({ input, ctx }) => {
-      const leave = await ctx.prisma.leave.update({
+      const leave = await ctx.prisma.leaveItem.update({
         where: {
           id: input,
         },

@@ -4,10 +4,10 @@ import { type NextPageWithLayout } from '../_app';
 
 type Props = {}
 
-const DashboardPage:NextPageWithLayout = () => {
+const HomePage:NextPageWithLayout = () => {
   return (
     <div>DashboardPage</div>
   )
 }
-DashboardPage.getLayout = Layout;
-export default DashboardPage
+HomePage.getLayout = Layout;
+export default HomePage
