@@ -69,10 +69,10 @@ const MyLeaveDetails = () => {
             <div className="w-2/3">
               <ul className="Ekachon_Bold item-leaveDetail text-base">
                 <li>ลาป่วย</li>
-                <li>วันที่เริ่มต้นลา</li>
-                <li>วันที่สิ้นสุดลา</li>
-                <li>ระยะเวลา</li>
-                <li>ผู้ปฏิบัติงานแทน</li>
+                <li>{leave.startLeaveDate}</li>
+                <li>{leave.endLeaveDate}</li>
+                <li>{leave.totalLeaveDays} วัน</li>
+                <li>{leave.totalLeaveDays}</li>
                 <li>เหตุผลการลา</li>
                 <li>สถานที่ติดต่อระหว่างการลา</li>
                 <li>เบอร์ติดต่อ</li>

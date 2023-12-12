@@ -653,11 +653,11 @@ model LeaveItem {
   leaveContactNumber        String
   assignUser                String
   managerUserApprove        String?
-  managerUserApproveUpdatedAt    DateTime @default(now())
+  managerUserApproveUpdatedAt    DateTime? @default(now())
   departmentHeadUserApprove String?
-  departmentHeadUserApproveUpdatedAt  DateTime  @default(now())
+  departmentHeadUserApproveUpdatedAt  DateTime?  @default(now())
   hrUserApprove             String?
-  hrUserApproveUpdatedAt             DateTime   @default(now())
+  hrUserApproveUpdatedAt             DateTime?   @default(now())
   status                    LeaveStatus       @default(PENDING)
   managerStatus             LeaveStatus       @default(PENDING)
   departmentHeadStatus      LeaveStatus       @default(PENDING)
