@@ -1,6 +1,6 @@
 import { Loader } from "@mantine/core";
 import { api } from "~/utils/api";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import {
   Breadcrumbs,
@@ -14,7 +14,13 @@ import {
   getKeyValue,
   ChipProps,
   Chip,
-  Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  useDisclosure,
 } from "@nextui-org/react";
 import {
   XCircleIcon,
@@ -75,19 +81,28 @@ const MyLeaveList = () => {
 
   type User = (typeof myleavelist)[0];
 
-  const { isOpen, onClose, onOpen,onOpenChange } = useDisclosure();
+  const { isOpen, onClose, onOpen, onOpenChange } = useDisclosure();
+  const [selectItemDelete, setSelectItemDelete] = useState<number>();
+
+  const handleConfirmDelete = async () => {
+    // Implement your delete logic here
+    console.log("selectItemDelete", selectItemDelete);
+    onClose();
+  }
   const handleCloseModal = () => {
     onClose();
   };
 
-  const handleDeleteItem = () => {
+  const handleDeleteItem = (leaveId:number) => {
+    setSelectItemDelete(leaveId)
+    onOpen();
     // Implement your delete logic here
-    onClose();
+    console.log("leaveId from handle",leaveId);
+    // onClose();
   };
 
   const renderCell = useCallback((user: User, columnKey: React.Key) => {
     const cellValue = user[columnKey as keyof User];
-
 
     switch (columnKey) {
       case "managerStatus":
@@ -128,7 +143,9 @@ const MyLeaveList = () => {
         );
       case "actions":
         return (
+
           <div className="relative flex items-center gap-2">
+            
             <Link href={`/myleave/${user.id}`}>
               <span className="cursor-pointer text-lg text-default-400 active:opacity-50">
                 <InformationCircleIcon className="h-5 w-5" />
@@ -139,8 +156,11 @@ const MyLeaveList = () => {
               <PencilSquareIcon className="h-5 w-5" />
               แก้ไข
             </span>
-            <Button onPress={onOpen}>Open Modal</Button>
-            <span className="cursor-pointer text-lg text-danger active:opacity-50" onClick={onOpen}>
+            
+            <span
+              className="cursor-pointer text-lg text-danger active:opacity-50"
+              onClick={() => handleDeleteItem(user.id)}
+            >
               <MinusCircleIcon className="h-5 w-5" />
               ยกเลิก
             </span>
@@ -154,43 +174,9 @@ const MyLeaveList = () => {
 
   return (
     <>
-    <Button onPress={onOpen}>Open Modal</Button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader>
-              <ModalBody>
-                <p> 
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nullam pulvinar risus non risus hendrerit venenatis.
-                  Pellentesque sit amet hendrerit risus, sed porttitor quam.
-                </p>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nullam pulvinar risus non risus hendrerit venenatis.
-                  Pellentesque sit amet hendrerit risus, sed porttitor quam.
-                </p>
-                <p>
-                  Magna exercitation reprehenderit magna aute tempor cupidatat consequat elit
-                  dolor adipisicing. Mollit dolor eiusmod sunt ex incididunt cillum quis. 
-                  Velit duis sit officia eiusmod Lorem aliqua enim laboris do dolor eiusmod. 
-                  Et mollit incididunt nisi consectetur esse laborum eiusmod pariatur 
-                  proident Lorem eiusmod et. Culpa deserunt nostrud ad veniam.
-                </p>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Close
-                </Button>
-                <Button color="primary" onPress={onClose}>
-                  Action
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+
+    
+
       <Breadcrumbs size="lg">
         <BreadcrumbItem>หน้าหลัก</BreadcrumbItem>
         <BreadcrumbItem>ใบลาของฉัน</BreadcrumbItem>
@@ -220,7 +206,25 @@ const MyLeaveList = () => {
           </Table>
         </div>
       </div>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={true} className="Ekachon_Light">
+        <ModalContent>
+              <ModalHeader className="flex flex-col gap-1 bg-[#F44436] text-white">
+                ยกเลิกใบลา
+              </ModalHeader>
+              <ModalBody className="p-10 Ekachon_Light">
+                <p>
+                คุณแน่ใจใช่หรือไม่ ที่จะยกเลิกใบลานี้
+                </p>
 
+              </ModalBody>
+              <ModalFooter className="bg-[#EFF0F6]">
+                <Button color="danger" variant="light" onPress={onClose}>
+                  ปิด
+                </Button>
+          <Button onPress={onClose} className="bg-[#F44436] text-white">ตกลง</Button>
+              </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 };
