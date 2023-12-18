@@ -82,13 +82,29 @@ const MyLeaveList = () => {
   type User = (typeof myleavelist)[0];
 
   const { isOpen, onClose, onOpen, onOpenChange } = useDisclosure();
-  const [selectItemDelete, setSelectItemDelete] = useState<number>();
+  const [selectItemDelete, setSelectItemDelete] = useState<number>(0);
+  const { mutateAsync } = api.leave.destroyMyLeaveItem.useMutation({
+    onSuccess(status) {
+      if (status) {
+        setSelectItemDelete(0);
+        onClose();
+      }
+    },
+  });
 
   const handleConfirmDelete = async () => {
     // Implement your delete logic here
-    console.log("selectItemDelete", selectItemDelete);
+    if(selectItemDelete){
+      try {
+        await mutateAsync(selectItemDelete);
+      } catch {
+        console.error("error");
+      }
+    }
     onClose();
+    listItemForUser.data?.invalidate();
   }
+
   const handleCloseModal = () => {
     onClose();
   };
@@ -97,7 +113,7 @@ const MyLeaveList = () => {
     setSelectItemDelete(leaveId)
     onOpen();
     // Implement your delete logic here
-    console.log("leaveId from handle",leaveId);
+    // console.log("leaveId from handle",leaveId);
     // onClose();
   };
 
@@ -221,7 +237,7 @@ const MyLeaveList = () => {
                 <Button color="danger" variant="light" onPress={onClose}>
                   ปิด
                 </Button>
-          <Button onPress={onClose} className="bg-[#F44436] text-white">ตกลง</Button>
+          <Button onPress={() =>handleConfirmDelete()} className="bg-[#F44436] text-white">ตกลง</Button>
               </ModalFooter>
         </ModalContent>
       </Modal>

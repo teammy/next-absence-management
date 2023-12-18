@@ -177,4 +177,24 @@ export const leaveRouter = createTRPCRouter({
         throw new TRPCError({ code: "NOT_FOUND" });
       return listItemsForDepartmentHead;
     }),
+
+    destroyMyLeaveItem: protectedProcedure
+    .input(z.number())
+    .mutation(async ({ ctx, input }) => {
+      const existingMyLeaveItem = await ctx.prisma.leaveItem.findUnique({
+        where: {
+          id: input,
+        },
+      });
+  
+      if (!existingMyLeaveItem) throw new TRPCError({ code: 'NOT_FOUND' });
+  
+      const destroyLeaveItem = await ctx.prisma.leaveItem.delete({
+        where: {
+          id: input,
+        },
+      });
+      return destroyLeaveItem;
+    }),
+  
 });
