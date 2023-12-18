@@ -31,6 +31,7 @@ import {
   MinusCircleIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import DeleteModal from "~/features/ui/components/modal/DeleteModal";
 
 export type EmployeeAssings = {
   id: number;
@@ -73,11 +74,11 @@ const MyLeaveList = () => {
   const { data: session } = useSession();
   const userId = session?.user.user_id ? session?.user.user_id : 0;
 
-  const { data: myleavelist = [], isLoading } =
+  const { data: myleavelist = [], isLoading,refetch } =
     api.leave.listItemsForUser.useQuery<EmployeeAssings[]>(userId);
 
-  // if (isLoading) return <Loader color="#1A477F" type="dots" />;
-  // if (!myleavelist) return <div>Not found.</div>;
+  if (isLoading) return <Loader color="#1A477F" type="dots" />;
+  if (!myleavelist) return <div>Not found.</div>;
 
   type User = (typeof myleavelist)[0];
 
@@ -88,6 +89,8 @@ const MyLeaveList = () => {
       if (status) {
         setSelectItemDelete(0);
         onClose();
+        setOpen(true)
+        refetch();
       }
     },
   });
@@ -102,7 +105,7 @@ const MyLeaveList = () => {
       }
     }
     onClose();
-    listItemForUser.data?.invalidate();
+    
   }
 
   const handleCloseModal = () => {
@@ -222,6 +225,7 @@ const MyLeaveList = () => {
           </Table>
         </div>
       </div>
+      
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={true} className="Ekachon_Light">
         <ModalContent>
               <ModalHeader className="flex flex-col gap-1 bg-[#F44436] text-white">
@@ -241,6 +245,7 @@ const MyLeaveList = () => {
               </ModalFooter>
         </ModalContent>
       </Modal>
+      {/* {isOpen && <DeleteModal onClose={() => setOpen(false)} />} */}
     </>
   );
 };

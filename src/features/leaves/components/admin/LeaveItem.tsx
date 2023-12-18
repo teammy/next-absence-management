@@ -10,7 +10,7 @@ export interface LeaveItemProps {
 }
 
 export function LeaveItem({ id }: LeaveItemProps) {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const list = utils.admin.leave.list;
   const { data: leave, isLoading } = api.admin.leave.byId.useQuery(+id);
   const { mutateAsync: approve } = api.admin.leave.approve.useMutation({
