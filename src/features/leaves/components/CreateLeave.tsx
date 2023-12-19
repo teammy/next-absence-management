@@ -8,6 +8,7 @@ const CreateLeave = () => {
   const setUiToast = useAppStore((state) => state.setUiToast);
   const utils = api.useUtils();
   const list = utils.leave.list;
+  const router = useRouter();
   const { mutate: add } = api.leave.add.useMutation({
     async onMutate(input) {
       await list.cancel();
@@ -38,6 +39,11 @@ const CreateLeave = () => {
     onSettled() {
       list.invalidate();
     },
+    onSuccess(status) {
+      if(status){
+        router.push('/myleave');
+      }
+    }
   });
 
   const createLeave = async  (leave: AddLeaveInput) => {

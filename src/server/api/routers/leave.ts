@@ -36,34 +36,40 @@ export const leaveRouter = createTRPCRouter({
     return leaves;
   }),
   byId: protectedProcedure.input(z.number()).query(async ({ input, ctx }) => {
-    const leave = await ctx.prisma.$queryRaw`
-      SELECT 
-        le.*,
-        lt.leaveTypeDescription,
-        CONCAT(ps.person_firstname," ",ps.person_lastname) as fName,
-        CONCAT(ps2.person_firstname," ",ps2.person_lastname) as assignFname,
-        CONCAT(ps3.person_firstname," ",ps3.person_lastname) as managerFname,
-        CONCAT(ps5.person_firstname," ",ps4.person_lastname) as departmentFname,
-        CONCAT(ps5.person_firstname," ",ps5.person_lastname) as hrFname 
-      FROM LeaveItem le
-      INNER JOIN personal ps 
-      on ps.user_id = le.userId
-      INNER JOIN personal ps2
-      on ps2.user_id = le.assignUser
-      LEFT JOIN personal ps3
-      on ps3.user_id = le.managerUserApprove
-      LEFT JOIN personal ps4
-      on ps4.user_id = le.departmentHeadUserApprove
-      LEFT JOIN personal ps5
-      on ps5.user_id = le.hrUserApprove
-      INNER JOIN LeaveType lt
-      ON lt.id = le.typeLeave
-      WHERE le.id=${input}
-      ORDER BY le.createdAt DESC
-    `;
+    const leave = await ctx.prisma.leaveItem.findUnique({
+      where: {
+        id: input,
+      },
+    });
 
+    // const leave = await ctx.prisma.$queryRaw`
+    //   SELECT 
+    //     le.*,
+    //     lt.leaveTypeDescription,
+    //     CONCAT(ps.person_firstname," ",ps.person_lastname) as fName,
+    //     CONCAT(ps2.person_firstname," ",ps2.person_lastname) as assignFname,
+    //     CONCAT(ps3.person_firstname," ",ps3.person_lastname) as managerFname,
+    //     CONCAT(ps5.person_firstname," ",ps4.person_lastname) as departmentFname,
+    //     CONCAT(ps5.person_firstname," ",ps5.person_lastname) as hrFname 
+    //   FROM LeaveItem le
+    //   INNER JOIN personal ps 
+    //   on ps.user_id = le.userId
+    //   INNER JOIN personal ps2
+    //   on ps2.user_id = le.assignUser
+    //   LEFT JOIN personal ps3
+    //   on ps3.user_id = le.managerUserApprove
+    //   LEFT JOIN personal ps4
+    //   on ps4.user_id = le.departmentHeadUserApprove
+    //   LEFT JOIN personal ps5
+    //   on ps5.user_id = le.hrUserApprove
+    //   INNER JOIN LeaveType lt
+    //   ON lt.id = le.typeLeave
+    //   WHERE le.id=${input}
+    //   ORDER BY le.createdAt DESC
+    // `;
+     console.log(leave);
     if (!leave) throw new TRPCError({ code: "NOT_FOUND" });
-    console.log(leave);
+   
     return leave;
   }),
   add: protectedProcedure
@@ -108,10 +114,10 @@ export const leaveRouter = createTRPCRouter({
         where: { id: input.id },
       });
 
-      // ABAC => Attribute-Based Access Control
       if (existingLeave?.userId !== +ctx.session.user.user_id) {
         throw new TRPCError({ code: "FORBIDDEN" });
       }
+
 
       const leave = await ctx.prisma.leaveItem.update({
         where: { id: input.id },

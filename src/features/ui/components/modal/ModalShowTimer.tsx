@@ -8,22 +8,21 @@ import {
 import { useState,useEffect } from 'react';
 
 type Props = {
-  isOpen: boolean;
-  warningMessage: string;
-  onOpenChange: () => void;
-  onDelete: () => void;
+  msgInModal: string;
+  titleInModal: string;
   onClose: () => void;
 };
 
-function DeleteModal({
+function ModalShowTimer({
   onClose,
-  warningMessage,
+  msgInModal,
+  titleInModal,
 }: Props) {
 
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(false), 5000); // Set timer for 5 seconds.
+    const timer = setTimeout(() => setIsVisible(false), 1000); // Set timer for 5 seconds.
     return () => clearTimeout(timer);
   }, []);
 
@@ -33,10 +32,10 @@ function DeleteModal({
         {(onClose) => (
           <>
             <ModalHeader className="flex flex-col gap-1">
-             การลบสำเร็จ
+             การลบสำเร็จ {titleInModal}
             </ModalHeader>
             <ModalBody>
-              ระบบได้ทำการลบสำเร็จแล้ว
+              ระบบได้ทำการลบสำเร็จแล้ว {msgInModal}
             </ModalBody>
           </>
         )}
@@ -45,4 +44,4 @@ function DeleteModal({
   );
 }
 
-export default DeleteModal;
+export default ModalShowTimer;

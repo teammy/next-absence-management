@@ -31,7 +31,7 @@ import {
   MinusCircleIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import DeleteModal from "~/features/ui/components/modal/DeleteModal";
+import ModalShowTimer from "~/features/ui/components/modal/ModalShowTimer";
 
 export type EmployeeAssings = {
   id: number;
@@ -70,26 +70,28 @@ const MyLeaveList = () => {
     PENDING: <ClockIcon className="h-5 w-5" />,
     APPROVED: <CheckCircleIcon className="h-5 w-5" />,
   };
-
+  
   const { data: session } = useSession();
   const userId = session?.user.user_id ? session?.user.user_id : 0;
+  const { isOpen, onClose, onOpen, onOpenChange } = useDisclosure();
+  const [openModelDelete, setOpenModelDelete] = useState(false);
 
   const { data: myleavelist = [], isLoading,refetch } =
     api.leave.listItemsForUser.useQuery<EmployeeAssings[]>(userId);
 
-  if (isLoading) return <Loader color="#1A477F" type="dots" />;
-  if (!myleavelist) return <div>Not found.</div>;
+  // if (isLoading) return <Loader color="#1A477F" type="dots" />;
+  // if (!myleavelist) return <div>Not found.</div>;
 
   type User = (typeof myleavelist)[0];
 
-  const { isOpen, onClose, onOpen, onOpenChange } = useDisclosure();
+
   const [selectItemDelete, setSelectItemDelete] = useState<number>(0);
   const { mutateAsync } = api.leave.destroyMyLeaveItem.useMutation({
     onSuccess(status) {
       if (status) {
         setSelectItemDelete(0);
         onClose();
-        setOpen(true)
+        setOpenModelDelete(true);
         refetch();
       }
     },
@@ -104,13 +106,7 @@ const MyLeaveList = () => {
         console.error("error");
       }
     }
-    onClose();
-    
   }
-
-  const handleCloseModal = () => {
-    onClose();
-  };
 
   const handleDeleteItem = (leaveId:number) => {
     setSelectItemDelete(leaveId)
@@ -165,17 +161,18 @@ const MyLeaveList = () => {
 
           <div className="relative flex items-center gap-2">
             
-            <Link href={`/myleave/${user.id}`}>
+            <Link href={`/myleave/view/${user.id}`}>
               <span className="cursor-pointer text-lg text-default-400 active:opacity-50">
                 <InformationCircleIcon className="h-5 w-5" />
                 ดู
               </span>
             </Link>
+            <Link href={`/myleave/edit/${user.id}`}>
             <span className="cursor-pointer text-lg text-default-400 active:opacity-50">
               <PencilSquareIcon className="h-5 w-5" />
               แก้ไข
             </span>
-            
+            </Link>
             <span
               className="cursor-pointer text-lg text-danger active:opacity-50"
               onClick={() => handleDeleteItem(user.id)}
@@ -233,7 +230,7 @@ const MyLeaveList = () => {
               </ModalHeader>
               <ModalBody className="p-10 Ekachon_Light">
                 <p>
-                คุณแน่ใจใช่หรือไม่ ที่จะยกเลิกใบลานี้
+                คุณต้องการจะยกเลิกใบลานี้ ใช่หรือไม่?
                 </p>
 
               </ModalBody>
@@ -241,11 +238,11 @@ const MyLeaveList = () => {
                 <Button color="danger" variant="light" onPress={onClose}>
                   ปิด
                 </Button>
-          <Button onPress={() =>handleConfirmDelete()} className="bg-[#F44436] text-white">ตกลง</Button>
+          <Button onPress={() =>handleConfirmDelete()} className="bg-[#F44436] text-white">ใช่</Button>
               </ModalFooter>
         </ModalContent>
       </Modal>
-      {/* {isOpen && <DeleteModal onClose={() => setOpen(false)} />} */}
+      {openModelDelete && <ModalShowTimer onClose={() => setOpenModelDelete(false)} titleInModal="การลบสำเร็จ" msgInModal="ระบบได้ทำการลบสำเร็จแล้ว" />}
     </>
   );
 };

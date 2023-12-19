@@ -8,19 +8,20 @@ const EditLeave = () => {
   const utils = api.useUtils();
 
   const router = useRouter();
-  const id = +(router.query.id as string);
+  const leaveId = +(router.query.leaveid as string);
   const { mutateAsync: update } = api.leave.update.useMutation({
     onSuccess() {
-      utils.leave.byId.invalidate(id);
+      utils.leave.byId.invalidate(leaveId);
     },
   });
-  const { data: leave, isLoading } = api.leave.byId.useQuery(id);
+
+  const { data: leave, isLoading } = api.leave.byId.useQuery(leaveId);
   const editLeave = async (leave: UpdateLeaveInput['data']) => {
     await update({
-      id,
+      id:leaveId,
       data: leave,
     });
-    router.push('/leaves');
+    router.push('/myleave');
   };
 
   if (isLoading) return <Loading></Loading>;

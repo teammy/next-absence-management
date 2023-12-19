@@ -47,6 +47,8 @@ export const typeLeaves = [
 ];
 
 const LeaveForm = (props: LeaveFormProps) => {
+
+  console.log("props",props);
   const [selectTypeLeave, setSelectTypeLeave] = useState<string>('1');
   const { data: session } = useSession();
   const [selectAssignUser, setSelectAssignUser] = useState<string>('');
@@ -88,11 +90,6 @@ const LeaveForm = (props: LeaveFormProps) => {
     ),
     defaultValues: kind === 'edit' ? props.leave : undefined,
   });
-
-  // console.log("typeLeave",getValues('typeLeave'))
-  console.log('isValid', isValid);
-  console.log('errors', errors);
-
 
 
 
@@ -146,16 +143,12 @@ const LeaveForm = (props: LeaveFormProps) => {
       shouldTouch: true,
     });
     setValue('typeLeave', selectTypeLeave);
-    // setValue('assignUser',Number(selectAssignUser));
-    console.log('selectAssignUser', getValues('assignUser'));
 
     setValue('uploadFiles', uploadedFilenames, {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true,
     });
-
-    console.log('uploadedFilenames', uploadedFilenames);
   }, [selectTypeLeave, selectAssignUser, startDate, endDate,uploadedFilenames]);
 
   // const startLeaveDate = new Date(getValues("startLeaveDate"));
@@ -217,6 +210,8 @@ const LeaveForm = (props: LeaveFormProps) => {
     setUploadedFilenames(filenames);
   };
 
+  console.log("dwadwa",getValues("typeLeave"));
+
 
 
   return (
@@ -229,6 +224,7 @@ const LeaveForm = (props: LeaveFormProps) => {
             <div id="select-typeLeave" className="pt-2">
               <Select
                 id="typeLeave"
+                {...register('typeLeave')}
                 variant="bordered"
                 label="ประเภทการลา"
                 labelPlacement="outside"

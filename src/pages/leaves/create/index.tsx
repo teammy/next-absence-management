@@ -18,7 +18,7 @@ const IndexCreateLeave:NextPageWithLayout = () => {
     </Breadcrumbs>
 
     <div className="head-title my-5">
-      <h2 className="text-2xl Ekachon_Bold blueDark">เขียนใบขอลา</h2>
+      <h2 className="text-2xl Ekachon_Bold blueDark">เขียนใบลา</h2>
     </div>
     
     <Card classNames={{ header: 'justify-center' }}>
