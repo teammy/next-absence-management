@@ -54,7 +54,7 @@ const MyLeaveDetails = () => {
 
 
   const { data: myLeaveDetail = [], isLoading } =
-    api.leave.byId.useQuery<MyLeaveDetailsProps[]>(leaveId);
+    api.leave.byIdForDetail.useQuery<MyLeaveDetailsProps[]>(leaveId);
 
   if (isLoading) return <Loader color="#1A477F" type="dots" />;
   if (!myLeaveDetail) return <div>No data found</div>;

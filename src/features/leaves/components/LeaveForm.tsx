@@ -229,6 +229,7 @@ const LeaveForm = (props: LeaveFormProps) => {
                 label="ประเภทการลา"
                 labelPlacement="outside"
                 radius="sm"
+                value={1}
                 onChange={handleSelectTypeLeaveChange}
                 placeholder="เลือกประเภทการลา"
                 isInvalid={!!errors.typeLeave}
@@ -246,29 +247,6 @@ const LeaveForm = (props: LeaveFormProps) => {
                   ลาพักผ่อน
                 </SelectItem>
               </Select>
-              {/* <Select
-              id="typeLeave"
-              {...register('typeLeave')}
-              items={typeLeaves}
-              label="ประเภทการลา"
-              radius="sm"
-              placeholder=" "
-              size="lg"
-              selectedKeys={[selectTypeLeave]}
-              onChange={handleSelectionTypeLeaveChange}
-              variant="bordered"
-              className="border-gray-300"
-              classNames={{
-                value: 'blueDark',
-                base: 'blueDark',
-                label: 'text-base',
-                listbox: 'mlp text-base lg:text-lg',
-              }}
-            >
-              {(typeLeave) => (
-                <SelectItem key={typeLeave.value}>{typeLeave.label}</SelectItem>
-              )}
-            </Select> */}
             </div>
             <div
               className="my-4 flex justify-between text-base"
