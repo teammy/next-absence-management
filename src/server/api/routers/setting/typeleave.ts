@@ -5,7 +5,7 @@ import { TRPCError } from "@trpc/server";
 
 export const typeLeaveRouter = createTRPCRouter({
   list : protectedProcedure
-    .meta({roles : ['ADMIN','HR']})
+    // .meta({roles : ['ADMIN','HR',]})
     .query(async ({ctx}) => {
       const typeLeave = await ctx.prisma.leaveType.findMany({
         select : {
@@ -59,4 +59,23 @@ export const typeLeaveRouter = createTRPCRouter({
 
       return typeLeave;
     }),
+  
+  destroy: protectedProcedure
+  .input(z.number())
+  .mutation(async ({ input,ctx }) => {
+    const typeLeave = await ctx.prisma.leaveType.findUnique({
+      where: {
+        id: input
+      }
+    });
+
+    if(!typeLeave) throw new TRPCError({ code:'NOT_FOUND'})
+
+    const destroyTypeLeave = await ctx.prisma.leaveType.delete({
+      where: {
+        id:input,
+      },
+    });
+    return destroyTypeLeave
+  })
 });

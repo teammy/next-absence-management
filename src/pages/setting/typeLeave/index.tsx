@@ -1,14 +1,15 @@
 import Layout from "~/features/ui/components/layouts/Normal"
 import { type NextPageWithLayout } from "~/pages/_app"
+import CreateTypeLeave from "~/features/setting/components/typeLeave/CreateTypeLeave";
+import TypeLeaveList from "~/features/setting/components/typeLeave/typeLeaveList";
 import {
   BreadcrumbItem,
   Breadcrumbs,
 } from "@nextui-org/react";
 
-import CreateTypeLeave from "~/features/setting/components/typeLeave/CreateTypeLeave";
 
-  const IndexCreateTypeLeave:NextPageWithLayout = () => {
-
+const IndexCreateTypeLeave:NextPageWithLayout = () => {
+  
   return (
     <>
 
@@ -19,7 +20,7 @@ import CreateTypeLeave from "~/features/setting/components/typeLeave/CreateTypeL
         </Breadcrumbs>
         
        <CreateTypeLeave/>
-
+      <TypeLeaveList/>
     </>
   )
 }

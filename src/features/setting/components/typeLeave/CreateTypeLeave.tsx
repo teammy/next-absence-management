@@ -9,11 +9,18 @@ const CreateTypeLeave = () => {
   const utils = api.useUtils();
   const list = utils.typeleave.list;
   const router = useRouter();
+  const { mutate: add } = api.typeleave.add.useMutation({
+    onSuccess(status) {
+      if(status) {
+        
+      }
+    }
+  })
+  
 
   const createTypeLeave = async (typeLeave: AddTypeLeaveSettingInput) => {
     try {
-      console.log("typeLeave",typeLeave);
-      // await api.typeLeave.add.mutateAsync(typeLeave);
+      await add(typeLeave)
       // router.push('/setting/typeLeave');
     }
     catch (err) {

@@ -18,7 +18,7 @@ export const destroySettingHoliday = z.number();
 // setting typeLeave
 export const addTypeLeaveFormSetting = z.object({
   leaveTypeDescription: z.string().min(1,{message:"** กรุณาระบุประเภทการลา"}),
-  maxAllowPerYear: z.number().min(1,{message:"** กรุณาระบุจำนวนวันลาต่อปี"}),
+  maxAllowPerYear:  z.number().min(1),
 });
 export const updateTypeLeaveFormSetting = addTypeLeaveFormSetting.partial();
 export const updateTypeLeaveSetting = z.object({

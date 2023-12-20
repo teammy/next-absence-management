@@ -1,11 +1,6 @@
 import { type SubmitHandler, useForm } from "react-hook-form";
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Input,
-  Button,
-} from "@nextui-org/react";
+import { Card, CardBody, CardHeader, Button } from "@nextui-org/react";
+import { TextInput } from "@mantine/core";
 import {
   type AddTypeLeaveSettingInput,
   type UpdateTypeLeaveSettingInput,
@@ -28,17 +23,26 @@ const TypeLeaveForm = (props: TypeFormProps) => {
   const { kind, onSubmit } = props;
   const {
     register,
+    getValues,
     handleSubmit,
     formState: { errors, isValid },
   } = useForm<
-  typeof onSubmit extends SubmitHandler<AddTypeLeaveSettingInput> 
-  ? AddTypeLeaveSettingInput 
-  : UpdateTypeLeaveSettingInput['data']>
-  ({
-    mode: 'onBlur',
-    resolver: zodResolver(kind === 'create' ? validators.addTypeLeaveFormSetting : validators.updateTypeLeaveFormSetting),
-    defaultValues: kind === 'edit' ? props.typeLeave : undefined ,
+    typeof onSubmit extends SubmitHandler<AddTypeLeaveSettingInput>
+      ? AddTypeLeaveSettingInput
+      : UpdateTypeLeaveSettingInput
+  >({
+    mode: "onBlur",
+    resolver: zodResolver(
+      kind === "create"
+        ? validators.addTypeLeaveFormSetting
+        : validators.updateTypeLeaveFormSetting,
+    ),
+    defaultValues: kind === "edit" ? props.typeLeave : undefined,
   });
+
+  const logCurrentValues = () => {
+    console.log("Current form values:", getValues());
+  };
 
   return (
     <>
@@ -53,21 +57,26 @@ const TypeLeaveForm = (props: TypeFormProps) => {
               className="flex w-full flex-col gap-4"
               onSubmit={handleSubmit(onSubmit)}
             >
-              <Input
+              <TextInput
                 type="text"
                 label="ประเภทการลา"
                 radius="sm"
-                errorMessage={errors.leaveTypeDescription?.message}
+                error={errors.leaveTypeDescription?.message}
                 {...register("leaveTypeDescription", { required: true })}
               />
-              <Input
+              <TextInput
                 type="number"
-                label="จำนวนวันลาต่อปี"
+                label="จำนวนวันลาต่อปี (วัน)"
                 radius="sm"
-                errorMessage={errors.maxAllowPerYear?.message}
-                {...register("maxAllowPerYear", { required: true })}
+                error={errors.maxAllowPerYear?.message}
+                {...register("maxAllowPerYear", { valueAsNumber:true })}
               />
-              <Button variant="shadow" size="lg" isDisabled={!isValid}>
+              <Button
+                variant="shadow"
+                type="submit"
+                size="lg"
+                isDisabled={!isValid}
+              >
                 บันทึก
               </Button>
             </form>
