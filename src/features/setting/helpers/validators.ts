@@ -14,3 +14,14 @@ export const updateSettingHoliday = z.object({
 });
 
 export const destroySettingHoliday = z.number();
+
+// setting typeLeave
+export const addTypeLeaveFormSetting = z.object({
+  leaveTypeDescription: z.string().min(1,{message:"** กรุณาระบุประเภทการลา"}),
+  maxAllowPerYear: z.number().min(1,{message:"** กรุณาระบุจำนวนวันลาต่อปี"}),
+});
+export const updateTypeLeaveFormSetting = addTypeLeaveFormSetting.partial();
+export const updateTypeLeaveSetting = z.object({
+  id: z.number(),
+  data: updateTypeLeaveFormSetting,
+});

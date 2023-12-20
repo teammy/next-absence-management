@@ -1,5 +1,5 @@
 import { api } from '~/utils/api';
-import { type AddLeaveInput, type AddFileLeaveUpload } from '../types';
+import { type AddLeaveInput } from '../types';
 import LeaveForm from './LeaveForm';
 import { useRouter } from 'next/router';
 import { useAppStore } from '~/features/store';

@@ -48,7 +48,6 @@ export const typeLeaves = [
 
 const LeaveForm = (props: LeaveFormProps) => {
 
-  console.log("props",props);
   const [selectTypeLeave, setSelectTypeLeave] = useState<string>('1');
   const { data: session } = useSession();
   const [selectAssignUser, setSelectAssignUser] = useState<string>('');

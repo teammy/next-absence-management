@@ -7,6 +7,7 @@ import { announcementRouter } from '~/server/api/routers/announcement';
 import { type inferRouterInputs, type inferRouterOutputs } from '@trpc/server';
 import { adminSettingHolidayRouter } from '~/server/api/routers/admin/settingHoliday';
 import { employeeRouter } from '~/server/api/routers/employee';
+import { typeLeaveRouter } from '~/server/api/routers/setting/typeleave';
 
 /**
  * This is the primary router for your server.
@@ -19,6 +20,7 @@ export const appRouter = createTRPCRouter({
   leave: leaveRouter,
   announcement: announcementRouter,
   employee: employeeRouter,
+  typeleave: typeLeaveRouter,
   admin: createTRPCRouter({
     leave: adminLeaveRouter,
     settingHoliday: adminSettingHolidayRouter,
