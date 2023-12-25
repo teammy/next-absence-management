@@ -5,7 +5,7 @@ import {
   type updateSettingHoliday,
   type destroySettingHoliday,
   type addTypeLeaveFormSetting,
-  type updateTypeLeaveFormSetting,
+  type updateTypeLeave,
 } from "./helpers/validators";
 
 export type HolidayDateItem =
@@ -17,5 +17,6 @@ export type AddSettingHolidayInput = z.infer<typeof addSettingHoliday>;
 export type UpdateSettingHolidayInput = z.infer<typeof updateSettingHoliday>;
 export type DestroySettingHolidayInput = z.infer<typeof destroySettingHoliday>;
 
+export type TypeLeaveDetails = RouterOutput["typeleave"]["byId"];
 export type AddTypeLeaveSettingInput = z.infer<typeof addTypeLeaveFormSetting>;
-export type UpdateTypeLeaveSettingInput = z.infer<typeof updateTypeLeaveFormSetting>;
+export type UpdateTypeLeaveSettingInput = z.infer<typeof updateTypeLeave>;

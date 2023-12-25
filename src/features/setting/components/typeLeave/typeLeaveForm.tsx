@@ -4,6 +4,7 @@ import { TextInput } from "@mantine/core";
 import {
   type AddTypeLeaveSettingInput,
   type UpdateTypeLeaveSettingInput,
+  type TypeLeaveDetails,
 } from "../../types";
 import * as validators from "../../helpers/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,8 +16,8 @@ export type TypeFormProps =
     }
   | {
       kind: "edit";
-      typeLeave: UpdateTypeLeaveSettingInput;
-      onSubmit: SubmitHandler<UpdateTypeLeaveSettingInput>;
+      typeLeave: TypeLeaveDetails;
+      onSubmit: SubmitHandler<UpdateTypeLeaveSettingInput['data']>;
     };
 
 const TypeLeaveForm = (props: TypeFormProps) => {
@@ -35,14 +36,12 @@ const TypeLeaveForm = (props: TypeFormProps) => {
     resolver: zodResolver(
       kind === "create"
         ? validators.addTypeLeaveFormSetting
-        : validators.updateTypeLeaveFormSetting,
+        : validators.updateTypeLeave
     ),
     defaultValues: kind === "edit" ? props.typeLeave : undefined,
+    // defaultValues: kind === "edit" ? props.typeLeave : undefined,
   });
 
-  const logCurrentValues = () => {
-    console.log("Current form values:", getValues());
-  };
 
   return (
     <>

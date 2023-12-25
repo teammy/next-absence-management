@@ -17,6 +17,20 @@ export const typeLeaveRouter = createTRPCRouter({
       });
       return typeLeave;
     }),
+
+  byId: protectedProcedure
+    .input(z.number())
+    .query(async ({ input, ctx }) => {
+      const typeLeave = await ctx.prisma.leaveType.findUnique({
+        where: {
+          id: input,
+        },
+      });
+
+      if (!typeLeave) throw new TRPCError({ code: "NOT_FOUND" });
+    
+      return typeLeave;
+    }),
   
   add: protectedProcedure
     .input(validators.addTypeLeaveFormSetting)
@@ -34,7 +48,7 @@ export const typeLeaveRouter = createTRPCRouter({
     }),
 
   update: protectedProcedure
-    .input(validators.updateTypeLeaveSetting)
+    .input(validators.updateTypeLeave)
     .mutation(async ({ input, ctx }) => {
 
       const existingTypeLeave = await ctx.prisma.leaveType.findUnique({

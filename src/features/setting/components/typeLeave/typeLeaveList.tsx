@@ -4,6 +4,7 @@ import { Table,TableBody,TableCell,TableRow,TableColumn,TableHeader,useDisclosur
 import { PencilSquareIcon,MinusCircleIcon } from "@heroicons/react/24/solid";
 import ModalShowTimer from "~/features/ui/components/modal/ModalShowTimer";
 import { Link } from "@nextui-org/react";
+import TypeLeaveForm from "./typeLeaveForm";
 
 export type Props = {
   id: number;
@@ -16,10 +17,12 @@ const TypeLeaveList = () => {
   const { isOpen, onClose, onOpen, onOpenChange } = useDisclosure();
   const [openModelDelete, setOpenModelDelete] = useState(false);
   const [selectItemDelete, setSelectItemDelete] = useState<number>(0);
+  const [selectItemEdit, setSelectItemEdit] = useState<number>(0);
 
   const columns = [
-    {key: "leaveTypeDesciption" , label: "ประเภทการลา"},
+    {key: "leaveTypeDescription" , label: "ประเภทการลา"},
     {key: "maxAllowPerYear" , label: "จำนวนวันลาต่อปี(วัน)"},
+    {key: "actions" , label: ""},
   ]
 
   const { data: typeleavelist =[],isLoading,refetch } = api.typeleave.list.useQuery();
@@ -51,18 +54,23 @@ const TypeLeaveList = () => {
     onOpen();
   };
 
+  const handleEditItem = (typeLeaveId:number) => {
+    // console.log(typeLeaveId);
+    setSelectItemEdit(typeLeaveId)
+    onOpen();
+  };
+
   const renderCell = useCallback((user: Props, columnKey: React.Key) => {
     const cellValue = user[columnKey as keyof Props];
 
     switch (columnKey) {
       case "actions":
         return (
-
           <div className="relative flex items-center gap-2">
-            
-            <Link href={`/myleave/edit/${user.id}`}>
+            <Link href={`/setting/typeLeave/${user.id}`}>
             <span className="cursor-pointer text-lg text-default-400 active:opacity-50">
-              <PencilSquareIcon className="h-5 w-5" />
+              <PencilSquareIcon className="h-5 w-5"  
+            />
               แก้ไข
             </span>
             </Link>
@@ -117,7 +125,6 @@ const TypeLeaveList = () => {
                 <p>
                 คุณต้องการจะยกเลิกใบลานี้ ใช่หรือไม่?
                 </p>
-
               </ModalBody>
               <ModalFooter className="bg-[#EFF0F6]">
                 <Button color="danger" variant="light" onPress={onClose}>
