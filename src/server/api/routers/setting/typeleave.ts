@@ -13,6 +13,9 @@ export const typeLeaveRouter = createTRPCRouter({
           leaveTypeDescription : true,
           maxAllowPerYear : true,
         },
+        orderBy: {
+          id: "desc",
+        }
        
       });
       return typeLeave;

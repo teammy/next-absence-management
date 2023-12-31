@@ -6,7 +6,7 @@ import { type UpdateTypeLeaveSettingInput } from '../../types';
 const EditTypeLeave = () => {
   const utils = api.useUtils();
   const router = useRouter();
-  const typeLeaveId = +(router.query.typeLeaveId as string);
+  const typeLeaveId = +(router.query.id as string);
   const { mutateAsync: update } = api.typeleave.update.useMutation({
     onSuccess() {
       utils.typeleave.byId.invalidate(typeLeaveId);

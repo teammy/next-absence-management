@@ -8,6 +8,7 @@ import {
 } from "../../types";
 import * as validators from "../../helpers/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { use, useState } from "react";
 
 export type TypeFormProps =
   | {
@@ -36,21 +37,21 @@ const TypeLeaveForm = (props: TypeFormProps) => {
     resolver: zodResolver(
       kind === "create"
         ? validators.addTypeLeaveFormSetting
-        : validators.updateTypeLeave
+        : validators.updateTypeLeaveForm
     ),
     defaultValues: kind === "edit" ? props.typeLeave : undefined,
-    // defaultValues: kind === "edit" ? props.typeLeave : undefined,
   });
+
+  const titleValueModal = kind === "create" ? "เพิ่มข้อมูลประเภทการลา" : "แก้ไขข้อมูลประเภทการลา";
 
 
   return (
     <>
       <Card className="mx-auto w-7/12">
         <CardHeader className="bg-blueDark Ekachon_Bold pl-5 text-xl text-white">
-          ตั้งค่าประเภทการลา
+          {titleValueModal}
         </CardHeader>
         <CardBody>
-          <h2 className="my-2">เพิ่มข้อมูล</h2>
           <div className="flex w-full flex-wrap gap-4 md:flex-nowrap">
             <form
               className="flex w-full flex-col gap-4"
@@ -74,6 +75,7 @@ const TypeLeaveForm = (props: TypeFormProps) => {
                 variant="shadow"
                 type="submit"
                 size="lg"
+                radius="sm"
                 isDisabled={!isValid}
               >
                 บันทึก

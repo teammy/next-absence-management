@@ -1,35 +1,27 @@
 import { api } from '~/utils/api';
-import { useRouter } from 'next/router';
 import { useAppStore } from '~/features/store';
 import TypeLeaveForm from './typeLeaveForm';
 import { type AddTypeLeaveSettingInput } from '../../types';
 
 const CreateTypeLeave = () => {
-
+  const setUiToast = useAppStore((state) => state.setUiToast);
   const utils = api.useUtils();
-  const list = utils.typeleave.list;
-  const router = useRouter();
+  const listType = utils.typeleave.list;
   const { mutate: add } = api.typeleave.add.useMutation({
-    onSuccess(status) {
-      if(status) {
-        
-      }
+    onSettled() {
+      listType.invalidate();
     }
   })
   
-
   const createTypeLeave = async (typeLeave: AddTypeLeaveSettingInput) => {
-    try {
-      await add(typeLeave)
-      // router.push('/setting/typeLeave');
-    }
-    catch (err) {
-      console.log("Not add",err);
-    }
+    await add(typeLeave);
+    setUiToast({
+      type: 'Success',
+      message: 'เพิ่มข้อมูลสำเร็จ',
+    })
   };
 
   return <TypeLeaveForm kind="create" onSubmit={createTypeLeave}></TypeLeaveForm>
-
 
 };
 

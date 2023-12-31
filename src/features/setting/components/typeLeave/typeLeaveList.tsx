@@ -67,7 +67,7 @@ const TypeLeaveList = () => {
       case "actions":
         return (
           <div className="relative flex items-center gap-2">
-            <Link href={`/setting/typeLeave/${user.id}`}>
+            <Link href={`/setting/typeLeave/${user.id}/edit`}>
             <span className="cursor-pointer text-lg text-default-400 active:opacity-50">
               <PencilSquareIcon className="h-5 w-5"  
             />
@@ -95,7 +95,6 @@ const TypeLeaveList = () => {
         <h1 className="Ekachon_Bold blueDark text-2xl">ใบลาของฉัน</h1>
       </div>
       <div className=" border-maincontent rounded-md">
-        <div className="filter-item m-6">Filter</div>
         <div className="filter-item">
           <Table aria-label="Example table with dynamic content">
             <TableHeader columns={columns}>
