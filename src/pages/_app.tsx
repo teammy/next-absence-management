@@ -12,6 +12,7 @@ import { type ReactElement, type ReactNode } from 'react';
 import { Noto_Sans_Thai } from 'next/font/google'
 import localFont from 'next/font/local'
 import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
 import { MantineProvider, createTheme } from '@mantine/core';
 
 const theme = createTheme({

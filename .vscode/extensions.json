@@ -2,7 +2,6 @@
   "recommendations": [
     "dbaeumer.vscode-eslint",
     "bradlc.vscode-tailwindcss",
-    "stivo.tailwind-fold",
     "pflannery.vscode-versionlens",
     "cweijan.vscode-mysql-client2",
     "prisma.prisma"

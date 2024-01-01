@@ -2,7 +2,7 @@ import React from 'react';
 
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import { HomeIcon,Cog8ToothIcon,DocumentPlusIcon,FolderIcon,InboxArrowDownIcon,PresentationChartLineIcon,UserIcon } from '@heroicons/react/24/solid';
+import { HomeIcon,Settings2Icon,FilePlus2Icon,FolderIcon,InboxIcon,FileLineChartIcon,UserIcon } from 'lucide-react';
 
 
 function SidebarContent() {
@@ -34,7 +34,7 @@ function SidebarContent() {
             href="/leaves/create"
             className="text-[#1A477F]  group relative rounded-xl p-2 hover:text-[#f68b1f]"
           >
-            <DocumentPlusIcon />
+            <FilePlus2Icon />
 
 
             <div className="absolute inset-y-0 left-12 hidden items-center group-hover:flex ">
@@ -67,7 +67,7 @@ function SidebarContent() {
             href="/leaveapprove"
             className="text-[#1A477F] group relative rounded-xl p-2 hover:text-[#f68b1f]"
           >
-            <InboxArrowDownIcon/>
+            <InboxIcon/>
 
 
             <div className="absolute inset-y-0 left-12 hidden items-center group-hover:flex ">
@@ -86,7 +86,7 @@ function SidebarContent() {
             href="/payroll"
             className="text-[#1A477F] group relative rounded-xl p-2 hover:text-[#f68b1f]"
           >
-           <PresentationChartLineIcon />
+           <FileLineChartIcon />
 
 
             <div className="absolute inset-y-0 left-12 hidden items-center group-hover:flex">
@@ -100,10 +100,10 @@ function SidebarContent() {
           </Link>
           <hr />
           <Link
-            href="/payroll"
+            href="/setting"
             className="text-[#1A477F] group relative rounded-xl p-2 hover:text-[#f68b1f]"
           >
-           <Cog8ToothIcon />
+           <Settings2Icon />
 
 
             <div className="absolute inset-y-0 left-12 hidden items-center group-hover:flex z-20">

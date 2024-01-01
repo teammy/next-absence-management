@@ -1,5 +1,4 @@
 import { z } from "zod"
-import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 
 export const add = z.object({
   startLeaveDate: z.string().min(1,{message:"** กรุณาระบุวันที่เริ่มต้นการลา"}),

@@ -11,11 +11,7 @@ import {
   Divider,
 } from "@nextui-org/react";
 import { Timeline, Text } from "@mantine/core";
-import {
-  CheckCircleIcon,
-  XCircleIcon,
-  ExclamationCircleIcon,
-} from "@heroicons/react/24/solid";
+import { CheckCircle2Icon,Trash2Icon,AlertTriangleIcon } from "lucide-react";
 
 // export interface MyLeaveDetailsProps {
 //   // leaveid: LeaveDetails["id"]
@@ -122,7 +118,7 @@ const MyLeaveDetails = () => {
               <Timeline active={1} bulletSize={27} lineWidth={2}>
                 <Timeline.Item
                   bullet={
-                    <CheckCircleIcon className="h-6 w-6 text-green-500" />
+                    <CheckCircle2Icon className="h-6 w-6 text-green-500" />
                   }
                   title="ยื่นใบลา"
                 >
@@ -141,7 +137,7 @@ const MyLeaveDetails = () => {
                     })}
                   </Text>
                 </Timeline.Item>
-                <Timeline.Item bullet={<CheckCircleIcon />} title="หัวหน้างาน">
+                <Timeline.Item bullet={<CheckCircle2Icon />} title="หัวหน้างาน">
                   <Text c="dimmed" size="sm">
                     {item.managerFname}
                   </Text>
@@ -159,7 +155,7 @@ const MyLeaveDetails = () => {
                 </Timeline.Item>
 
                 <Timeline.Item
-                  bullet={<CheckCircleIcon />}
+                  bullet={<CheckCircle2Icon />}
                   title="หัวหน้ากลุ่มงาน"
                   lineVariant="dashed"
                 >
@@ -181,7 +177,7 @@ const MyLeaveDetails = () => {
 
                 <Timeline.Item
                   title="งานทรัพยากรบุคคล (HR)"
-                  bullet={<CheckCircleIcon />}
+                  bullet={<CheckCircle2Icon />}
                   lineVariant="dashed"
                 >
                   <Text c="dimmed" size="sm">
@@ -207,15 +203,15 @@ const MyLeaveDetails = () => {
                 <ul className="flex items-center justify-end gap-2 text-xs">
                   <li>สัญลักษณ์:</li>
                   <li className="flex list-none items-center">
-                    <CheckCircleIcon className="h-6 w-6 text-green-500" />
+                    <CheckCircle2Icon className="h-6 w-6 text-green-500" />
                     <span className="">อนุมัติ</span>
                   </li>
                   <li className="flex list-none items-center">
-                    <XCircleIcon className="h-6 w-6 text-red-500" />
+                    <Trash2Icon className="h-6 w-6 text-red-500" />
                     <span className="">ไม่อนุมัติ</span>
                   </li>
                   <li className="flex list-none items-center">
-                    <ExclamationCircleIcon className="h-6 w-6 text-yellow-500" />
+                    <AlertTriangleIcon className="h-6 w-6 text-yellow-500" />
                     <span className="">รออนุมัติ</span>
                   </li>
                 </ul>

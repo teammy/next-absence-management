@@ -1,9 +1,8 @@
 import { useState, type ChangeEventHandler, useRef, useEffect } from 'react';
 import { ACCEPTED_FILE_TYPES } from '../../ui/helpers/validators';
-import { Image, Button } from '@nextui-org/react';
-import { ArrowUpTrayIcon,XMarkIcon } from '@heroicons/react/24/solid';
+import { Button } from '@nextui-org/react';
 import { set } from 'lodash';
-import { on } from 'events';
+import { ArrowUp,XCircleIcon } from 'lucide-react';
 
 export interface AvatarUploaderProps {
   error?: string | undefined;
@@ -91,7 +90,7 @@ export default function FileUploadLeave({ error,onFileUpload }: AvatarUploaderPr
             <span className="truncate pr-3 text-base font-medium text-[#07074D]">
             {file.name}
             </span>
-            <button onClick={() => handleDeleteFile(file.name)}><XMarkIcon className="w-5 h-" /></button>
+            <button onClick={() => handleDeleteFile(file.name)}><XCircleIcon className="w-5 h-" /></button>
           </div>
         </div>
          ))}
@@ -101,7 +100,7 @@ export default function FileUploadLeave({ error,onFileUpload }: AvatarUploaderPr
           <Button
             className="btn-orange-transparent"
             variant="bordered"
-            startContent={<ArrowUpTrayIcon className="h-5 w-5" />}
+            startContent={<ArrowUp className="h-5 w-5" />}
             onPress={handleButtonUploadClick}
           >
             เลือกไฟล์

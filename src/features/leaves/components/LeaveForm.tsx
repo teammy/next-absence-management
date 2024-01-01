@@ -2,20 +2,14 @@ import dayjs from 'dayjs';
 import { th } from 'date-fns/locale';
 import 'dayjs/locale/th';
 dayjs.locale('th');
-import { ThaiDatePicker } from 'thaidatepicker-react';
+import DatePicker from '~/features/ui/components/DatePicker';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { capitalize, get, set } from 'lodash';
 import { api } from '~/utils/api';
 import { useSession } from 'next-auth/react';
-import {
-  ArrowUpTrayIcon,
-  SpeakerXMarkIcon,
-  BriefcaseIcon,
-  PhotoIcon,
-} from '@heroicons/react/24/outline';
 import FileUploadLeave from './FileUploadLeave';
-import { DatePicker, DatePickerValue } from '@tremor/react';
+
 
 import { Button, Select, SelectItem, Textarea, Input } from '@nextui-org/react';
 import {
@@ -28,6 +22,7 @@ import {
   useState,
   useEffect,
 } from 'react';
+import { type DatePickerValue } from '@mantine/dates/lib/types';
 
 export type LeaveFormProps =
   | {
@@ -52,8 +47,8 @@ const LeaveForm = (props: LeaveFormProps) => {
   const { data: session } = useSession();
   const [selectAssignUser, setSelectAssignUser] = useState<string>('');
   const [totalLeaveDate, setTotalLeaveDate] = useState<number>();
-  const [startDate, setStartDate] = useState<DatePickerValue>();
-  const [endDate, setEndDate] = useState<DatePickerValue>();
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndDate] = useState<Date | null>(null);
   const [uploadedFilenames, setUploadedFilenames] = useState<string[]>([]);
 
   const { kind, onSubmit } = props;
@@ -169,7 +164,18 @@ const LeaveForm = (props: LeaveFormProps) => {
   //   }
   // }
 
-  const handleDatePickerStartChange = (value: DatePickerValue) => {
+  const currentStartLeaveDate = getValues('startLeaveDate');
+  const currentEndLeaveDate = getValues('endLeaveDate');
+
+  const handleDatePickerStartChange = (value:DatePickerValue) => {
+    if(value) {
+
+      setValue('startLeaveDate',new Date(value).toISOString(),{
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      })
+    }
     setStartDate(value);
 
     const dateStartString = value ? (value instanceof Date ? value.toISOString().split('T')[0] : '') : '';
@@ -186,7 +192,9 @@ const LeaveForm = (props: LeaveFormProps) => {
     });
   };
 
-  const handleDatePickerEndChange = (value: DatePickerValue) => {
+  
+
+  const handleDatePickerEndChange = (value:DatePickerValue) => {
     setEndDate(value);
 
     const dateEndString = value ? (value instanceof Date ? value.toISOString().split('T')[0] : '') : '';
@@ -267,13 +275,11 @@ const LeaveForm = (props: LeaveFormProps) => {
               <h1 className="blueDark Ekachon_Bold mb-5">ช่วงเวลา</h1>
               <label className="grayBlack text-base">เริ่มต้น *</label>
               <DatePicker
-                className="mx-auto"
-                locale={th}
-                placeholder="เลือกวันที่เริ่มต้นลา"
-                // onValueChange={handleDatePickerStartChange}
-                // value={currentStartLeaveDate}
+                label="เริ่มต้น"
                 value={startDate}
-                onValueChange={handleDatePickerStartChange}
+                onChange={setStartDate}
+                // minDate={}
+                // onChange={handleDatePickerStartChange}
               />
               {/* <ThaiDatePicker
               id="startLeaveDate"
@@ -291,13 +297,12 @@ const LeaveForm = (props: LeaveFormProps) => {
             <div>
               <label className="grayBlack text-base">สิ้นสุด *</label>
               <DatePicker
-                className="mx-auto"
-                locale={th}
-                minDate={startDate}
+
+                // minDate={startDate}
                 // value={currentEndLeaveDate}
-                placeholder="เลือกวันที่สิ้นสุดลา"
+                // placeholder="เลือกวันที่สิ้นสุดลา"
                 value={endDate}
-                onValueChange={handleDatePickerEndChange}
+                onChange={handleDatePickerEndChange}
                 // onValueChange={handleDatePickerEndChange}
               />
               {/* <ThaiDatePicker

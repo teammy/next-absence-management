@@ -22,16 +22,9 @@ import {
   Button,
   useDisclosure,
 } from "@nextui-org/react";
-import {
-  XCircleIcon,
-  ClockIcon,
-  CheckCircleIcon,
-  InformationCircleIcon,
-  PencilSquareIcon,
-  MinusCircleIcon,
-} from "@heroicons/react/24/outline";
 import Link from "next/link";
 import ModalShowTimer from "~/features/ui/components/modal/ModalShowTimer";
+import { XCircleIcon,ClockIcon,CheckCircle2Icon,InfoIcon,PenSquareIcon,MinusCircleIcon } from "lucide-react";
 
 export type EmployeeAssings = {
   id: number;
@@ -68,7 +61,7 @@ const MyLeaveList = () => {
   const statusIconMap: Record<string, ChipProps["startContent"]> = {
     REJECTED: <XCircleIcon className="h-5 w-5" />,
     PENDING: <ClockIcon className="h-5 w-5" />,
-    APPROVED: <CheckCircleIcon className="h-5 w-5" />,
+    APPROVED: <CheckCircle2Icon className="h-5 w-5" />,
   };
   
   const { data: session } = useSession();
@@ -163,13 +156,13 @@ const MyLeaveList = () => {
             
             <Link href={`/myleave/view/${user.id}`}>
               <span className="cursor-pointer text-lg text-default-400 active:opacity-50">
-                <InformationCircleIcon className="h-5 w-5" />
+                <InfoIcon className="h-5 w-5" />
                 ดู
               </span>
             </Link>
             <Link href={`/myleave/edit/${user.id}`}>
             <span className="cursor-pointer text-lg text-default-400 active:opacity-50">
-              <PencilSquareIcon className="h-5 w-5" />
+              <PenSquareIcon className="h-5 w-5" />
               แก้ไข
             </span>
             </Link>

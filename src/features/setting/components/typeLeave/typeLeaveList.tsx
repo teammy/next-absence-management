@@ -1,10 +1,10 @@
 import { api } from "~/utils/api";
 import { useCallback, useState } from "react";
 import { Table,TableBody,TableCell,TableRow,TableColumn,TableHeader,useDisclosure,Modal,ModalHeader,ModalBody,ModalContent,ModalFooter,Button } from "@nextui-org/react";
-import { PencilSquareIcon,MinusCircleIcon } from "@heroicons/react/24/solid";
 import ModalShowTimer from "~/features/ui/components/modal/ModalShowTimer";
 import { Link } from "@nextui-org/react";
 import TypeLeaveForm from "./typeLeaveForm";
+import { PenSquareIcon,MinusCircleIcon } from "lucide-react";
 
 export type Props = {
   id: number;
@@ -69,7 +69,7 @@ const TypeLeaveList = () => {
           <div className="relative flex items-center gap-2">
             <Link href={`/setting/typeLeave/${user.id}/edit`}>
             <span className="cursor-pointer text-lg text-default-400 active:opacity-50">
-              <PencilSquareIcon className="h-5 w-5"  
+              <PenSquareIcon className="h-5 w-5"  
             />
               แก้ไข
             </span>

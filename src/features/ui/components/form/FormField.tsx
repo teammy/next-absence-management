@@ -17,7 +17,8 @@ const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
           placeholder={placeholder}
           type={type}
           labelPlacement='outside'
-          variant='bordered'
+          errorMessage={error}
+          // variant='bordered'
           radius='sm'
           className="block w-full p-4 rounded-sm"
           classNames={{
@@ -25,7 +26,7 @@ const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
           }}
           {...props}
         ></Input>
-        {error && <div className="text-md text-red-500 pt-2">{error}</div>}
+        {/* {error && <div className="text-md text-red-500 pt-2">{error}</div>} */}
 
       </>
     );
