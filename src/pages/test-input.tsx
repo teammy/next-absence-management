@@ -8,6 +8,7 @@ export default function TestInput () {
 
   useEffect(() => {
     console.log('dateSelect',convertDateToFormatNormal(value))
+    console.log("dwadwa")
   }, [value])
 
   return (
