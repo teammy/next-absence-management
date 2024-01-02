@@ -646,12 +646,12 @@ model LeaveItem {
   startLeaveDate            String
   endLeaveDate              String
   totalLeaveDays            Int
-  typeLeave                 String
+  typeLeave                 Int
   reason                    String
   rejectionReason           String?
   leaveLocation             String
   leaveContactNumber        String
-  assignUser                String
+  assignUser                Int
   managerUserApprove        String?
   managerUserApproveUpdatedAt    DateTime? @default(now())
   departmentHeadUserApprove String?

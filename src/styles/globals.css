@@ -1,6 +1,9 @@
+
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+
 
 @font-face {
   font-family: 'Ekachon';
@@ -39,7 +42,7 @@
 }
 
 .Ekachon_Light {
-  font-family: 'Ekachon_Light';
+  font-family: 'Ekachon_Light' !important;
 }
 
 .Ekachon_Normal {

@@ -3,15 +3,18 @@ import { th } from 'date-fns/locale';
 import 'dayjs/locale/th';
 dayjs.locale('th');
 import DatePicker from '~/features/ui/components/DatePicker';
+
+import { type DateValue } from '@mantine/dates/lib/types';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { capitalize, get, set } from 'lodash';
 import { api } from '~/utils/api';
 import { useSession } from 'next-auth/react';
 import FileUploadLeave from './FileUploadLeave';
+import { convertDateToFormatNormal } from '~/features/shared/helpers/date';
 
 
-import { Button, Select, SelectItem, Textarea, Input } from '@nextui-org/react';
+import { Button, SelectItem, Textarea, Input } from '@nextui-org/react';
 import {
   type AddLeaveInput,
   type LeaveDetails,
@@ -47,8 +50,8 @@ const LeaveForm = (props: LeaveFormProps) => {
   const { data: session } = useSession();
   const [selectAssignUser, setSelectAssignUser] = useState<string>('');
   const [totalLeaveDate, setTotalLeaveDate] = useState<number>();
-  const [startDate, setStartDate] = useState<Date>();
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [startDate, setStartDate] = useState<DateValue>(null);
+  const [endDate, setEndDate] = useState<DateValue>(null);
   const [uploadedFilenames, setUploadedFilenames] = useState<string[]>([]);
 
   const { kind, onSubmit } = props;
@@ -88,13 +91,14 @@ const LeaveForm = (props: LeaveFormProps) => {
 
 
   const calculateDiffDays = (startDate: any, endDate: any) => {
+    if(!startDate || !endDate) return 0;
+    let diffDays = 0;
     const oneDay = 24 * 60 * 60 * 1000; // milliseconds in a day
     const holidays = [
       new Date('2023-10-02'), // public holiday
       new Date('2023-10-03'), // public holiday
       new Date('2023-10-01'), // custom holiday
     ];
-    let diffDays = 0;
     for (
       let date = new Date(startDate);
       date <= new Date(endDate);
@@ -129,13 +133,19 @@ const LeaveForm = (props: LeaveFormProps) => {
 
   useEffect(() => {
     setValue('totalLeaveDays', calculateDiffDays(startDate, endDate));
+    console.log('startDate', startDate);
+    console.log('endDate', endDate);
+    console.log('totalLeaveDays', calculateDiffDays(startDate, endDate));
     setTotalLeaveDate(getValues('totalLeaveDays'));
+
+
 
     setValue('assignUser', selectAssignUser, {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true,
     });
+
     setValue('typeLeave', selectTypeLeave);
 
     setValue('uploadFiles', uploadedFilenames, {
@@ -167,44 +177,26 @@ const LeaveForm = (props: LeaveFormProps) => {
   const currentStartLeaveDate = getValues('startLeaveDate');
   const currentEndLeaveDate = getValues('endLeaveDate');
 
-  const handleDatePickerStartChange = (value:DatePickerValue) => {
+  const handleDatePickerStartChange = (value:DateValue) => {
+    setStartDate(value);
     if(value) {
-
-      setValue('startLeaveDate',new Date(value).toISOString(),{
+      setValue('startLeaveDate',convertDateToFormatNormal(value.toString()),{
         shouldValidate: true,
         shouldDirty: true,
         shouldTouch: true,
       })
     }
-    setStartDate(value);
-
-    const dateStartString = value ? (value instanceof Date ? value.toISOString().split('T')[0] : '') : '';
-    if(!dateStartString) return null;
-
-    // const dateStartString = value instanceof Date
-    // ? value.toISOString().split('T')[0]
-    // : '';
-
-    setValue('startLeaveDate',dateStartString, {
-      shouldValidate: true,
-      shouldDirty: true,
-      shouldTouch: true,
-    });
   };
 
-  
-
-  const handleDatePickerEndChange = (value:DatePickerValue) => {
+  const handleDatePickerEndChange = (value:DateValue) => {
     setEndDate(value);
-
-    const dateEndString = value ? (value instanceof Date ? value.toISOString().split('T')[0] : '') : '';
-    if(!dateEndString) return null;
-
-    setValue('endLeaveDate', dateEndString, {
-      shouldValidate: true,
-      shouldDirty: true,
-      shouldTouch: true,
-    });
+    if(value) {
+      setValue('endLeaveDate',convertDateToFormatNormal(value.toString()),{
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      })
+    }
   };
 
   if (!listPerAssigns) return <div>ไม่มีผู้ปฏิบัติงานแทน</div>;
@@ -231,7 +223,7 @@ const LeaveForm = (props: LeaveFormProps) => {
             <div id="select-typeLeave" className="pt-2">
               <Select
                 id="typeLeave"
-                {...register('typeLeave')}
+                {...register('typeLeave') , { valueAsNumber:true }}
                 variant="bordered"
                 label="ประเภทการลา"
                 labelPlacement="outside"
@@ -273,13 +265,11 @@ const LeaveForm = (props: LeaveFormProps) => {
           <div id="dateRange">
             <div className="my-5">
               <h1 className="blueDark Ekachon_Bold mb-5">ช่วงเวลา</h1>
-              <label className="grayBlack text-base">เริ่มต้น *</label>
               <DatePicker
-                label="เริ่มต้น"
+                label="วันที่เริ่มต้น"
                 value={startDate}
-                onChange={setStartDate}
-                // minDate={}
-                // onChange={handleDatePickerStartChange}
+                onChange={handleDatePickerStartChange}
+                maxDate={endDate ?? undefined}
               />
               {/* <ThaiDatePicker
               id="startLeaveDate"
@@ -295,14 +285,15 @@ const LeaveForm = (props: LeaveFormProps) => {
             /> */}
             </div>
             <div>
-              <label className="grayBlack text-base">สิ้นสุด *</label>
               <DatePicker
 
                 // minDate={startDate}
                 // value={currentEndLeaveDate}
                 // placeholder="เลือกวันที่สิ้นสุดลา"
+                label='วันที่สิ้นสุด'
                 value={endDate}
                 onChange={handleDatePickerEndChange}
+                minDate={startDate ?? undefined}
                 // onValueChange={handleDatePickerEndChange}
               />
               {/* <ThaiDatePicker
