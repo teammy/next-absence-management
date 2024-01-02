@@ -2,9 +2,10 @@ import DatePicker from "~/features/ui/components/DatePicker"
 import { useEffect,useState } from "react"
 import { convertDateToFormatNormal } from "~/features/shared/helpers/date";
 import { type DateValue } from "@mantine/dates";
+import SelectItem from "~/features/ui/components/SelectItem";
 
 export default function TestInput () {
-
+  const [selectTypeLeave, setSelectTypeLeave] = useState<string | null>('');
   const [startDate,setStartDate] = useState<DateValue>(null);
   const [endDate,setEndDate] = useState<DateValue>(null);
   const [daysDifference, setDaysDifference] = useState(0);
@@ -19,16 +20,15 @@ export default function TestInput () {
   }
 
   useEffect(() => {
-    setDaysDifference(calculateDaysDifference(startDate,endDate));
-    console.log('dateSelect',convertDateToFormatNormal(startDate))
-  }, [startDate,endDate])
+
+    console.log('itemSelect',selectTypeLeave)
+  }, [selectTypeLeave])
 
   return (
     <>
   <div>
-    <h2>ทดสอบ Dateppicker</h2>
 
-    <DatePicker 
+    {/* <DatePicker 
     value={startDate}
     // date={value}
     onChange={setStartDate}
@@ -42,8 +42,20 @@ export default function TestInput () {
     value={endDate}
     onChange={setEndDate}
     minDate={startDate ?? undefined}
-    />
-    <p>รวมเวลาทั้งหมด {daysDifference}</p>
+    /> */}
+    {/* <p>รวมเวลาทั้งหมด {daysDifference}</p> */}
+
+    <SelectItem
+      label="ทดสอบ Select"
+      data={[
+        { value: '1', label: 'ลาป่วย' },
+{ value: '2', label: 'ลาคลอด' },
+      ]}
+      value={selectTypeLeave}
+      onChange={setSelectTypeLeave}
+    >
+
+    </SelectItem>
 
   </div>
     </>

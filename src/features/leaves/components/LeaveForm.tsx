@@ -5,16 +5,17 @@ dayjs.locale('th');
 import DatePicker from '~/features/ui/components/DatePicker';
 
 import { type DateValue } from '@mantine/dates/lib/types';
+import { convertDateToFormatNormal } from '~/features/shared/helpers/date';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { capitalize, get, set } from 'lodash';
 import { api } from '~/utils/api';
 import { useSession } from 'next-auth/react';
 import FileUploadLeave from './FileUploadLeave';
-import { convertDateToFormatNormal } from '~/features/shared/helpers/date';
+import SelectItem from '~/features/ui/components/SelectItem';
 
 
-import { Button, SelectItem, Textarea, Input } from '@nextui-org/react';
+import { Button, Textarea, Input } from '@nextui-org/react';
 import {
   type AddLeaveInput,
   type LeaveDetails,
@@ -46,7 +47,7 @@ export const typeLeaves = [
 
 const LeaveForm = (props: LeaveFormProps) => {
 
-  const [selectTypeLeave, setSelectTypeLeave] = useState<string>('1');
+  const [selectTypeLeave, setSelectTypeLeave] = useState<string | null>('');
   const { data: session } = useSession();
   const [selectAssignUser, setSelectAssignUser] = useState<string>('');
   const [totalLeaveDate, setTotalLeaveDate] = useState<number>();
@@ -125,34 +126,35 @@ const LeaveForm = (props: LeaveFormProps) => {
     setSelectAssignUser(e.target.value);
   };
 
-  const handleSelectTypeLeaveChange = (
-    e: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
-    setSelectTypeLeave(e.target.value);
-  };
 
   useEffect(() => {
     setValue('totalLeaveDays', calculateDiffDays(startDate, endDate));
-    console.log('startDate', startDate);
-    console.log('endDate', endDate);
-    console.log('totalLeaveDays', calculateDiffDays(startDate, endDate));
     setTotalLeaveDate(getValues('totalLeaveDays'));
 
+    setValue('typeLeave',Number(selectTypeLeave))
+
+    console.log("getValue:",getValues('typeLeave'))
+    console.log("value From useState:",selectTypeLeave)
 
 
-    setValue('assignUser', selectAssignUser, {
+    setValue('assignUser', Number(selectAssignUser), {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true,
     });
 
-    setValue('typeLeave', selectTypeLeave);
+    // setValue('typeLeave', Number(selectTypeLeave),{
+    //   shouldValidate:true,
+    //   shouldDirty:true,
+    //   shouldTouch:true,
+    // });
 
     setValue('uploadFiles', uploadedFilenames, {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true,
     });
+  
   }, [selectTypeLeave, selectAssignUser, startDate, endDate,uploadedFilenames]);
 
   // const startLeaveDate = new Date(getValues("startLeaveDate"));
@@ -174,8 +176,20 @@ const LeaveForm = (props: LeaveFormProps) => {
   //   }
   // }
 
-  const currentStartLeaveDate = getValues('startLeaveDate');
-  const currentEndLeaveDate = getValues('endLeaveDate');
+  const handleSelectTypeLeaveChange = (value:string | null) => {
+    setSelectTypeLeave(value);
+    const ww = Number(value);
+    setValue('typeLeave',ww,{
+      // shouldValidate: true,
+      // shouldDirty: true,
+      // shouldTouch: true,
+    })
+   
+    if(value) {
+      
+    }
+  };
+
 
   const handleDatePickerStartChange = (value:DateValue) => {
     setStartDate(value);
@@ -209,10 +223,6 @@ const LeaveForm = (props: LeaveFormProps) => {
     setUploadedFilenames(filenames);
   };
 
-  console.log("dwadwa",getValues("typeLeave"));
-
-
-
   return (
     <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
       {/* <h1>{capitalize(kind)}</h1> */}
@@ -221,7 +231,19 @@ const LeaveForm = (props: LeaveFormProps) => {
           <div id="detailMain" className="mb-10">
             <h1 className="blueDark Ekachon_Bold mb-5">รายละเอียด</h1>
             <div id="select-typeLeave" className="pt-2">
-              <Select
+              <SelectItem
+                label="ประเภทการลา"
+                data={[
+                  { value: '1', label: 'react' },
+        { value: '2', label: 'Angular' },
+                ]}
+                placeholder="เลือกประเภทการลา"
+                value={selectTypeLeave}
+                onChange={setSelectTypeLeave}
+              >
+
+              </SelectItem>
+              {/* <Select
                 id="typeLeave"
                 {...register('typeLeave') , { valueAsNumber:true }}
                 variant="bordered"
@@ -245,7 +267,7 @@ const LeaveForm = (props: LeaveFormProps) => {
                 <SelectItem value="3" key={3}>
                   ลาพักผ่อน
                 </SelectItem>
-              </Select>
+              </Select> */}
             </div>
             <div
               className="my-4 flex justify-between text-base"
@@ -335,7 +357,7 @@ const LeaveForm = (props: LeaveFormProps) => {
           <h1 className="blueDark Ekachon_Bold mb-5">รายละเอียดเพิ่มเติม</h1>
           <div className="" id="selectAssignUser">
           
-            <Select
+            {/* <Select
               className="mb-6"
               label="ผู้ปฏิบัติงานแทน"
               items={listPerAssigns}
@@ -350,12 +372,13 @@ const LeaveForm = (props: LeaveFormProps) => {
                   {`${listPerAssign.person_firstname} ${listPerAssign.person_lastname}`}
                 </SelectItem>
               )}
+                          </Select> */}
                {/* {listPerAssigns.map((animal) => (
           <SelectItem key={animal.user_id} value={animal.user_id}>
             {animal.user_id}
           </SelectItem>
         ))} */}
-            </Select>
+
           </div>
           <div id="reasonLeave" className="mb-5">
             {/* <label htmlFor="reason" className="text-sm text-slate-500">
@@ -411,7 +434,7 @@ const LeaveForm = (props: LeaveFormProps) => {
             />
           </div>
 
-          {selectTypeLeave[0] === '2' && (
+          {/* {selectTypeLeave[0] === '2' && (
             <div className="mb-5">
               <h2 className="blueDark Ekachon_Bold mb-2">
                 เอกสารแนบ (ไม่บังคับ)
@@ -422,7 +445,7 @@ const LeaveForm = (props: LeaveFormProps) => {
               </div>
               <FileUploadLeave onFileUpload={handleFileUpload} />
             </div>
-          )}
+          )} */}
         </div>
       </div>
 
