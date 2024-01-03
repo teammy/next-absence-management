@@ -1,13 +1,12 @@
-import {Select,SelectProps  } from '@mantine/core'
+import {Select,type SelectProps  } from '@mantine/core'
 
 interface SelectItemProps extends SelectProps {
   label:string;
   error?: string;
-  defaultValue?: string;
 }
 
 
-const SelectItem = ({label,error,defaultValue,...props}: SelectItemProps) => {
+const SelectItem = ({label,error,...props}: SelectItemProps) => {
 
   return (
     <Select
@@ -16,7 +15,6 @@ const SelectItem = ({label,error,defaultValue,...props}: SelectItemProps) => {
     checkIconPosition="right"
     error={error}
     {...props}
-    defaultValue={defaultValue}
     classNames={{
       input:'Ekachon_Light',
       option:'Ekachon_Light'

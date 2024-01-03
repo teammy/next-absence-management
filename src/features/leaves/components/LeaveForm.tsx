@@ -7,15 +7,14 @@ import { type DateValue } from '@mantine/dates/lib/types';
 import { convertDateToFormatNormal } from '~/features/shared/helpers/date';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { capitalize, get, set } from 'lodash';
+import { capitalize } from 'lodash';
 import { api } from '~/utils/api';
 import { useSession } from 'next-auth/react';
 import FileUploadLeave from './FileUploadLeave';
-import SelectItem from '~/features/ui/components/form/SelectItem';
 import InputField from '~/features/ui/components/form/InputField';
 import TextAreaField from '~/features/ui/components/form/TextAreaField';
+import { Button, Input,Select,SelectItem } from '@nextui-org/react';
 
-import { Button, Textarea, Input } from '@nextui-org/react';
 import {
   type AddLeaveInput,
   type LeaveDetails,
@@ -26,7 +25,6 @@ import {
   useState,
   useEffect,
 } from 'react';
-import { type DatePickerValue } from '@mantine/dates/lib/types';
 
 
 export type LeaveFormProps =
@@ -43,7 +41,7 @@ export type LeaveFormProps =
 
 const LeaveForm = (props: LeaveFormProps) => {
 
-  const [selectTypeLeave, setSelectTypeLeave] = useState<string | null>('');
+  const [selectTypeLeave, setSelectTypeLeave] = useState<string>('');
   const { data: session } = useSession();
   const [selectAssignUser, setSelectAssignUser] = useState<string>('');
   const [totalLeaveDate, setTotalLeaveDate] = useState<number>();
@@ -128,7 +126,7 @@ const LeaveForm = (props: LeaveFormProps) => {
     setValue('totalLeaveDays', calculateDiffDays(startDate, endDate));
     setTotalLeaveDate(getValues('totalLeaveDays'));
 
-    setValue('typeLeave',Number(selectTypeLeave),{
+    setValue('typeLeave',selectTypeLeave,{
       shouldValidate:true,
       shouldDirty:true,
       shouldTouch:true,
@@ -138,7 +136,7 @@ const LeaveForm = (props: LeaveFormProps) => {
     console.log("value From useState:",selectTypeLeave)
 
 
-    setValue('assignUser', Number(selectAssignUser), {
+    setValue('assignUser', selectAssignUser, {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true,
@@ -171,17 +169,14 @@ const LeaveForm = (props: LeaveFormProps) => {
   //   }
   // }
 
-  const handleSelectTypeLeaveChange = (value:string | null) => {
+  const handleSelectTypeLeaveChange = (value:string) => {
     setSelectTypeLeave(value);
-    const ww = Number(value);
-    setValue('typeLeave',ww,{
-      // shouldValidate: true,
-      // shouldDirty: true,
-      // shouldTouch: true,
-    })
-   
     if(value) {
-      
+      setValue('typeLeave',value, {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      })
     }
   };
 
@@ -226,7 +221,7 @@ const LeaveForm = (props: LeaveFormProps) => {
           <div id="detailMain" className="mb-10">
             <h1 className="blueDark Ekachon_Bold mb-5">รายละเอียด</h1>
             <div id="select-typeLeave" className="pt-2">
-              <SelectItem
+              {/* <SelectItem
                 label="ประเภทการลา"
                 data={listTypeLeave?.map((item) => ({
                   value: item.id.toString(),
@@ -237,32 +232,27 @@ const LeaveForm = (props: LeaveFormProps) => {
                 onChange={setSelectTypeLeave}
                 error={errors.typeLeave && errors.typeLeave.message}
               >
-              </SelectItem>
-              {/* <Select
+              </SelectItem> */}
+              <Select
                 id="typeLeave"
-                {...register('typeLeave') , { valueAsNumber:true }}
+
                 variant="bordered"
                 label="ประเภทการลา"
                 labelPlacement="outside"
                 radius="sm"
-                value={1}
                 onChange={handleSelectTypeLeaveChange}
                 placeholder="เลือกประเภทการลา"
                 isInvalid={!!errors.typeLeave}
                 errorMessage={errors.typeLeave && errors.typeLeave.message}
               >
-
+                {listTypeLeave?.map((item) => (
+                  <SelectItem key={item.id} value={item.id}>
+                    {item.leaveTypeDescription}
+                  </SelectItem>
+                )) ?? []}
                 
-                <SelectItem value="1" key={1}>
-                  ลากิจ
-                </SelectItem>
-                <SelectItem value="2" key={2}>
-                  ลาป่วย
-                </SelectItem>
-                <SelectItem value="3" key={3}>
-                  ลาพักผ่อน
-                </SelectItem>
-              </Select> */}
+            
+              </Select>
             </div>
             <div
               className="my-4 flex justify-between text-base"

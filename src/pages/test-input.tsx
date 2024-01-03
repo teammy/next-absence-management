@@ -7,7 +7,9 @@ import InputField from "~/features/ui/components/form/InputField";
 import {type TextInputProps } from "@mantine/core";
 import { api } from "~/utils/api";
 import { Select,ComboboxItem } from "@mantine/core";
-
+import { zodResolver } from "@hookform/resolvers/zod";
+import { type SubmitHandler,useForm } from "react-hook-form";
+import * as validator from '../features/leaves/helpers/validators'
 
 
 export default function TestInput () {
@@ -16,13 +18,25 @@ export default function TestInput () {
   const [endDate,setEndDate] = useState<DateValue>(null);
   const [daysDifference, setDaysDifference] = useState(0);
   const [testInput, setTestInput] = useState("");
+  const [selectTypeLeave, setSelectTypeLeave] = useState<string | null>('');
 
   const { data:listType } = api.typeleave.list.useQuery();
 
+  const { 
+    
+  } = useForm<typeof onSubmit extends SubmitHandler<>>({
+    mode: 'onBlur',
+    resolver:zodResolver(validator.add),
+    defaultValues:{
+      startDate:startDate,
+      endDate:endDate,
+      typeLeave:selectTypeLeave
+    }
+  
+  })
 
 
-
-  const [selectTypeLeave, setSelectTypeLeave] = useState<string | null>('');
+  
 
 
 
