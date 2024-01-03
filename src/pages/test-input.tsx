@@ -1,14 +1,30 @@
-import DatePicker from "~/features/ui/components/DatePicker"
+import DatePicker from "~/features/ui/components/form/DatePicker";
 import { useEffect,useState } from "react"
 import { convertDateToFormatNormal } from "~/features/shared/helpers/date";
 import { type DateValue } from "@mantine/dates";
-import SelectItem from "~/features/ui/components/SelectItem";
+import SelectItem from "~/features/ui/components/form/SelectItem";
+import InputField from "~/features/ui/components/form/InputField";
+import {type TextInputProps } from "@mantine/core";
+import { api } from "~/utils/api";
+import { Select,ComboboxItem } from "@mantine/core";
+
+
 
 export default function TestInput () {
-  const [selectTypeLeave, setSelectTypeLeave] = useState<string | null>('');
+
   const [startDate,setStartDate] = useState<DateValue>(null);
   const [endDate,setEndDate] = useState<DateValue>(null);
   const [daysDifference, setDaysDifference] = useState(0);
+  const [testInput, setTestInput] = useState("");
+
+  const { data:listType } = api.typeleave.list.useQuery();
+
+
+
+
+  const [selectTypeLeave, setSelectTypeLeave] = useState<string | null>('');
+
+
 
   const calculateDaysDifference = (startDate:any,endDate:any) => {
     if(!startDate || !endDate) return 0;
@@ -20,9 +36,8 @@ export default function TestInput () {
   }
 
   useEffect(() => {
-
-    console.log('itemSelect',selectTypeLeave)
-  }, [selectTypeLeave])
+    console.log(selectTypeLeave);
+  }, [listType,selectTypeLeave]);
 
   return (
     <>
@@ -45,17 +60,25 @@ export default function TestInput () {
     /> */}
     {/* <p>รวมเวลาทั้งหมด {daysDifference}</p> */}
 
-    <SelectItem
-      label="ทดสอบ Select"
-      data={[
-        { value: '1', label: 'ลาป่วย' },
-{ value: '2', label: 'ลาคลอด' },
-      ]}
+    <Select
+      label="Your favorite library"
+      placeholder="เลือกประเภทการลา"
+      data={listType?.map((item) => ({
+        value: item.id.toString(),
+        label: item.leaveTypeDescription,
+      }))}
       value={selectTypeLeave}
       onChange={setSelectTypeLeave}
-    >
+      clearable
+    />
 
-    </SelectItem>
+    {/* <InputField
+    label="ทดสอบ Input"
+    value={testInput}
+    onChange={(e) => setTestInput(e.currentTarget.value)}
+    >
+    
+    </InputField> */}
 
   </div>
     </>

@@ -12,12 +12,11 @@ export const typeLeaveRouter = createTRPCRouter({
           id : true,
           leaveTypeDescription : true,
           maxAllowPerYear : true,
-        },
-        orderBy: {
-          id: "desc",
         }
-       
       });
+      
+      if (!typeLeave) throw new TRPCError({code : "NOT_FOUND"});
+
       return typeLeave;
     }),
 

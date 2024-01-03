@@ -1,9 +1,8 @@
-import dayjs from 'dayjs';
-import { th } from 'date-fns/locale';
-import 'dayjs/locale/th';
-dayjs.locale('th');
-import DatePicker from '~/features/ui/components/DatePicker';
-
+// import dayjs from 'dayjs';
+// import { th } from 'date-fns/locale';
+// import 'dayjs/locale/th';
+// dayjs.locale('th');
+import DatePicker from '~/features/ui/components/form/DatePicker';
 import { type DateValue } from '@mantine/dates/lib/types';
 import { convertDateToFormatNormal } from '~/features/shared/helpers/date';
 import { type SubmitHandler, useForm } from 'react-hook-form';
@@ -12,8 +11,9 @@ import { capitalize, get, set } from 'lodash';
 import { api } from '~/utils/api';
 import { useSession } from 'next-auth/react';
 import FileUploadLeave from './FileUploadLeave';
-import SelectItem from '~/features/ui/components/SelectItem';
-
+import SelectItem from '~/features/ui/components/form/SelectItem';
+import InputField from '~/features/ui/components/form/InputField';
+import TextAreaField from '~/features/ui/components/form/TextAreaField';
 
 import { Button, Textarea, Input } from '@nextui-org/react';
 import {
@@ -28,6 +28,7 @@ import {
 } from 'react';
 import { type DatePickerValue } from '@mantine/dates/lib/types';
 
+
 export type LeaveFormProps =
   | {
       kind: 'create';
@@ -39,11 +40,6 @@ export type LeaveFormProps =
       onSubmit: SubmitHandler<UpdateLeaveInput['data']>;
     };
 
-export const typeLeaves = [
-  { label: 'ลากิจ', value: '1' },
-  { label: 'ลาป่วย', value: '2' },
-  { label: 'ลาพักร้อน', value: '3' },
-];
 
 const LeaveForm = (props: LeaveFormProps) => {
 
@@ -70,6 +66,7 @@ const LeaveForm = (props: LeaveFormProps) => {
     EmployeeAssings[]
   >({ wardId, userId, positionId });
 
+  const { data: listTypeLeave } = api.typeleave.list.useQuery();
 
   const {
     register,
@@ -131,7 +128,11 @@ const LeaveForm = (props: LeaveFormProps) => {
     setValue('totalLeaveDays', calculateDiffDays(startDate, endDate));
     setTotalLeaveDate(getValues('totalLeaveDays'));
 
-    setValue('typeLeave',Number(selectTypeLeave))
+    setValue('typeLeave',Number(selectTypeLeave),{
+      shouldValidate:true,
+      shouldDirty:true,
+      shouldTouch:true,
+    })
 
     console.log("getValue:",getValues('typeLeave'))
     console.log("value From useState:",selectTypeLeave)
@@ -142,12 +143,6 @@ const LeaveForm = (props: LeaveFormProps) => {
       shouldDirty: true,
       shouldTouch: true,
     });
-
-    // setValue('typeLeave', Number(selectTypeLeave),{
-    //   shouldValidate:true,
-    //   shouldDirty:true,
-    //   shouldTouch:true,
-    // });
 
     setValue('uploadFiles', uploadedFilenames, {
       shouldValidate: true,
@@ -233,15 +228,15 @@ const LeaveForm = (props: LeaveFormProps) => {
             <div id="select-typeLeave" className="pt-2">
               <SelectItem
                 label="ประเภทการลา"
-                data={[
-                  { value: '1', label: 'react' },
-        { value: '2', label: 'Angular' },
-                ]}
+                data={listTypeLeave?.map((item) => ({
+                  value: item.id.toString(),
+                  label: item.leaveTypeDescription,
+                }))}
                 placeholder="เลือกประเภทการลา"
                 value={selectTypeLeave}
                 onChange={setSelectTypeLeave}
+                error={errors.typeLeave && errors.typeLeave.message}
               >
-
               </SelectItem>
               {/* <Select
                 id="typeLeave"
@@ -283,7 +278,7 @@ const LeaveForm = (props: LeaveFormProps) => {
               <p className="Ekachon_Light text-[#6F6F6F]">วันลาคงเหลือรวม</p>
               <p className="blueDark Ekachon_Bold">0 วัน</p>
             </div>
-          </div>ช่วงเวลา
+          </div>
           <div id="dateRange">
             <div className="my-5">
               <h1 className="blueDark Ekachon_Bold mb-5">ช่วงเวลา</h1>
@@ -292,6 +287,7 @@ const LeaveForm = (props: LeaveFormProps) => {
                 value={startDate}
                 onChange={handleDatePickerStartChange}
                 maxDate={endDate ?? undefined}
+                error={errors.startLeaveDate && errors.startLeaveDate.message}
               />
               {/* <ThaiDatePicker
               id="startLeaveDate"
@@ -316,6 +312,7 @@ const LeaveForm = (props: LeaveFormProps) => {
                 value={endDate}
                 onChange={handleDatePickerEndChange}
                 minDate={startDate ?? undefined}
+                error={errors.endLeaveDate && errors.endLeaveDate.message}
                 // onValueChange={handleDatePickerEndChange}
               />
               {/* <ThaiDatePicker
@@ -384,7 +381,14 @@ const LeaveForm = (props: LeaveFormProps) => {
             {/* <label htmlFor="reason" className="text-sm text-slate-500">
               เหตุผลการลา *
             </label> */}
-            <Textarea
+            <TextAreaField
+            label="เหตุผลการลา"
+            id="reason"
+            {...register('reason')}
+            error={errors.reason && errors.reason.message}
+            >
+            </TextAreaField>
+            {/* <Textarea
               label="เหตุผลการลา"
               id="reason"
               placeholder=" "
@@ -394,14 +398,23 @@ const LeaveForm = (props: LeaveFormProps) => {
               radius="sm"
               isInvalid={!!errors.reason}
               errorMessage={errors.reason && errors.reason.message}
-            />
+            /> */}
             {/* {errors.reason && <div>{errors.reason.message}</div>} */}
           </div>
           <div id="contactLocation" className="mb-5">
             {/* <label htmlFor="address_contact" className="text-sm text-slate-500">
               สถานที่ติดต่อระหว่างการลา *
             </label> */}
-            <Textarea
+
+            <TextAreaField
+            label="สถานที่ติดต่อระหว่างการลา"
+            error={errors.leaveLocation && errors.leaveLocation.message}
+            id="address_contact"
+            {...register('leaveLocation')}
+            cols={3}
+            >
+            </TextAreaField>
+            {/* <Textarea
               label="สถานที่ติดต่อระหว่างการลา"
               placeholder=" "
               labelPlacement='outside'
@@ -412,24 +425,18 @@ const LeaveForm = (props: LeaveFormProps) => {
               {...register('leaveLocation')}
               isInvalid={!!errors.leaveLocation}
               errorMessage={errors.leaveLocation && errors.leaveLocation.message}
-            />
+            /> */}
           </div>
 
           <div className="mb-6">
             {/* <label className="grayBlack text-base">เบอร์ติดต่อ *</label> */}
-            <Input
+            <InputField
             label="เบอร์ติดต่อ"
             type="number"
             maxLength={10}
-            labelPlacement='outside'
               id="leaveContactNumber"
               placeholder=" "
-              variant="bordered"
-              radius="sm"
-              isInvalid={!!errors.leaveContactNumber}
-              errorMessage={
-                errors.leaveContactNumber && errors.leaveContactNumber.message
-              }
+              error={errors.leaveContactNumber && errors.leaveContactNumber.message}
               {...register('leaveContactNumber')}
             />
           </div>
