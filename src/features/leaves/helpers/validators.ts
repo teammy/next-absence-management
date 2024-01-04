@@ -13,13 +13,16 @@ export const add = z.object({
 });
 
 export const addTest = z.object({
-  startDate: z
+  startLeaveDate: z
   .date()
   .nullable()
   .refine((date) => date !==null, { message: 'กรุณาระบุวันที่เริ่มต้นการลา' }),
-  // endLeaveDate: z.string().min(1,{message:"** กรุณาระบุวันที่สิ้นสุดการลา"}),
-  // totalLeaveDays: z.number(),
-  typeLeave: z.coerce.number().min(1,{message:"** กรุณาเลือกประเภทการลา"}),
+  endLeaveDate: z
+  .date()
+  .nullable()
+  .refine((date) => date !==null, { message: 'กรุณาระบุวันที่สิ้นสุดการลา' }),
+  totalLeaveDays: z.number().min(1),
+  typeLeave: z.string().min(1,{message:"** กรุณาเลือกประเภทการลา"}),
   // reason: z.string().min(1,{message:"** กรุณาระบุเหตุผลการลา"}),
   // assignUser : z.string().min(1,{message:"** กรุณาเลือกผู้รับผิดชอบ"}),
   // leaveLocation : z.string().min(1,{message:"** กรุณาระบุสถานที่ติดต่อระหว่างการลา"}),
