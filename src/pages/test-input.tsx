@@ -15,6 +15,7 @@ import { type SubmitHandler } from "react-hook-form";
 import * as validator from '../features/leaves/helpers/validators'
 import * as types from "~/features/leaves/types";
 import MantineDatePicker from "~/features/ui/components/form/DatePicker";
+import { useInputState } from "@mantine/hooks";
 
 
 export type TestFromProps =
@@ -36,6 +37,7 @@ export default function TestInput (props:TestFromProps) {
   const [daysDifference, setDaysDifference] = useState(0);
   const [testInput, setTestInput] = useState("");
   const [selectTypeLeave, setSelectTypeLeave] = useState<string | null>('');
+  const [totalLeaveDay, setTotalLeaveDay] = useInputState(0);
 
   const { data:listType } = api.typeleave.list.useQuery();
   const { kind, onSubmit } = props;
@@ -70,14 +72,16 @@ export default function TestInput (props:TestFromProps) {
 
     const oneDay = 24 * 60 * 60 * 1000;
     const diffDays = Math.round(Math.abs((endLeaveDate - startLeaveDate) / oneDay)) + 1;
-
+    form.setFieldValue('totalLeaveDay',diffDays)
+    
     return diffDays;
   }
 
   useEffect(() => {
-    form.setFieldValue('totalLeaveDay',calculateDaysDifference())
-    // console.log("totaldate",calculateDaysDifference());
-  }, [form.values.startLeaveDate, form.values.endLeaveDate]);
+    setTotalLeaveDay(calculateDaysDifference())
+    // console.log("ddd",form.setFieldValue('totalLeaveDay',totalLeaveDay))
+    // console.log("totalLeaveDay",totalLeaveDay);
+  }, [form.values.startLeaveDate, form.values.endLeaveDate,totalLeaveDay]);
 
   return (
     <>
@@ -89,10 +93,6 @@ export default function TestInput (props:TestFromProps) {
     label="เริ่มต้น"
     maxDate={form.values.endLeaveDate ?? undefined}
     {...form.getInputProps('startLeaveDate')}
-    onChange={(value) => {
-      form.setFieldValue('startLeaveDate',value)
-      form.setFieldValue('totalLeaveDay',calculateDaysDifference())
-    }}
     >
     </MantineDatePicker>
     <hr/>
@@ -100,10 +100,6 @@ export default function TestInput (props:TestFromProps) {
     label="สิ้นสุด"
     minDate={form.values.startLeaveDate ?? undefined}
     {...form.getInputProps('endLeaveDate')}
-    onChange={(value)=>{
-      form.setFieldValue('endLeaveDate',value);
-      form.setFieldValue('totalLeaveDay',calculateDaysDifference())
-    }}
     />
     <div>รวมเวลาทั้งหมด <NumberInput {...form.getInputProps('totalLeaveDay')} /> วัน</div>
     
