@@ -2,11 +2,11 @@ import DatePicker from "~/features/ui/components/form/DatePicker";
 import { useEffect,useState } from "react"
 import { convertDateToFormatNormal } from "~/features/shared/helpers/date";
 import { type DateValue } from "@mantine/dates";
-import SelectItem from "~/features/ui/components/form/SelectItem";
+import SelectItem from "~/features/ui/components/form/SelectItemField";
 import InputField from "~/features/ui/components/form/InputField";
 import {type TextInputProps } from "@mantine/core";
 import { api } from "~/utils/api";
-import { Select,ComboboxItem,Button,NumberInput } from "@mantine/core";
+import { Select,ComboboxItem,Button,NumberInput,Textarea } from "@mantine/core";
 import { useForm } from '@mantine/form';
 // import { useForm } from "react-hook-form";
 // import { zodResolver } from "@hookform/resolvers/zod";
@@ -52,7 +52,9 @@ export default function TestInput (props:TestFromProps) {
       typeLeave: '',
       startLeaveDate: null,
       endLeaveDate: null,
-      totalLeaveDays:0,
+      totalLeaveDay:0,
+      reason: '',
+      leaveContactNumber:''
     },
 
     // validate:zodResolver(validator.addTest)
@@ -101,7 +103,7 @@ export default function TestInput (props:TestFromProps) {
     minDate={form.values.startLeaveDate ?? undefined}
     {...form.getInputProps('endLeaveDate')}
     />
-    <div>รวมเวลาทั้งหมด <NumberInput {...form.getInputProps('totalLeaveDay')} /> วัน</div>
+    <div>รวมเวลาทั้งหมด <NumberInput leftSection="รวมเวลาทั้งสิ้น" variant="unstyled" hideControls {...form.getInputProps('totalLeaveDay')} rightSection="วัน" /> วัน</div>
     
 
     <SelectItem
@@ -121,6 +123,7 @@ export default function TestInput (props:TestFromProps) {
     >
     
     </InputField> */}
+    <Textarea label="เหตุผลการลา" placeholder="กรุณากรอกเหตุผลการลา" {...form.getInputProps('reason')} />
     <Button type="submit">Submit</Button>
     </form>
   </div>

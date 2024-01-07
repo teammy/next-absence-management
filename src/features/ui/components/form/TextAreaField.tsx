@@ -17,7 +17,8 @@ const TextAreaField = forwardRef<HTMLTextAreaElement,TextAreaFieldProps>(
     error={error}
     placeholder={placeholder}
     classNames={{
-      input:'Ekachon_Light'
+      input:'txt_blueDark Ekachon_Normal',
+      label:'txt_gray'
     }}
     {...props}
     >

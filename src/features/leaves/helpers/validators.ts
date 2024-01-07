@@ -1,15 +1,16 @@
 import { z } from "zod"
 
 export const add = z.object({
-  startLeaveDate: z.string().min(1,{message:"** กรุณาระบุวันที่เริ่มต้นการลา"}),
-  endLeaveDate: z.string().min(1,{message:"** กรุณาระบุวันที่สิ้นสุดการลา"}),
-  totalLeaveDays: z.number(),
-  typeLeave: z.string().min(1,{message:"** กรุณาเลือกประเภทการลา"}),
+  startLeaveDate: z.date().nullable().refine((date) => date !==null, { message: '** กรุณาระบุวันที่เริ่มต้นการลา' }),
+  endLeaveDate: z.date().nullable().refine((date) => date !==null, { message: '** กรุณาระบุวันที่สิ้นสุดการลา' }),
+  // totalLeaveDay: z.number().min(1),
+  typeLeave: z.number().min(1),
+  // z.string().min(1,{message:"** กรุณาเลือกประเภทการลา"}),
   reason: z.string().min(1,{message:"** กรุณาระบุเหตุผลการลา"}),
-  assignUser : z.string().min(1,{message:"** กรุณาเลือกผู้รับผิดชอบ"}),
+  assignUser : z.number().min(1),
   leaveLocation : z.string().min(1,{message:"** กรุณาระบุสถานที่ติดต่อระหว่างการลา"}),
   leaveContactNumber : z.string().min(1,{message:"** กรุณาระบุเบอร์โทรศัพท์ติดต่อระหว่างการลา"}),
-  uploadFiles: z.array(z.string())
+  // uploadFiles: z.array(z.string())
 });
 
 export const addTest = z.object({
@@ -21,12 +22,12 @@ export const addTest = z.object({
   .date()
   .nullable()
   .refine((date) => date !==null, { message: 'กรุณาระบุวันที่สิ้นสุดการลา' }),
-  totalLeaveDays: z.number().min(1),
+  totalLeaveDay: z.number().min(1),
   typeLeave: z.string().min(1,{message:"** กรุณาเลือกประเภทการลา"}),
-  // reason: z.string().min(1,{message:"** กรุณาระบุเหตุผลการลา"}),
+  reason: z.string().min(1,{message:"** กรุณาระบุเหตุผลการลา"}),
   // assignUser : z.string().min(1,{message:"** กรุณาเลือกผู้รับผิดชอบ"}),
   // leaveLocation : z.string().min(1,{message:"** กรุณาระบุสถานที่ติดต่อระหว่างการลา"}),
-  // leaveContactNumber : z.string().min(1,{message:"** กรุณาระบุเบอร์โทรศัพท์ติดต่อระหว่างการลา"}),
+  leaveContactNumber : z.string().min(1,{message:"** กรุณาระบุเบอร์โทรศัพท์ติดต่อระหว่างการลา"}),
   // uploadFiles: z.array(z.string())
 });
 

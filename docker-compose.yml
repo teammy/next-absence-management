@@ -7,7 +7,7 @@ services:
       - 33061:3306
     container_name: leave_db
     volumes:
-      - ./init_mysql:/docker-entrypoint-initdb.d
+      # - ./init_mysql:/docker-entrypoint-initdb.d
       # - leave_data:/var/lib/mysql
     environment:
       - MARIADB_ROOT_PASSWORD=superroot

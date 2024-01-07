@@ -46,17 +46,19 @@
 }
 
 .Ekachon_Normal {
-  font-family: 'Ekachon';
+  font-family: 'Ekachon' !important;
 }
 
-
+.txt_gray {
+  color: #7d8999;
+}
 
 .grayBlack {
   color: #6f6f6f;
 }
 
-.blueDark {
-  color: #002D63;
+.txt_blueDark {
+  color: #002D63 !important; 
 }
 
 .bg-blueDark {

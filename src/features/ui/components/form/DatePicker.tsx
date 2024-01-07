@@ -1,6 +1,6 @@
-import { DatesProvider,DateInput } from "@mantine/dates";
-import type { DatePickerInputProps,DateValue,DatesRangeValue,DatePickerValue,DateInputProps  } from "@mantine/dates";
-import {useRef,forwardRef } from "react";
+import { DatesProvider,DateInput,DateInputProps } from "@mantine/dates";
+import {forwardRef } from "react";
+import { convertDateToFormatNormal } from "~/features/shared/helpers/date";
 import dayjs from 'dayjs'
 import { CalendarDaysIcon } from 'lucide-react'
 import buddhistEra from 'dayjs/plugin/buddhistEra'
@@ -9,15 +9,15 @@ dayjs.extend(buddhistEra)
 dayjs.locale("th");
 
 
-interface ThaiDatePickerProps extends DateInputProps  {
+interface ThaiDatePickerProps extends Omit<DateInputProps, 'value' | 'onChange'> {
   label:string;
   error?: string;
-  // minDate?:Date;
-  // maxDate?:Date;
+  value: string;
+  onChange: (value: string) => void;
 }
 
 const MantineDatePicker = forwardRef<HTMLInputElement,ThaiDatePickerProps>(
-  ({id,label,error,...props},ref) => {
+  ({id,label,error,value,onChange,...props},ref) => {
   const IconCalendar = <CalendarDaysIcon className="w-5 h-5"></CalendarDaysIcon>;
 
   return (
@@ -34,6 +34,8 @@ const MantineDatePicker = forwardRef<HTMLInputElement,ThaiDatePickerProps>(
         label={label}
         yearsListFormat="BBBB"
         leftSection={IconCalendar}
+        // onChange={it =>onChange(it)}
+        // value={}
         clearable
         hideOutsideDates
         yearLabelFormat="BBBB"
@@ -45,9 +47,10 @@ const MantineDatePicker = forwardRef<HTMLInputElement,ThaiDatePickerProps>(
           calendarHeader:'Ekachon_Normal',
           monthThead: 'Ekachon_Normal',
           error:'Ekachon_Light',
-          input:'Ekachon_Light',
+          input:'Ekachon_Normal txt_blueDark',
           monthTbody:'Ekachon_Light',
           monthsList: 'Ekachon_Normal',
+          label:'txt_gray'
         }}
         {...props}
       />

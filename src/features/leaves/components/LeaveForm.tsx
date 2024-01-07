@@ -5,15 +5,17 @@
 import DatePicker from '~/features/ui/components/form/DatePicker';
 import { type DateValue } from '@mantine/dates/lib/types';
 import { convertDateToFormatNormal } from '~/features/shared/helpers/date';
-import { type SubmitHandler, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { type SubmitHandler } from 'react-hook-form';
+import { useForm } from '@mantine/form';
+import { zodResolver } from 'mantine-form-zod-resolver';
+// import { zodResolver } from '@hookform/resolvers/zod';
 import { capitalize } from 'lodash';
 import { api } from '~/utils/api';
 import { useSession } from 'next-auth/react';
 import FileUploadLeave from './FileUploadLeave';
 import InputField from '~/features/ui/components/form/InputField';
 import TextAreaField from '~/features/ui/components/form/TextAreaField';
-import { Button, Input,Select,SelectItem } from '@nextui-org/react';
+import SelectItemField from '~/features/ui/components/form/SelectItemField';
 
 import {
   type AddLeaveInput,
@@ -25,6 +27,8 @@ import {
   useState,
   useEffect,
 } from 'react';
+import MantineDatePicker from '~/features/ui/components/form/DatePicker';
+import { NumberInput, Textarea,TextInput,Button } from '@mantine/core';
 
 
 export type LeaveFormProps =
@@ -66,89 +70,119 @@ const LeaveForm = (props: LeaveFormProps) => {
 
   const { data: listTypeLeave } = api.typeleave.list.useQuery();
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    getValues,
-    formState: { errors, isValid },
-  } = useForm<
-    typeof onSubmit extends SubmitHandler<AddLeaveInput>
-      ? AddLeaveInput
-      : UpdateLeaveInput['data']
-  >({
-    mode: 'onBlur',
-    resolver: zodResolver(
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   setValue,
+  //   getValues,
+  //   formState: { errors, isValid },
+  // } = useForm<
+  //   typeof onSubmit extends SubmitHandler<AddLeaveInput>
+  //     ? AddLeaveInput
+  //     : UpdateLeaveInput['data']
+  // >({
+  //   mode: 'onBlur',
+  //   resolver: zodResolver(
+  //     kind === 'create' ? validators.add : validators.updateForm,
+  //   ),
+    // defaultValues: kind === 'edit' ? props.leave : undefined,
+  // });
+
+  const form = useForm<typeof onSubmit extends SubmitHandler<AddLeaveInput> ? AddLeaveInput : UpdateLeaveInput['data']>({
+    validateInputOnChange: true,
+    validate: zodResolver(
       kind === 'create' ? validators.add : validators.updateForm,
     ),
-    defaultValues: kind === 'edit' ? props.leave : undefined,
+    initialValues: {
+      typeLeave: '',
+      startLeaveDate: null,
+      endLeaveDate: null,
+      totalLeaveDay: 0,
+      reason: '',
+      assignUser: '',
+      uploadFiles: [],
+      leaveLocation: '',
+      leaveContactNumber: '',
+    },
+    
   });
 
+  const calculateDaysDifference = () => {
+    const startLeaveDate = form.values.startLeaveDate;
+    const endLeaveDate = form.values.endLeaveDate;
+    if(!startLeaveDate || !endLeaveDate) return 0;
 
-
-  const calculateDiffDays = (startDate: any, endDate: any) => {
-    if(!startDate || !endDate) return 0;
-    let diffDays = 0;
-    const oneDay = 24 * 60 * 60 * 1000; // milliseconds in a day
-    const holidays = [
-      new Date('2023-10-02'), // public holiday
-      new Date('2023-10-03'), // public holiday
-      new Date('2023-10-01'), // custom holiday
-    ];
-    for (
-      let date = new Date(startDate);
-      date <= new Date(endDate);
-      date.setDate(date.getDate() + 1)
-    ) {
-      const dayOfWeek = date.getDay();
-      if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-        // exclude weekends
-        const isHoliday = holidays.some(
-          (holiday) => holiday.toDateString() === date.toDateString(),
-        );
-        if (!isHoliday) {
-          diffDays++;
-        }
-      }
-    }
-
+    const oneDay = 24 * 60 * 60 * 1000;
+    const diffDays = Math.round(Math.abs((endLeaveDate - startLeaveDate) / oneDay)) + 1;
+    form.setFieldValue('totalLeaveDay',diffDays)
+    
     return diffDays;
-  };
-
-  const handleValueAssignUserChange = (
-    e: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
-    setSelectAssignUser(e.target.value);
-  };
+  }
 
 
-  useEffect(() => {
-    setValue('totalLeaveDays', calculateDiffDays(startDate, endDate));
-    setTotalLeaveDate(getValues('totalLeaveDays'));
+  // const calculateDiffDays = (startDate: any, endDate: any) => {
+  //   if(!startDate || !endDate) return 0;
+  //   let diffDays = 0;
+  //   const oneDay = 24 * 60 * 60 * 1000; // milliseconds in a day
+  //   const holidays = [
+  //     new Date('2023-10-02'), // public holiday
+  //     new Date('2023-10-03'), // public holiday
+  //     new Date('2023-10-01'), // custom holiday
+  //   ];
+  //   for (
+  //     let date = new Date(startDate);
+  //     date <= new Date(endDate);
+  //     date.setDate(date.getDate() + 1)
+  //   ) {
+  //     const dayOfWeek = date.getDay();
+  //     if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+  //       // exclude weekends
+  //       const isHoliday = holidays.some(
+  //         (holiday) => holiday.toDateString() === date.toDateString(),
+  //       );
+  //       if (!isHoliday) {
+  //         diffDays++;
+  //       }
+  //     }
+  //   }
 
-    setValue('typeLeave',selectTypeLeave,{
-      shouldValidate:true,
-      shouldDirty:true,
-      shouldTouch:true,
-    })
+  //   return diffDays;
+  // };
 
-    console.log("getValue:",getValues('typeLeave'))
-    console.log("value From useState:",selectTypeLeave)
+  // const handleValueAssignUserChange = (
+  //   e: React.ChangeEvent<HTMLSelectElement>,
+  // ) => {
+  //   setSelectAssignUser(e.target.value);
+  // };
 
 
-    setValue('assignUser', selectAssignUser, {
-      shouldValidate: true,
-      shouldDirty: true,
-      shouldTouch: true,
-    });
+  // useEffect(() => {
+  //   setValue('totalLeaveDays', calculateDiffDays(startDate, endDate));
+  //   setTotalLeaveDate(getValues('totalLeaveDays'));
 
-    setValue('uploadFiles', uploadedFilenames, {
-      shouldValidate: true,
-      shouldDirty: true,
-      shouldTouch: true,
-    });
+  //   setValue('typeLeave',selectTypeLeave,{
+  //     shouldValidate:true,
+  //     shouldDirty:true,
+  //     shouldTouch:true,
+  //   })
+
+  //   console.log("getValue:",getValues('typeLeave'))
+  //   console.log("value From useState:",selectTypeLeave)
+
+
+  //   setValue('assignUser', selectAssignUser, {
+  //     shouldValidate: true,
+  //     shouldDirty: true,
+  //     shouldTouch: true,
+  //   });
+
+  //   setValue('uploadFiles', uploadedFilenames, {
+  //     shouldValidate: true,
+  //     shouldDirty: true,
+  //     shouldTouch: true,
+  //   });
   
-  }, [selectTypeLeave, selectAssignUser, startDate, endDate,uploadedFilenames]);
+  // }, [selectTypeLeave, selectAssignUser, startDate, endDate,uploadedFilenames]);
 
   // const startLeaveDate = new Date(getValues("startLeaveDate"));
   // const endLeaveDate = new Date(getValues("endLeaveDate"));
@@ -169,155 +203,110 @@ const LeaveForm = (props: LeaveFormProps) => {
   //   }
   // }
 
-  const handleSelectTypeLeaveChange = (value:string) => {
-    setSelectTypeLeave(value);
-    if(value) {
-      setValue('typeLeave',value, {
-        shouldValidate: true,
-        shouldDirty: true,
-        shouldTouch: true,
-      })
-    }
-  };
+  // const handleSelectTypeLeaveChange = (value:string) => {
+  //   setSelectTypeLeave(value);
+  //   if(value) {
+  //     setValue('typeLeave',value, {
+  //       shouldValidate: true,
+  //       shouldDirty: true,
+  //       shouldTouch: true,
+  //     })
+  //   }
+ // };
 
 
-  const handleDatePickerStartChange = (value:DateValue) => {
-    setStartDate(value);
-    if(value) {
-      setValue('startLeaveDate',convertDateToFormatNormal(value.toString()),{
-        shouldValidate: true,
-        shouldDirty: true,
-        shouldTouch: true,
-      })
-    }
-  };
+  // const handleDatePickerStartChange = (value:DateValue) => {
+  //   setStartDate(value);
+  //   if(value) {
+  //     setValue('startLeaveDate',convertDateToFormatNormal(value.toString()),{
+  //       shouldValidate: true,
+  //       shouldDirty: true,
+  //       shouldTouch: true,
+  //     })
+  //   }
+  // };
 
-  const handleDatePickerEndChange = (value:DateValue) => {
-    setEndDate(value);
-    if(value) {
-      setValue('endLeaveDate',convertDateToFormatNormal(value.toString()),{
-        shouldValidate: true,
-        shouldDirty: true,
-        shouldTouch: true,
-      })
-    }
-  };
+  // const handleDatePickerEndChange = (value:DateValue) => {
+  //   setEndDate(value);
+  //   if(value) {
+  //     setValue('endLeaveDate',convertDateToFormatNormal(value.toString()),{
+  //       shouldValidate: true,
+  //       shouldDirty: true,
+  //       shouldTouch: true,
+  //     })
+  //   }
+  // };
 
-  if (!listPerAssigns) return <div>ไม่มีผู้ปฏิบัติงานแทน</div>;
+  // if (!listPerAssigns) return <div>ไม่มีผู้ปฏิบัติงานแทน</div>;
 
-  const logCurrentValues = () => {
-    console.log('Current form values:', getValues());
-  };
+  // const logCurrentValues = () => {
+  //   console.log('Current form values:', getValues());
+  // };
 
-  const handleFileUpload = (filenames: string[]) => {
-    setUploadedFilenames(filenames);
-  };
+  // const handleFileUpload = (filenames: string[]) => {
+  //   setUploadedFilenames(filenames);
+  // };
+
+  const handleSubmit = (formValue : AddLeaveInput) => {
+    // form.setFieldValue('startLeaveDate',convertDateToFormatNormal(formValue.startLeaveDate))
+    console.log("formValue",formValue)
+  }
+
+  useEffect(()=> {
+    calculateDaysDifference()
+  },[form.isValid(),form.values.startLeaveDate, form.values.endLeaveDate])
 
   return (
-    <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
+    <>
+    <form className="flex flex-col" onSubmit={form.onSubmit((values) => handleSubmit(values))}>
       {/* <h1>{capitalize(kind)}</h1> */}
       <div className="flex flex-col md:flex-row md:space-x-7">
         <div className="flex-1 md:w-1/2">
           <div id="detailMain" className="mb-10">
             <h1 className="blueDark Ekachon_Bold mb-5">รายละเอียด</h1>
             <div id="select-typeLeave" className="pt-2">
-              {/* <SelectItem
+              <SelectItemField
                 label="ประเภทการลา"
                 data={listTypeLeave?.map((item) => ({
-                  value: item.id.toString(),
+                  value: item.id as any,
                   label: item.leaveTypeDescription,
                 }))}
                 placeholder="เลือกประเภทการลา"
-                value={selectTypeLeave}
-                onChange={setSelectTypeLeave}
-                error={errors.typeLeave && errors.typeLeave.message}
-              >
-              </SelectItem> */}
-              <Select
-                id="typeLeave"
-
-                variant="bordered"
-                label="ประเภทการลา"
-                labelPlacement="outside"
-                radius="sm"
-                onChange={handleSelectTypeLeaveChange}
-                placeholder="เลือกประเภทการลา"
-                isInvalid={!!errors.typeLeave}
-                errorMessage={errors.typeLeave && errors.typeLeave.message}
-              >
-                {listTypeLeave?.map((item) => (
-                  <SelectItem key={item.id} value={item.id}>
-                    {item.leaveTypeDescription}
-                  </SelectItem>
-                )) ?? []}
-                
-            
-              </Select>
+                {...form.getInputProps('typeLeave')}
+              />
             </div>
             <div
               className="my-4 flex justify-between text-base"
               id="remainingLeaveDays"
             >
-              <p className="Ekachon_Light grayBlack">ยอดวันลาสะสม</p>
-              <p className="blueDark Ekachon_Bold">0 วัน</p>
+              <p className="txt_gray">ยอดวันลาสะสม</p>
+              <p className="blueDark">0 วัน</p>
             </div>
             <div
               className="my-4 flex justify-between text-base"
               id="remainingLeaveDays"
             >
-              <p className="Ekachon_Light text-[#6F6F6F]">วันลาคงเหลือรวม</p>
-              <p className="blueDark Ekachon_Bold">0 วัน</p>
+              <p className="txt_gray">วันลาคงเหลือรวม</p>
+              <p className="blueDark">0 วัน</p>
             </div>
           </div>
           <div id="dateRange">
             <div className="my-5">
               <h1 className="blueDark Ekachon_Bold mb-5">ช่วงเวลา</h1>
-              <DatePicker
+              <MantineDatePicker
+                placeholder="เลือกวันที่"
                 label="วันที่เริ่มต้น"
-                value={startDate}
-                onChange={handleDatePickerStartChange}
-                maxDate={endDate ?? undefined}
-                error={errors.startLeaveDate && errors.startLeaveDate.message}
+                maxDate={form.values.endLeaveDate ?? undefined}
+                {...form.getInputProps('startLeaveDate')}
               />
-              {/* <ThaiDatePicker
-              id="startLeaveDate"
-              onChange={handleDatePickerStartChange}
-              value={currentStartLeaveDate}
-              placeholder="เลือกวันที่เริ่มต้นลา"
-              yearBoundary={1}
-              inputProps={{
-                displayFormat: 'D MMM YYYY',
-                className:
-                  'border w-full rounded-md border-gray-300 text-base px-3 py-2 mt-1',
-              }}
-            /> */}
             </div>
             <div>
-              <DatePicker
-
-                // minDate={startDate}
-                // value={currentEndLeaveDate}
-                // placeholder="เลือกวันที่สิ้นสุดลา"
+              <MantineDatePicker
                 label='วันที่สิ้นสุด'
-                value={endDate}
-                onChange={handleDatePickerEndChange}
-                minDate={startDate ?? undefined}
-                error={errors.endLeaveDate && errors.endLeaveDate.message}
-                // onValueChange={handleDatePickerEndChange}
+                placeholder='เลือกวันที่'
+                minDate={form.values.startLeaveDate ?? undefined}
+                {...form.getInputProps('endLeaveDate')}
               />
-              {/* <ThaiDatePicker
-              id="endLeaveDate"
-              yearBoundary={1}
-              placeholder="เลือกวันที่สิ้นสุดลา"
-              onChange={handleDatePickerEndChange}
-              value={currentEndLeaveDate}
-              minDate={new Date(currentStartLeaveDate)}
-              inputProps={{
-                displayFormat: 'D MMM YYYY',
-                className:
-                  'border w-full rounded-md text-base border-gray-300 px-3 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500',
-              }}
-            /> */}
             </div>
 
             <div
@@ -325,110 +314,51 @@ const LeaveForm = (props: LeaveFormProps) => {
               id="remainingLeaveDays"
             >
               <p className="Ekachon_Light text-[#6F6F6F]">ระยะเวลา</p>
-              <p className="blueDark Ekachon_Bold">
-                {totalLeaveDate} วัน
-              </p>
-              <Input
-                id="totalLeaveDays"
-                placeholder=" "
-                disabled={true}
-                className="hidden"
-                value={totalLeaveDate?.toString()}
-                {...register('totalLeaveDays')}
+              <p className="blueDark Ekachon_Bold"> วัน</p>
+              <NumberInput
+              hideControls
+              disabled 
+              {...form.getInputProps('totalLeaveDay')}
+              rightSection="วัน"
               />
             </div>
-          </div>{' '}
-          {/*  dateRange */}
+          </div>
         </div>
         <div className="mt-5 flex-1 md:w-1/2 lg:mt-0">
           <h1 className="blueDark Ekachon_Bold mb-5">รายละเอียดเพิ่มเติม</h1>
           <div className="" id="selectAssignUser">
           
-            {/* <Select
+             <SelectItemField
               className="mb-6"
               label="ผู้ปฏิบัติงานแทน"
-              items={listPerAssigns}
-              variant="bordered"
-              radius="sm"
-              labelPlacement="outside"
-              onChange={handleValueAssignUserChange}
               placeholder="เลือกผู้ปฏิบัติงานแทน"
-            >
-              {(listPerAssign) => (
-                <SelectItem key={listPerAssign.user_id}>
-                  {`${listPerAssign.person_firstname} ${listPerAssign.person_lastname}`}
-                </SelectItem>
-              )}
-                          </Select> */}
-               {/* {listPerAssigns.map((animal) => (
-          <SelectItem key={animal.user_id} value={animal.user_id}>
-            {animal.user_id}
-          </SelectItem>
-        ))} */}
+              data={listPerAssigns?.map((item) => ({
+                value: item.user_id.toString(),
+                label: `${item.person_firstname} ${item.person_lastname}`,
+              }))}
+              {...form.getInputProps('assignUser')}
+            />
+
+              
 
           </div>
           <div id="reasonLeave" className="mb-5">
-            {/* <label htmlFor="reason" className="text-sm text-slate-500">
-              เหตุผลการลา *
-            </label> */}
             <TextAreaField
             label="เหตุผลการลา"
-            id="reason"
-            {...register('reason')}
-            error={errors.reason && errors.reason.message}
-            >
-            </TextAreaField>
-            {/* <Textarea
-              label="เหตุผลการลา"
-              id="reason"
-              placeholder=" "
-              labelPlacement='outside'
-              {...register('reason')}
-              variant="bordered"
-              radius="sm"
-              isInvalid={!!errors.reason}
-              errorMessage={errors.reason && errors.reason.message}
-            /> */}
-            {/* {errors.reason && <div>{errors.reason.message}</div>} */}
+            {...form.getInputProps('reason')}
+            />
           </div>
           <div id="contactLocation" className="mb-5">
-            {/* <label htmlFor="address_contact" className="text-sm text-slate-500">
-              สถานที่ติดต่อระหว่างการลา *
-            </label> */}
-
-            <TextAreaField
+            <TextAreaField 
             label="สถานที่ติดต่อระหว่างการลา"
-            error={errors.leaveLocation && errors.leaveLocation.message}
-            id="address_contact"
-            {...register('leaveLocation')}
+            {...form.getInputProps('leaveLocation')}
             cols={3}
-            >
-            </TextAreaField>
-            {/* <Textarea
-              label="สถานที่ติดต่อระหว่างการลา"
-              placeholder=" "
-              labelPlacement='outside'
-              id="address_contact"
-              cols={3}
-              variant="bordered"
-              radius="sm"
-              {...register('leaveLocation')}
-              isInvalid={!!errors.leaveLocation}
-              errorMessage={errors.leaveLocation && errors.leaveLocation.message}
-            /> */}
+            />
+        
           </div>
 
           <div className="mb-6">
-            {/* <label className="grayBlack text-base">เบอร์ติดต่อ *</label> */}
-            <InputField
-            label="เบอร์ติดต่อ"
-            type="number"
-            maxLength={10}
-              id="leaveContactNumber"
-              placeholder=" "
-              error={errors.leaveContactNumber && errors.leaveContactNumber.message}
-              {...register('leaveContactNumber')}
-            />
+            <TextInput label="เบอร์ติดต่อ" {...form.getInputProps('leaveContactNumber')} />
           </div>
 
           {/* {selectTypeLeave[0] === '2' && (
@@ -446,29 +376,24 @@ const LeaveForm = (props: LeaveFormProps) => {
         </div>
       </div>
 
-      <div>
-        {/* <Input
-          id="typeLeave"
-          placeholder='Type Leave'
-          {...register('typeLeave')}
-        /> */}
-      </div>
-
-      <Button type="button" onClick={logCurrentValues}>
+      {/* <Button type="button" onClick={logCurrentValues}>
       Log Current Values
-      </Button>
+      </Button> */}
 
       <Button
         type="submit"
-        radius="sm"
-        color="primary"
-        className="btn-orange mt-5"
-        isDisabled={!isValid}
+        color="gray"
+        // className="btn-orange mt-5"
+        // disabled={!form.isValid()}
+        // isDisabled={!isValid}
       >
         {capitalize(kind)}
       </Button>
     </form>
+    </>
   );
-};
+}
 
 export default LeaveForm;
+
+
